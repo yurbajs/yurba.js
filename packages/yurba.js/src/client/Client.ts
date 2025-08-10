@@ -23,6 +23,36 @@ import MiddlewareManager from './MiddlewareManager';
 
 
 
+interface AppErrorOptions {
+  code?: number | null;
+}
+
+class AppError extends Error {
+  public code: number | null;
+  public timestamp: Date;
+
+  constructor(message: string, options: AppErrorOptions = {}) {
+    super(message);
+    this.name = this.constructor.name;
+    this.code = options.code ?? null;
+    this.timestamp = new Date();
+    Error.captureStackTrace?.(this, this.constructor);
+  }
+}
+
+class WebsocketError extends AppError {
+  constructor(message: string, options?: { code?: number }) {
+    super(message, { code: options?.code });
+    this.logError();
+  }
+
+  private logError(): void {
+    console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
+    // sendToSentry(this);
+  }
+}
+
+
 interface DevConfig {
   debug: boolean;
   level?: LogLevel;
@@ -255,6 +285,8 @@ class Client extends EventEmitter {
     }
   }
 
+
+
   /**
    * Handles WebSocket reconnection
    * @private
@@ -275,7 +307,7 @@ class Client extends EventEmitter {
           await this.wsm.connect(this._user as UserModel);
         } else {
           // Якщо немає користувача, тоді викликаємо init()
-          await this.init();
+  
         }
       } catch (error) {
         const wsError = new WebSocketError(`Reconnect failed: ${error instanceof Error ? error.message : String(error)}`);

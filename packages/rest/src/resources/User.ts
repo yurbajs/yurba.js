@@ -1,16 +1,16 @@
-import { REST, RequestConfig } from '../RestClient';
-import { BaseResource } from './BaseResource';
+import { REST, RequestConfig } from '../BaseClient';
+import { BaseResource } from './Base';
 import { User, Photo } from '@yurbajs/types';
 
 /**
  * User resource for managing user-related API operations
- * 
+ *
  * @example Basic usage
  * ```typescript
  * const user = await client.users.getMe();
  * const userByTag = await client.users.getByTag('rastgame');
  * ```
- * 
+ *
  * @public
  */
 export class UserResource extends BaseResource {
@@ -24,15 +24,15 @@ export class UserResource extends BaseResource {
 
   /**
    * Get current authenticated user information
-   * 
+   *
    * @returns Promise resolving to current user data
-   * 
+   *
    * @example
    * ```typescript
    * const user = await client.users.getMe();
    * console.log(`Logged in as: ${user.name}`);
    * ```
-   * 
+   *
    * @throws {ApiError} When authentication fails or user not found
    */
   public async getMe(config?: RequestConfig): Promise<User> {
@@ -41,45 +41,45 @@ export class UserResource extends BaseResource {
 
   /**
    * Get user information by tag
-   * 
+   *
    * @param tag - User tag (without @ symbol)
    * @param config - Request configuration
    * @returns Promise resolving to user data
-   * 
+   *
    * @example
    * ```typescript
    * const user = await client.users.getByTag('rastgame');
    * console.log(`User: ${user.name} (@${user.tag})`);
    * ```
-   * 
+   *
    * @throws {ApiError} When user not found or access denied
    */
   public async getByTag(tag: string, config?: RequestConfig): Promise<User> {
     this.validateRequired({ tag }, ['tag']);
     this.validateConstraints(tag, { minLength: 1, maxLength: 50 }, 'tag');
-    
+
     return this.request<User>('GET', `/user/${tag}`, undefined, config);
   }
 
   /**
    * Get user photos with pagination and filtering
-   * 
+   *
    * @param tag - User tag
    * @param options - Photo retrieval options
    * @param options.page - Page number (default: 0)
    * @param options.mode - Photo visibility mode (0: all, 1: public, 2: private)
    * @param config - Request configuration
    * @returns Promise resolving to array of photos
-   * 
+   *
    * @example
    * ```typescript
    * // Get first page of all photos
    * const photos = await client.users.getPhotos('rastgame');
-   * 
+   *
    * // Get public photos from page 2
-   * const publicPhotos = await client.users.getPhotos('rastgame', { 
-   *   page: 2, 
-   *   mode: 1 
+   * const publicPhotos = await client.users.getPhotos('rastgame', {
+   *   page: 2,
+   *   mode: 1
    * });
    * ```
    */
@@ -89,11 +89,11 @@ export class UserResource extends BaseResource {
     config?: RequestConfig
   ): Promise<Photo[]> {
     const { page = 0, mode = 0 } = options;
-    
+
     this.validateRequired({ tag }, ['tag']);
     this.validateConstraints(page, { min: 0 }, 'page');
     this.validateConstraints(mode, { enum: [0, 1, 2] }, 'mode');
-    
+
     return this.request<Photo[]>('GET', `/user/${tag}/photos`, { page, mode }, config);
   }
 

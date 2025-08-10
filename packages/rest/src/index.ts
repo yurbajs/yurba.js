@@ -1,22 +1,17 @@
-import { REST, ApiError, RestClientOptions, RequestConfig, RateLimitConfig } from './RestClient';
-import { UserResource } from './resources/UserResource';
-import { MessageResource } from './resources/MessageResource';
-import { DialogResource } from './resources/DialogResource';
-import { PostResource } from './resources/PostResource';
-import { MediaResource } from './resources/MediaResource';
-import { AuthResource } from './resources/AuthResource';
+import { REST, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
+import { UserResource, MessageResource, DialogResource, PostResource, MediaResource, AuthResource } from './resources/';
 
 /**
  * Enhanced REST client for Yurba.one API with all resources
- * 
+ *
  * @example Basic usage
  * ```typescript
  * import { RestClient } from '@yurbajs/rest';
- * 
+ *
  * const client = new RestClient('your-token');
  * const user = await client.users.getMe();
  * ```
- * 
+ *
  * @example With configuration
  * ```typescript
  * const client = new RestClient('your-token', {
@@ -25,40 +20,41 @@ import { AuthResource } from './resources/AuthResource';
  *   debug: true
  * });
  * 
+ *
  * // Set rate limiting
  * client.setRateLimit({ maxRequests: 100, windowMs: 60000 });
  * ```
- * 
+ *
  * @public
  */
 class RestClient extends REST {
   /** User-related API operations */
   public readonly users: UserResource;
-  
-  /** Message-related API operations */
+
+  /* Message-related API operations */
   public readonly messages: MessageResource;
-  
+
   /** Dialog-related API operations */
   public readonly dialogs: DialogResource;
-  
+
   /** Post-related API operations */
   public readonly posts: PostResource;
-  
+
   /** Media-related API operations */
   public readonly media: MediaResource;
-  
+
   /** Authentication-related API operations */
   public readonly auth: AuthResource;
 
   /**
    * Creates a new REST client with all resources
-   * 
+   *
    * @param token - Authorization token for API requests
    * @param options - Configuration options
    */
-  constructor(token: string, options?: RestClientOptions) {
+  constructor(token: string, options?: BaseClientOptions) {
     super(token, options);
-    
+
     // Initialize all resources
     this.users = new UserResource(this);
     this.messages = new MessageResource(this);
@@ -76,7 +72,7 @@ export default RestClient;
 // Export types and utilities
 export {
   ApiError,
-  RestClientOptions,
+  BaseClientOptions,
   RequestConfig,
   RateLimitConfig
 };
