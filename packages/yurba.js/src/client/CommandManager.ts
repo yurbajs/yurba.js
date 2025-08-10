@@ -196,6 +196,7 @@ export default class CommandManager implements ICommandManager {
     }
   }
 
+
   /**
    * Parses arguments with support for types string, int, user, repost
    * @param args Array of arguments

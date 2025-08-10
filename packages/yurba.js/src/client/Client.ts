@@ -23,34 +23,34 @@ import MiddlewareManager from './MiddlewareManager';
 
 
 
-interface AppErrorOptions {
-  code?: number | null;
-}
+// interface AppErrorOptions {
+//   code?: number | null;
+// }
 
-class AppError extends Error {
-  public code: number | null;
-  public timestamp: Date;
+// class AppError extends Error {
+//   public code: number | null;
+//   public timestamp: Date;
 
-  constructor(message: string, options: AppErrorOptions = {}) {
-    super(message);
-    this.name = this.constructor.name;
-    this.code = options.code ?? null;
-    this.timestamp = new Date();
-    Error.captureStackTrace?.(this, this.constructor);
-  }
-}
+//   constructor(message: string, options: AppErrorOptions = {}) {
+//     super(message);
+//     this.name = this.constructor.name;
+//     this.code = options.code ?? null;
+//     this.timestamp = new Date();
+//     Error.captureStackTrace?.(this, this.constructor);
+//   }
+// }
 
-class WebsocketError extends AppError {
-  constructor(message: string, options?: { code?: number }) {
-    super(message, { code: options?.code });
-    this.logError();
-  }
+// class WebsocketError extends AppError {
+//   constructor(message: string, options?: { code?: number }) {
+//     super(message, { code: options?.code });
+//     this.logError();
+//   }
 
-  private logError(): void {
-    console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
-    // sendToSentry(this);
-  }
-}
+//   private logError(): void {
+//     console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
+//     // sendToSentry(this);
+//   }
+// }
 
 
 interface DevConfig {
