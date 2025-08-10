@@ -296,3 +296,78 @@ div[class*="language-"] {
   background: var(--vp-c-bg-soft);
   font-weight: 600;
 }
+
+/* ===== СОЦІАЛЬНІ ІКОНКИ ===== */
+/* GitHub іконка - автоматична зміна кольору */
+.VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
+.VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
+  transition: color 0.2s ease !important;
+}
+
+/* Світла тема - темна іконка */
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
+  color: #24292f !important;
+}
+
+/* Темна тема - біла іконка */
+.dark .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
+.dark .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
+  color: #ffffff !important;
+}
+
+/* Hover ефекти */
+.VPSocialLink[aria-label*="GitHub"]:hover .vpi-social-github,
+.VPSocialLink[aria-label*="GitHub Repository"]:hover .vpi-social-github {
+  color: var(--vp-c-brand-1) !important;
+}
+
+/* Альтернативний підхід через filter для SVG іконок */
+.VPSocialLink[aria-label*="GitHub"] svg,
+.VPSocialLink[aria-label*="GitHub Repository"] svg {
+  transition: filter 0.2s ease !important;
+}
+
+/* Світла тема */
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub"] svg,
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] svg {
+  filter: brightness(0) saturate(100%) !important;
+}
+
+/* Темна тема */
+.dark .VPSocialLink[aria-label*="GitHub"] svg,
+.dark .VPSocialLink[aria-label*="GitHub Repository"] svg {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Hover ефект */
+.VPSocialLink[aria-label*="GitHub"]:hover svg,
+.VPSocialLink[aria-label*="GitHub Repository"]:hover svg {
+  filter: brightness(0) saturate(100%) invert(41%) sepia(100%) saturate(1000%) hue-rotate(180deg) !important;
+}
+
+/* Додатковий селектор для всіх GitHub іконок */
+.vpi-social-github {
+  transition: color 0.2s ease !important;
+}
+
+:root:not(.dark) .vpi-social-github {
+  color: #24292f !important;
+}
+
+.dark .vpi-social-github {
+  color: #ffffff !important;
+}
+
+/* Форсуємо правильний колір при завантаженні */
+.VPSocialLinks .VPSocialLink:first-child svg {
+  transition: filter 0.2s ease !important;
+}
+
+:root:not(.dark) .VPSocialLinks .VPSocialLink:first-child svg {
+  filter: brightness(0) saturate(100%) !important;
+}
+
+.dark .VPSocialLinks .VPSocialLink:first-child svg {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+}

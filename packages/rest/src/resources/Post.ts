@@ -1,4 +1,4 @@
-import { REST } from '../RestClient';
+import { REST } from '../BaseClient';
 import { CreatePostPayload, Post, DeletePostResponse, Language } from '@yurbajs/types';
 
 export class PostResource {

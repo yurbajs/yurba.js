@@ -1,4 +1,4 @@
-import { REST } from '../RestClient';
+import { REST } from '../BaseClient';
 
 /**
  * Ресурс для роботи з автентифікацією

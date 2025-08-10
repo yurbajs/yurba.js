@@ -37,12 +37,51 @@ export default {
         }, 100)
       }
       
+      // Функція для правильної ініціалізації теми
+      const initializeTheme = () => {
+        // Форсуємо перерендер соціальних іконок
+        const socialLinks = document.querySelectorAll('.VPSocialLink')
+        socialLinks.forEach(link => {
+          link.style.opacity = '0.99'
+          setTimeout(() => {
+            link.style.opacity = '1'
+          }, 10)
+        })
+      }
+      
       // Розгорнути при зміні маршруту
-      router.onAfterRouteChanged = expandActiveSections
+      router.onAfterRouteChanged = () => {
+        expandActiveSections()
+        initializeTheme()
+      }
       
       // Розгорнути при завантаженні
-      document.addEventListener('DOMContentLoaded', expandActiveSections)
-      setTimeout(expandActiveSections, 300)
+      document.addEventListener('DOMContentLoaded', () => {
+        expandActiveSections()
+        initializeTheme()
+      })
+      
+      setTimeout(() => {
+        expandActiveSections()
+        initializeTheme()
+      }, 300)
+      
+      // Слухач для зміни теми
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            const target = mutation.target as HTMLElement
+            if (target.classList.contains('dark') || target === document.documentElement) {
+              setTimeout(initializeTheme, 50)
+            }
+          }
+        })
+      })
+      
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      })
     }
   }
 } satisfies Theme

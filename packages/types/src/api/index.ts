@@ -186,6 +186,8 @@ export interface CreateDialogPayload {
 
 export type CreateDialogResponse = DialogInfo;
 
+
+// ISSUES:
 export enum DialogType {
   Channel = 'channel',
   Group = 'group',

@@ -1,4 +1,4 @@
-import { REST, RequestConfig } from '../RestClient';
+import { REST, RequestConfig } from '../BaseClient';
 
 /**
  * Base class for all API resources
@@ -93,6 +93,51 @@ export abstract class BaseResource {
     
     const queryString = params.toString();
     return queryString ? `${baseEndpoint}?${queryString}` : baseEndpoint;
+  }
+
+  /**
+   * Validate dialog ID
+   */
+  protected validateDialogId(dialogId: number): void {
+    if (dialogId < 1) throw new Error('Invalid dialogId');
+  }
+
+  /**
+   * Validate page number
+   */
+  protected validatePage(page: number): void {
+    if (page < 0) throw new Error('Page number must be >= 0');
+  }
+
+  /**
+   * Validate string length
+   */
+  protected validateStringLength(value: string, maxLength: number, fieldName: string): void {
+    if (value.length > maxLength) {
+      throw new Error(`${fieldName} exceeds ${maxLength} characters`);
+    }
+  }
+
+  /**
+   * Handle API errors with consistent error mapping
+   */
+  protected handleApiError(err: any, endpoint?: string): never {
+    const detail = err?.response?.data?.detail;
+    
+    switch (detail) {
+      case 'auth_failed':
+        throw new Error('Authorization failed: invalid token');
+      case 'access_denied':
+        throw new Error('Access denied or resource does not exist');
+      case 'not_found':
+        throw new Error('Resource not found');
+      case 'invalid_type':
+        throw new Error('Invalid type provided');
+      case 'upload_error':
+        throw new Error('Failed to save to database');
+      default:
+        throw new Error(`API Error: ${detail || err.message}`);
+    }
   }
 
   /**

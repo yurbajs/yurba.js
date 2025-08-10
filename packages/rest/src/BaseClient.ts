@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
  * Configuration options for REST client
  * @public
  */
-export interface RestClientOptions {
+export interface BaseClientOptions {
   /** Base API URL */
   baseURL?: string;
   /** Default request timeout in milliseconds */
@@ -75,7 +75,7 @@ export class ApiError extends Error {
     this.responseBody = responseBody;
     this.endpoint = endpoint;
     this.method = method;
-    
+
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 
@@ -107,19 +107,19 @@ export class ApiError extends Error {
  */
 class RateLimiter {
   private requests: number[] = [];
-  
-  constructor(private config: RateLimitConfig) {}
-  
+
+  constructor(private config: RateLimitConfig) { }
+
   public canMakeRequest(): boolean {
     const now = Date.now();
     this.requests = this.requests.filter(time => now - time < this.config.windowMs);
     return this.requests.length < this.config.maxRequests;
   }
-  
+
   public recordRequest(): void {
     this.requests.push(Date.now());
   }
-  
+
   public getResetTime(): number {
     if (this.requests.length === 0) return 0;
     return this.requests[0] + this.config.windowMs;
@@ -128,13 +128,13 @@ class RateLimiter {
 
 /**
  * Enhanced REST client for Yurba.one API with advanced features
- * 
+ *
  * @example Basic usage
  * ```typescript
  * const client = new REST('your-token');
  * const user = await client.get<User>('/get_me');
  * ```
- * 
+ *
  * @example With custom configuration
  * ```typescript
  * const client = new REST('your-token', {
@@ -144,7 +144,7 @@ class RateLimiter {
  *   debug: true
  * });
  * ```
- * 
+ *
  * @public
  */
 export class REST extends EventEmitter {
@@ -152,18 +152,18 @@ export class REST extends EventEmitter {
   private readonly token: string;
   private readonly defaultHeaders: Record<string, string>;
   private readonly abortControllers = new Map<string, AbortController>();
-  private readonly options: Required<RestClientOptions>;
+  private readonly options: Required<BaseClientOptions>;
   private rateLimiter?: RateLimiter;
 
   /**
    * Creates a new REST client instance
-   * 
+   *
    * @param token - Authorization token for API requests
    * @param options - Configuration options
    */
-  constructor(token: string, options: RestClientOptions = {}) {
+  constructor(token: string, options: BaseClientOptions = {}) {
     super();
-    
+
     this.token = token;
     this.options = {
       baseURL: 'https://api.yurba.one',
@@ -174,12 +174,12 @@ export class REST extends EventEmitter {
       debug: false,
       ...options
     };
-    
+
     this.baseURL = this.options.baseURL;
     this.defaultHeaders = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': `@yurbajs/rest/0.2.0`,
+      'User-Agent': `@yurbajs/REST`,
       'token': this.token,
       ...this.options.headers
     };
@@ -187,9 +187,9 @@ export class REST extends EventEmitter {
 
   /**
    * Configure rate limiting
-   * 
+   *
    * @param config - Rate limit configuration
-   * 
+   *
    * @example
    * ```typescript
    * client.setRateLimit({ maxRequests: 100, windowMs: 60000 }); // 100 requests per minute
@@ -201,12 +201,12 @@ export class REST extends EventEmitter {
 
   /**
    * Execute GET request
-   * 
+   *
    * @param endpoint - API endpoint
    * @param queryParams - Query parameters
    * @param config - Request configuration
    * @returns Promise resolving to response data
-   * 
+   *
    * @example
    * ```typescript
    * const user = await client.get<User>('/get_me');
@@ -224,7 +224,7 @@ export class REST extends EventEmitter {
 
   /**
    * Execute POST request
-   * 
+   *
    * @param endpoint - API endpoint
    * @param data - Request body data
    * @param config - Request configuration
@@ -276,12 +276,12 @@ export class REST extends EventEmitter {
 
   /**
    * Upload file with multipart/form-data
-   * 
+   *
    * @param endpoint - API endpoint
    * @param formData - Form data containing file
    * @param config - Request configuration
    * @returns Promise resolving to response data
-   * 
+   *
    * @example
    * ```typescript
    * const formData = new FormData();
@@ -297,15 +297,15 @@ export class REST extends EventEmitter {
     const url = this.buildUrl(endpoint);
     const headers = { ...this.defaultHeaders, ...config?.headers };
     delete headers['Content-Type']; // Let browser set boundary
-    
+
     return this.request<T>('POST', url, formData, { ...config, headers });
   }
 
   /**
    * Cancel request by endpoint
-   * 
+   *
    * @param endpoint - API endpoint to cancel
-   * 
+   *
    * @example
    * ```typescript
    * client.cancelRequest('/long-running-endpoint');
@@ -323,7 +323,7 @@ export class REST extends EventEmitter {
    * Cancel all pending requests
    */
   public cancelAllRequests(): void {
-    for (const [endpoint, controller] of this.abortControllers) {
+    for (const [, controller] of this.abortControllers) { 
       controller.abort();
     }
     this.abortControllers.clear();
@@ -334,7 +334,7 @@ export class REST extends EventEmitter {
    */
   public getRateLimitStatus(): { canMakeRequest: boolean; resetTime: number } | null {
     if (!this.rateLimiter) return null;
-    
+
     return {
       canMakeRequest: this.rateLimiter.canMakeRequest(),
       resetTime: this.rateLimiter.getResetTime()
@@ -354,20 +354,20 @@ export class REST extends EventEmitter {
     const endpoint = new URL(url).pathname;
     const maxRetries = config?.retry?.attempts ?? this.options.maxRetries;
     const retryDelay = config?.retry?.delay ?? this.options.retryDelay;
-    
+
     let lastError: Error;
-    
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await this.executeRequest<T>(method, url, data, config, endpoint);
       } catch (error) {
         lastError = error as Error;
-        
+
         // Don't retry on client errors or if it's the last attempt
         if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) {
           throw error;
         }
-        
+
         // Wait before retry with exponential backoff
         if (attempt < maxRetries) {
           const delay = retryDelay * Math.pow(2, attempt);
@@ -375,7 +375,7 @@ export class REST extends EventEmitter {
         }
       }
     }
-    
+
     throw lastError!;
   }
 
@@ -404,10 +404,10 @@ export class REST extends EventEmitter {
 
     // Setup abort controller
     const controller = new AbortController();
-    const signal = config?.signal ? 
-      this.combineSignals([controller.signal, config.signal]) : 
+    const signal = config?.signal ?
+      this.combineSignals([controller.signal, config.signal]) :
       controller.signal;
-    
+
     if (endpoint) {
       this.abortControllers.set(endpoint, controller);
     }
@@ -431,18 +431,18 @@ export class REST extends EventEmitter {
       }
 
       const response = await fetch(url, options);
-      
+
       // Record request for rate limiting
       if (this.rateLimiter) {
         this.rateLimiter.recordRequest();
       }
 
       if (this.options.debug) {
-        this.emit('response', { 
-          method, 
-          url, 
-          status: response.status, 
-          statusText: response.statusText 
+        this.emit('response', {
+          method,
+          url,
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
@@ -452,16 +452,16 @@ export class REST extends EventEmitter {
 
       const result = await response.json() as T;
       return result;
-      
+
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
         throw new ApiError('Request aborted', 0, undefined, endpoint, method);
       }
-      
+
       if (error instanceof ApiError) {
         throw error;
       }
-      
+
       throw new ApiError(
         `Network error: ${(error as Error).message}`,
         0,
@@ -488,7 +488,7 @@ export class REST extends EventEmitter {
   ): Promise<never> {
     let errorBody: string;
     let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
-    
+
     try {
       const errorData = await response.json();
       errorBody = JSON.stringify(errorData);
@@ -498,7 +498,7 @@ export class REST extends EventEmitter {
     } catch {
       errorBody = await response.text();
     }
-    
+
     throw new ApiError(errorMessage, response.status, errorBody, endpoint, method);
   }
 
@@ -508,7 +508,7 @@ export class REST extends EventEmitter {
    */
   private buildUrl(endpoint: string, queryParams: Record<string, any> = {}): string {
     const url = new URL(`${this.baseURL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`);
-    
+
     Object.entries(queryParams).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         if (Array.isArray(value)) {
@@ -518,7 +518,7 @@ export class REST extends EventEmitter {
         }
       }
     });
-    
+
     return url.toString();
   }
 
@@ -528,7 +528,7 @@ export class REST extends EventEmitter {
    */
   private combineSignals(signals: AbortSignal[]): AbortSignal {
     const controller = new AbortController();
-    
+
     for (const signal of signals) {
       if (signal.aborted) {
         controller.abort();
@@ -536,7 +536,7 @@ export class REST extends EventEmitter {
       }
       signal.addEventListener('abort', () => controller.abort());
     }
-    
+
     return controller.signal;
   }
 }
