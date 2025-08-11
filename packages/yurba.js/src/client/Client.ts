@@ -20,8 +20,9 @@ import WSM from './WebsocketManager';
 import MessageManager from './MessageManager';
 import CommandManager from './CommandManager';
 import MiddlewareManager from './MiddlewareManager';
+import { error } from 'console';
 
-
+import { YJSError } from './Error';
 
 // interface AppErrorOptions {
 //   code?: number | null;
@@ -306,8 +307,11 @@ class Client extends EventEmitter {
         if (this._user) {
           await this.wsm.connect(this._user as UserModel);
         } else {
-          // Якщо немає користувача, тоді викликаємо init()
-  
+          throw new YJSError("Not initialized", {
+            hint: "Check if you called .init()",
+            code: 2,
+          });
+
         }
       } catch (error) {
         const wsError = new WebSocketError(`Reconnect failed: ${error instanceof Error ? error.message : String(error)}`);

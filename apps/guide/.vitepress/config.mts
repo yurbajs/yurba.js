@@ -105,7 +105,8 @@ export default defineConfig({
   
   srcDir: '.',
   rewrites: {
-    'en/(.*)': '(.*)',
+    'en/:path*': ':path*',
+    'archive/:version/en/:path*': 'archive/:version/:path*'
   },
   
   locales: {
