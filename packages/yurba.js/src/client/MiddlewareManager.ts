@@ -1,23 +1,36 @@
-import { Message, IMiddlewareManager, MiddlewareFunction, MiddlewareConfig } from '@yurbajs/types';
+import {
+  Message,
+  IMiddlewareManager,
+  MiddlewareFunction,
+  MiddlewareConfig,
+} from '@yurbajs/types';
 import Logger from '../utils/Logger';
 
 const logging = new Logger('MiddlewareManager');
 
 export default class MiddlewareManager implements IMiddlewareManager {
-  private middlewares: Map<string, { fn: MiddlewareFunction; config: MiddlewareConfig }> = new Map();
+  private middlewares: Map<
+    string,
+    { fn: MiddlewareFunction; config: MiddlewareConfig }
+  > = new Map();
 
-  use(middleware: MiddlewareFunction, config: Partial<MiddlewareConfig> = {}): void {
+  use(
+    middleware: MiddlewareFunction,
+    config: Partial<MiddlewareConfig> = {}
+  ): void {
     const fullConfig: MiddlewareConfig = {
       name: config.name || `middleware_${Date.now()}`,
-      enabled: config.enabled !== undefined ? config.enabled : true
+      enabled: config.enabled !== undefined ? config.enabled : true,
     };
     if (this.middlewares.has(fullConfig.name)) {
-      throw new Error(`Middleware with name "${fullConfig.name}" already exists`);
+      throw new Error(
+        `Middleware with name "${fullConfig.name}" already exists`
+      );
     }
 
     this.middlewares.set(fullConfig.name, {
       fn: middleware,
-      config: { priority: 0, enabled: true, ...config, name: fullConfig.name }
+      config: { priority: 0, enabled: true, ...config, name: fullConfig.name },
     });
 
     logging.info(`Registered middleware: ${config.name}`);

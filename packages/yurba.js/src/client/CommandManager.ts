@@ -1,6 +1,11 @@
-import { CommandArgsSchema, CommandHandler, Message, ICommandManager } from "@yurbajs/types";
-import Logger, { LogLevel } from "../utils/Logger";
-import { CommandError } from "@yurbajs/types";
+import {
+  CommandArgsSchema,
+  CommandHandler,
+  Message,
+  ICommandManager,
+} from '@yurbajs/types';
+import Logger, { LogLevel } from '../utils/Logger';
+import { CommandError } from '@yurbajs/types';
 
 interface DevConfig {
   debug: boolean;
@@ -9,23 +14,23 @@ interface DevConfig {
 
 let Dev: DevConfig = {
   debug: false,
-  level: LogLevel.DEBUG
+  level: LogLevel.DEBUG,
 };
 
 if (process.env.MODULES === 'yurbajs') {
   try {
     require('dotenv').config();
-    
+
     Dev = {
       debug: Boolean(process.env.DEBUG),
-      level: (process.env.LEVEL as unknown) as LogLevel
+      level: process.env.LEVEL as unknown as LogLevel,
     };
-  } catch {  
+  } catch {
     // no-op
   }
 }
 
-const logging = new Logger("CommandManager", { enabled: Dev.debug });
+const logging = new Logger('CommandManager', { enabled: Dev.debug });
 
 /**
  * Command manager for client
@@ -77,8 +82,8 @@ export default class CommandManager implements ICommandManager {
     handler: CommandHandler,
     description?: string
   ): void {
-    if (!command || typeof command !== "string" || !command.trim()) {
-      throw new Error("Command name is required");
+    if (!command || typeof command !== 'string' || !command.trim()) {
+      throw new Error('Command name is required');
     }
     if (this.commands.has(command)) {
       throw new Error(`Command "${command}" is already registered.`);
@@ -153,10 +158,10 @@ export default class CommandManager implements ICommandManager {
 
     const { Text, Author } = message;
     if (!Text || !Author) {
-      throw new Error("Invalid message: missing Text or Author");
+      throw new Error('Invalid message: missing Text or Author');
     }
 
-    const [commandName, ...args] = Text.slice(1).split(" ");
+    const [commandName, ...args] = Text.slice(1).split(' ');
 
     // Check original command or alias
     let actualCommand = commandName;
@@ -182,7 +187,7 @@ export default class CommandManager implements ICommandManager {
     try {
       const parsedArgs = await this.parseArgs([...args], argsSchema);
       if (!parsedArgs) {
-        throw new Error("Invalid arguments for the command.");
+        throw new Error('Invalid arguments for the command.');
       }
 
       logging.debug(
@@ -195,7 +200,6 @@ export default class CommandManager implements ICommandManager {
       throw error;
     }
   }
-
 
   /**
    * Parses arguments with support for types string, int, user, repost
@@ -216,12 +220,12 @@ export default class CommandManager implements ICommandManager {
         defaultValue: any,
         captureRest = false;
 
-      if (typeof argConfig === "string") {
+      if (typeof argConfig === 'string') {
         type = argConfig;
         defaultValue = null;
       } else if (Array.isArray(argConfig)) {
         type = argConfig[0];
-        if (argConfig.length >= 3 && argConfig[2] === "rest") {
+        if (argConfig.length >= 3 && argConfig[2] === 'rest') {
           captureRest = true;
         }
         if (argConfig.length >= 2) {
@@ -242,7 +246,7 @@ export default class CommandManager implements ICommandManager {
 
       let argValue: string | undefined;
       if (captureRest) {
-        argValue = args.join(" ");
+        argValue = args.join(' ');
         args = [];
       } else {
         argValue = args.shift();
@@ -250,16 +254,22 @@ export default class CommandManager implements ICommandManager {
 
       if (argValue === undefined) {
         if (required) {
-          throw new CommandError(`Missing required argument: ${argName}`, 'parseArgs');
+          throw new CommandError(
+            `Missing required argument: ${argName}`,
+            'parseArgs'
+          );
         } else {
           // If argument is optional, use default value
-          if (type === "user" && defaultValue && this.getUser) {
+          if (type === 'user' && defaultValue && this.getUser) {
             try {
               const user = await this.getUser(defaultValue);
               parsedArgs[argName] = user;
             } catch (error) {
               logging.error(`Default user "${defaultValue}" not found:`, error);
-              throw new CommandError(`Default user "${defaultValue}" not found.`, 'parseArgs');
+              throw new CommandError(
+                `Default user "${defaultValue}" not found.`,
+                'parseArgs'
+              );
             }
           } else {
             parsedArgs[argName] = defaultValue;
@@ -269,30 +279,36 @@ export default class CommandManager implements ICommandManager {
       }
 
       switch (type) {
-        case "string":
+        case 'string':
           parsedArgs[argName] = argValue;
           break;
-        case "int": {
+        case 'int': {
           const intValue = parseInt(argValue, 10);
           if (isNaN(intValue)) {
-            throw new CommandError(`Argument "${argName}" must be an integer.`, 'parseArgs');
+            throw new CommandError(
+              `Argument "${argName}" must be an integer.`,
+              'parseArgs'
+            );
           }
           parsedArgs[argName] = intValue;
           break;
         }
-        case "float": {
+        case 'float': {
           const floatValue = parseFloat(argValue);
           if (isNaN(floatValue)) {
-            throw new CommandError(`Argument "${argName}" must be a number.`, 'parseArgs');
+            throw new CommandError(
+              `Argument "${argName}" must be a number.`,
+              'parseArgs'
+            );
           }
           parsedArgs[argName] = floatValue;
           break;
         }
-        case "boolean": {
+        case 'boolean': {
           const lowerValue = argValue.toLowerCase();
-          if (["true", "yes", "1", "y"].includes(lowerValue)) {
+          if (['true', 'yes', '1', 'y'].includes(lowerValue)) {
             parsedArgs[argName] = true;
-          } else if (["false", "no", "0", "n"].includes(lowerValue)) {
+          } else if (['false', 'no', '0', 'n'].includes(lowerValue)) {
             parsedArgs[argName] = false;
           } else {
             throw new CommandError(
@@ -302,25 +318,38 @@ export default class CommandManager implements ICommandManager {
           }
           break;
         }
-        case "user": {
-          if (!this.getUser) throw new CommandError("getUser function not provided", 'parseArgs');
-          const userTag = argValue.startsWith("@")
+        case 'user': {
+          if (!this.getUser)
+            throw new CommandError(
+              'getUser function not provided',
+              'parseArgs'
+            );
+          const userTag = argValue.startsWith('@')
             ? argValue.slice(1)
             : argValue;
           try {
             const user = await this.getUser(userTag);
             if (!user) {
-              throw new CommandError(`User "${argValue}" not found.`, 'parseArgs');
+              throw new CommandError(
+                `User "${argValue}" not found.`,
+                'parseArgs'
+              );
             }
             parsedArgs[argName] = user;
           } catch (error) {
             logging.error(`Error getting user "${argValue}":`, error);
-            throw new CommandError(`User "${argValue}" not found.`, 'parseArgs');
+            throw new CommandError(
+              `User "${argValue}" not found.`,
+              'parseArgs'
+            );
           }
           break;
         }
-        case "repost":
-          throw new CommandError("Repost is not supported in the current Message type.", 'parseArgs');
+        case 'repost':
+          throw new CommandError(
+            'Repost is not supported in the current Message type.',
+            'parseArgs'
+          );
         default:
           throw new CommandError(`Unknown argument type: ${type}`, 'parseArgs');
       }
