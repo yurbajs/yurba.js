@@ -1,103 +1,97 @@
-import { REST } from '../BaseClient';
-import { BaseResource } from './Base';
-import { Dialog, DialogMember, CreateDialogPayload, Dtype } from '@yurbajs/types';
+import { REST } from '../index';
+import { Dialog, DialogMember, CreateDialogPayload, DialogCreateType, CreateDialogResponse, CreatePrivateDialogResponse } from '@yurbajs/types';
 
-/**
- * Ресурс для роботи з діалогами
- */
-export class DialogResource extends BaseResource {
-  constructor(client: REST) {
-    super(client);
-  }
-  
+export class DialogResource {
   /**
-   * Отримати всі діалоги
+   * @internal
+   */
+  constructor(private client: REST) {}
+
+  /**
+   * Gets a dialog by identifier
+   * @param id - Dialog identifier
+   * @param code - Invitation code (optional)
    * @since 0.1.7
-   * @category Dialogs
-   * @returns {Promise<Dialog[]} Список діалогів
+   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @throws {Error} If dialog not found
    */
-  get = {
-    all: async (): Promise<Dialog[]> => {
-      return this.request<Dialog[]>('GET', '/dialogs');
-    }
-  };
-  
-  /**
-   * Створити новий діалог
-   * @param {string} name - Назва діалогу (макс. 330 символів)
-   * @param {Dtype} type - Тип діалогу (тільки Channel або Group)
-   * @param {Object} [options] - Додаткові опції
-   * @param {string} [options.description] - Опис діалогу (макс. 330 символів)
-   * @returns {Promise<Dialog>} Створений діалог
-   * @throws {Error} Може кинути: auth_failed, invalid_type, upload_error або інші
-   */
-  create = async (
-    name: string,
-    type: Dtype,
-    options?: { description?: string }
-  ): Promise<Dialog> => {
-    this.validateRequired({ name, type }, ['name', 'type']);
-    this.validateStringLength(name, 330, 'Name');
-    if (options?.description) {
-      this.validateStringLength(options.description, 330, 'Description');
-    }
-    this.validateConstraints(type, { enum: Object.values(Dtype) }, 'type');
+  async get(id: number, code: string = ''): Promise<Dialog[]> {
+    return this.client.get<Dialog[]>(`/dialogs/${id}?code=${code}`);
+  }
 
+  /**
+   * Gets all dialogs
+   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @since 0.1.7
+   * @throws {Error} If dialogs cannot be retrieved
+   */
+  async getAll(): Promise<Dialog[]> {
+    return this.client.get<Dialog[]>('/dialogs');
+  }
+
+  /**
+   * Creates a new dialog
+   * @param name - Dialog name
+   * @param type - {@link DialogCreateType} Dialog creation type
+   * @param options - Optional dialog settings
+   * @param options.description - Optional dialog description
+   * @returns {Promise<CreateDialogResponse>} {@link CreateDialogResponse} Created dialog response
+   * @since 0.1.7
+   * @throws {Error} If name or description is invalid
+   */
+  async create(name: string, type: DialogCreateType, options?: { description?: string }): Promise<CreateDialogResponse> {
+    if (!name || name.length > 330) throw new Error('Invalid name');
+    if (options?.description && options.description.length > 330) throw new Error('Invalid description');
     const payload: CreateDialogPayload = { name, type, ...options };
+    return this.client.post<CreateDialogResponse>('/dialogs', payload);
+  }
 
-    try {
-      return await this.request<Dialog>('POST', '/dialogs', payload);
-    } catch (err: any) {
-      this.handleApiError(err, '/dialogs');
-    }
-  };
-
-
-  
   /**
-   * Методи для роботи з учасниками діалогу
+   * Creates a private dialog with a user
+   * @param userId - User identifier to create private dialog with
+   * @returns {Promise<Dialog>} {@link Dialog} Created private dialog
+   * @since 0.1.7
+   * @throws {Error} If user ID is invalid or user not found
    */
-  members = {
-    /**
-     * Отримати учасників діалогу
-     * @param {number} dialogId - ID діалогу (≥1)
-     * @param {number} [page=0] - Номер сторінки для пагінації (≥0)
-     * @returns {Promise<DialogMember[]>} Список учасників
-     * @throws {Error} Може кинути: not_found, auth_failed, invalid_page або інші
-     */
-    get: async (dialogId: number, page: number = 0): Promise<DialogMember[]> => {
-      this.validateDialogId(dialogId);
-      this.validatePage(page);
-
-      try {
-        return await this.request<DialogMember[]>('GET', `/dialogs/${dialogId}/members`, { page });
-      } catch (err: any) {
-        this.handleApiError(err, `/dialogs/${dialogId}/members`);
-      }
-    },
-    
-    /**
-     * Додати користувача до діалогу
-     * @param dialogId - ID діалогу
-     * @param userId - ID користувача
-     * @returns Результат операції
-     */
-    add: async (dialogId: number, userId: number): Promise<any> => {
-      this.validateDialogId(dialogId);
-      this.validateRequired({ userId }, ['userId']);
-      return this.request<any>('POST', `/dialogs/${dialogId}/join/${userId}`, {});
-    },
-    
-    /**
-     * Видалити користувача з діалогу
-     * @param dialogId - ID діалогу
-     * @param userId - ID користувача
-     * @returns Результат операції
-     */
-    remove: async (dialogId: number, userId: number): Promise<any> => {
-      this.validateDialogId(dialogId);
-      this.validateRequired({ userId }, ['userId']);
-      return this.request<any>('DELETE', `/dialogs/${dialogId}/leave/${userId}`);
+  async createPrivate(userId: number): Promise<Dialog> {
+    if (userId < 1) throw new Error('Invalid user ID');
+    if (await this.client.get(`/user/${userId}`)){
+      return this.client.post<CreatePrivateDialogResponse>('/dialogs/private/', userId);
     }
-  };
+    else throw new Error('Invalid user ID');
+  }
+
+
+  /**
+   * Get dialog members
+   * @param dialogId - Dialog identifier
+   * @param page - Page number (default 0)
+   * @since 0.1.7
+   */
+  async getMembers(dialogId: number, page = 0): Promise<DialogMember[]> {
+    if (dialogId < 1 || page < 0) throw new Error('Invalid parameters');
+    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, { page });
+  }
+
+  /**
+   * Add user to dialog
+   * @param dialogId - Dialog identifier
+   * @param userId - User identifier
+   * @since 0.1.7
+   */
+  async addMember(dialogId: number, userId: number): Promise<any> {
+    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
+    return this.client.post(`/dialogs/${dialogId}/join/${userId}`, {});
+  }
+
+  /**
+   * Remove user from dialog
+   * @param dialogId - Dialog identifier
+   * @param userId - User identifier
+   * @since 0.1.7
+   */
+  async removeMember(dialogId: number, userId: number): Promise<any> {
+    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
+    return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
+  }
 }
