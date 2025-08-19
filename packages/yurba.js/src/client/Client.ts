@@ -52,6 +52,36 @@ import { YJSError } from './Error';
 //   }
 // }
 
+// interface AppErrorOptions {
+//   code?: number | null;
+// }
+
+// class AppError extends Error {
+//   public code: number | null;
+//   public timestamp: Date;
+
+//   constructor(message: string, options: AppErrorOptions = {}) {
+//     super(message);
+//     this.name = this.constructor.name;
+//     this.code = options.code ?? null;
+//     this.timestamp = new Date();
+//     Error.captureStackTrace?.(this, this.constructor);
+//   }
+// }
+
+// class WebsocketError extends AppError {
+//   constructor(message: string, options?: { code?: number }) {
+//     super(message, { code: options?.code });
+//     this.logError();
+//   }
+
+//   private logError(): void {
+//     console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
+//     // sendToSentry(this);
+//   }
+// }
+
+
 interface DevConfig {
   debug: boolean;
   level?: LogLevel;
@@ -296,6 +326,8 @@ class Client extends EventEmitter {
     }
   }
 
+
+
   /**
    * Handles WebSocket reconnection
    * @private
@@ -321,6 +353,7 @@ class Client extends EventEmitter {
             hint: 'Check if you called .init()',
             code: 2,
           });
+          // Якщо немає користувача, тоді викликаємо init()
         }
       } catch (error) {
         const wsError = new WebSocketError(

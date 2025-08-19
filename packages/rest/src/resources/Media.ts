@@ -35,6 +35,7 @@ export class MediaResource {
   }
 
   /**
+
    * Add a new photo
    * @param photo Binary photo data
    * @param caption Photo caption
