@@ -1,15 +1,6 @@
-import { UserResource } from './User';
-import { MessageResource } from './Message'; 
-import { DialogResource } from './Dialog';
-import { PostResource } from './Post';
-import { MediaResource } from './Media';
-import { AuthResource } from './Account';
-
-export {
-  UserResource,
-  MessageResource,
-  DialogResource,
-  PostResource,
-  MediaResource,
-  AuthResource
-};
+export { UserResource } from './User';
+export { MessageResource } from './Message'; 
+export { DialogResource } from './Dialog';
+export { PostResource } from './Post';
+export { MediaResource } from './Media';
+export { AuthResource } from './Account';
