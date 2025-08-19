@@ -49,9 +49,9 @@ The main package is [`Yurba.js`](https://github.com/yurbajs/yurba.js/tree/main/p
 
 ## Packages
 - `yurba.js` ([source][source]) - The powerful library for creating bots and integrating with the Yurba API. [![NPM Version](https://img.shields.io/npm/v/yurba.js?labelColor=%23363a4f)](https://www.npmjs.com/package/yurba.js)
-- `@yurbajs/rest` ([source][source]) - REST client for Yurba API. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/rest?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/rest)
-- `@yurbajs/ws` ([source][source]) - WebSocket client for yurba.one. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/ws?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/ws)
-- `@yurbajs/types` ([source][source]) - Types for yurba.js packages and yurba.one. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/types?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/types)
+- `@yurbajs/rest` ([source][rest-source]) - REST client for Yurba API. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/rest?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/rest)
+- `@yurbajs/ws` ([source][ws-source]) - WebSocket client for yurba.one. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/ws?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/ws)
+- `@yurbajs/types` ([source][types-source]) - Types for yurba.js packages and yurba.one. [![NPM Version](https://img.shields.io/npm/v/@yurbajs/types?labelColor=%23363a4f)](https://www.npmjs.com/package/@yurbajs/types)
 
 
 ## Links
@@ -81,6 +81,9 @@ Need assistance? Here's where to find help:
 
 [github-tags]: https://github.com/yurbajs/yurba.js/tags
 [source]: https://github.com/yurbajs/yurba.js/tree/main/packages/yurba.js
+[rest-source]: https://github.com/yurbajs/yurba.js/tree/main/packages/rest
+[ws-source]: https://github.com/yurbajs/yurba.js/tree/main/packages/ws
+[types-source]: https://github.com/yurbajs/yurba.js/tree/main/packages/types
 [website]: https://yurba.js.org
 [website-source]: https://github.com/yurbajs/yurba.js/tree/main/apps/guide
 [documentation]: https://yurbajs.pages.dev/

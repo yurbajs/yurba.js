@@ -32,7 +32,7 @@ bun add @yurbajs/ws
 ```js
 import { ReconnectingWebSocket } from '@yurbajs/ws';
 
-const ws = new ReconnectingWebSocket('wss://api.yurba.one/ws?token=TOKEN');
+const ws = new ReconnectingWebSocket(`wss://api.yurba.one/ws?token=${TOKEN}`);
 
 ws.on('message', (message) => {
   console.log('Received message:', message);
