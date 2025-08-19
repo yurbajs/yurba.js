@@ -181,11 +181,14 @@ export interface DialogMember {
 export interface CreateDialogPayload {
     name:        string;
     description?: string;
-    type:        Dtype;
+    type:        DialogCreateType;
 }
 
 export type CreateDialogResponse = DialogInfo;
 
+export type CreatePrivateDialogResponse = Dialog;
+
+export type DialogCreateType = 'group' | 'channel';
 
 // ISSUES:
 export enum DialogType {
@@ -193,12 +196,6 @@ export enum DialogType {
   Group = 'group',
   Private = 'private',
 }
-
-export enum Dtype {
-  Channel = 2,
-  Group = 1
-}
-
 export enum DialogVerify {
     Default = "Default",
     None = "None",
