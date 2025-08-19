@@ -1,6 +1,6 @@
 {
   "name": "@yurbajs/types",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Types for yurba.js packages and yurba.one",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

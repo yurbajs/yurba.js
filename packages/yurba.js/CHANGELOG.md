@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.11](https://github.com/yurbajs/yurba.js/compare/yurba.js@0.1.10...yurba.js@0.1.11) (2025-08-19)
+
+
+### Bug Fixes
+
+* **yurba.js:** remove old test ([3aea6b9](https://github.com/yurbajs/yurba.js/commit/3aea6b99430718c60bc7c3ac00bf779f6adfc399))
+
+
+
+
+
 ## [0.1.10](https://github.com/yurbajs/yurba.js/compare/yurba.js@0.1.9...yurba.js@0.1.10) (2025-07-20)
 
 
