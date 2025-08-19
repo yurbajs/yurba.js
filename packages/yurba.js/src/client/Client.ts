@@ -20,7 +20,6 @@ import WSM from './WebsocketManager';
 import MessageManager from './MessageManager';
 import CommandManager from './CommandManager';
 import MiddlewareManager from './MiddlewareManager';
-import { error } from 'console';
 
 import { YJSError } from './Error';
 
