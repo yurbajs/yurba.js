@@ -1,0 +1,30 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "docs",
+    "yurbajs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://yurbajs/yurba.js"
+  },
+  "license": "Apache-2.0",
+  "author": "RastGame",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "predocs": "typedoc --options typedoc.json",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs": "pnpm run predocs && pnpm run docs:build",
+    "docs:preview": "vitepress preview apps/guide"
+  },
+  "devDependencies": {
+    "typedoc": "^0.28.7",
+    "typedoc-plugin-markdown": "^4.8.1",
+    "typedoc-vitepress-theme": "^1.1.2",
+    "vitepress": "^1.0.0"
+  }
+}

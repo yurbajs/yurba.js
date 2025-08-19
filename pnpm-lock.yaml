@@ -65,6 +65,9 @@ importers:
       typedoc:
         specifier: ^0.28.7
         version: 0.28.7(typescript@5.8.3)
+      typedoc-plugin-md:
+        specifier: ^0.7.1
+        version: 0.7.1(typedoc@0.28.7(typescript@5.8.3))
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -77,6 +80,18 @@ importers:
       ws:
         specifier: ^8.18.3
         version: 8.18.3
+
+  apps/docs:
+    devDependencies:
+      typedoc:
+        specifier: ^0.28.7
+        version: 0.28.7(typescript@5.8.3)
+      typedoc-plugin-markdown:
+        specifier: ^4.8.1
+        version: 4.8.1(typedoc@0.28.7(typescript@5.8.3))
+      typedoc-vitepress-theme:
+        specifier: ^1.1.2
+        version: 1.1.2(typedoc-plugin-markdown@4.8.1(typedoc@0.28.7(typescript@5.8.3)))
 
   packages/events:
     devDependencies:
@@ -5903,6 +5918,25 @@ packages:
 
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  typedoc-plugin-markdown@4.8.1:
+    resolution: {integrity: sha512-ug7fc4j0SiJxSwBGLncpSo8tLvrT9VONvPUQqQDTKPxCoFQBADLli832RGPtj6sfSVJebNSrHZQRUdEryYH/7g==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      typedoc: 0.28.x
+
+  typedoc-plugin-md@0.7.1:
+    resolution: {integrity: sha512-cWwtkG8fda9pj7R69aEuJ3RCFLLvGIN1OYJ3s4tL5zpq6cqAaE9lhKVNhhpOvxefRfgY5+RvDurh1UZ5AOElZA==}
+    peerDependencies:
+      typedoc: ^0.28.9
+    peerDependenciesMeta:
+      typedoc:
+        optional: true
+
+  typedoc-vitepress-theme@1.1.2:
+    resolution: {integrity: sha512-hQvCZRr5uKDqY1bRuY1+eNTNn6d4TE4OP5pnw65Y7WGgajkJW9X1/lVJK2UJpcwCmwkdjw1QIO49H9JQlxWhhw==}
+    peerDependencies:
+      typedoc-plugin-markdown: '>=4.4.0'
 
   typedoc@0.28.7:
     resolution: {integrity: sha512-lpz0Oxl6aidFkmS90VQDQjk/Qf2iw0IUvFqirdONBdj7jPSN9mGXhy66BcGNDxx5ZMyKKiBVAREvPEzT6Uxipw==}
@@ -13443,6 +13477,20 @@ snapshots:
       reflect.getprototypeof: 1.0.10
 
   typedarray@0.0.6: {}
+
+  typedoc-plugin-markdown@4.8.1(typedoc@0.28.7(typescript@5.8.3)):
+    dependencies:
+      typedoc: 0.28.7(typescript@5.8.3)
+
+  typedoc-plugin-md@0.7.1(typedoc@0.28.7(typescript@5.8.3)):
+    dependencies:
+      typedoc-plugin-markdown: 4.8.1(typedoc@0.28.7(typescript@5.8.3))
+    optionalDependencies:
+      typedoc: 0.28.7(typescript@5.8.3)
+
+  typedoc-vitepress-theme@1.1.2(typedoc-plugin-markdown@4.8.1(typedoc@0.28.7(typescript@5.8.3))):
+    dependencies:
+      typedoc-plugin-markdown: 4.8.1(typedoc@0.28.7(typescript@5.8.3))
 
   typedoc@0.28.7(typescript@5.8.3):
     dependencies:

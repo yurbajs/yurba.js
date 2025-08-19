@@ -2,19 +2,16 @@
   "name": "Yurba.js Documentation",
   "entryPointStrategy": "packages",
   "entryPoints": [
-    "packages/yurba.js",
-    "packages/rest",
-    "packages/ws",
-    "packages/types"
+    "../../packages/*"
   ],
-  "out": "apps/docs/dist",
+  "out": "./api",
   "theme": "default",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
   "hideGenerator": true,
-  "readme": "README.md",
+  "readme": "../../README.md",
   "categorizeByGroup": true,
   "sort": ["alphabetical"],
   "gitRevision": "main",
@@ -28,6 +25,15 @@
     "notDocumented": false
   },
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "hidePageHeader": true,
+  "entryFileName": "index.md",
+  "docsRoot": "./",
+  "sidebar": {
+    "autoConfiguration": true,
+    "format": "vitepress",
+    "pretty": true,
+    "collapsed": false
+  },
   "skipErrorChecking": true,
   "navigationLinks": {
     "Guide": "https://yurba.js.org",
@@ -41,8 +47,6 @@
     "external": true
   },
   "searchInComments": true,
-  "customCss": "apps/docs/theme/assets/style.css",
-  "cname": "https://yurbajs.pages.dev/",
   "disableSources": false,
   "lightHighlightTheme": "github-light",
   "darkHighlightTheme": "github-dark"
