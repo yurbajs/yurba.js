@@ -8,7 +8,7 @@ import {
   BaseOkay,
   DeletePlaylistResponse,
   EditPlaylistResponse,
-  DeleteTrackResponse
+  DeleteTrackResponse,
 } from '@yurbajs/types';
 
 /**
@@ -35,20 +35,23 @@ export class MediaResource {
   }
 
   /**
-
    * Add a new photo
    * @param photo Binary photo data
    * @param caption Photo caption
    * @param mode Photo visibility mode
    * @returns Photo data
    */
-  async addPhoto(photo: Blob, caption: string, mode: 'public' | 'private' = 'public'): Promise<Photo> {
+  async addPhoto(
+    photo: Blob,
+    caption: string = '',
+    mode: 'public' | 'private' = 'public'
+  ): Promise<Photo> {
     const formData = new FormData();
     formData.append('photo', photo);
     formData.append('caption', caption);
     formData.append('mode', mode);
-    
-    return this.client.post<Photo>('/photos', formData);
+
+    return this.client.post<Photo>('/photos/upload', formData);
   }
 
   /**
@@ -77,7 +80,12 @@ export class MediaResource {
    * @param cover Cover ID
    * @returns Created playlist
    */
-  async createPlaylist(name: string, release: string, description: string, cover: number): Promise<Playlist> {
+  async createPlaylist(
+    name: string,
+    release: string,
+    description: string,
+    cover: number
+  ): Promise<Playlist> {
     const playlistData: PlaylistPayload = { name, release, description, cover };
     return this.client.post<Playlist>('/musebase/playlists', playlistData);
   }
@@ -88,7 +96,9 @@ export class MediaResource {
    * @returns Deletion result
    */
   async deletePlaylist(playlistId: number): Promise<DeletePlaylistResponse> {
-    return this.client.delete<DeletePlaylistResponse>(`/musebase/playlists/${playlistId}`);
+    return this.client.delete<DeletePlaylistResponse>(
+      `/musebase/playlists/${playlistId}`
+    );
   }
 
   /**
@@ -108,7 +118,10 @@ export class MediaResource {
     cover: number
   ): Promise<EditPlaylistResponse> {
     const playlistData: PlaylistPayload = { name, release, description, cover };
-    return this.client.patch<EditPlaylistResponse>(`/musebase/playlists/${playlistId}`, playlistData);
+    return this.client.patch<EditPlaylistResponse>(
+      `/musebase/playlists/${playlistId}`,
+      playlistData
+    );
   }
 
   /**
@@ -117,8 +130,14 @@ export class MediaResource {
    * @param trackId Track ID
    * @returns Addition result
    */
-  async addTrackToPlaylist(playlistId: number, trackId: number): Promise<BaseOkay> {
-    return this.client.post<BaseOkay>(`/musebase/playlists/${playlistId}/tracks/${trackId}`, {});
+  async addTrackToPlaylist(
+    playlistId: number,
+    trackId: number
+  ): Promise<BaseOkay> {
+    return this.client.post<BaseOkay>(
+      `/musebase/playlists/${playlistId}/tracks/${trackId}`,
+      {}
+    );
   }
 
   /**
@@ -127,8 +146,13 @@ export class MediaResource {
    * @param trackId Track ID
    * @returns Removal result
    */
-  async removeTrackFromPlaylist(playlistId: number, trackId: number): Promise<DeleteTrackResponse> {
-    return this.client.delete<DeleteTrackResponse>(`/musebase/playlists/${playlistId}/tracks/${trackId}`);
+  async removeTrackFromPlaylist(
+    playlistId: number,
+    trackId: number
+  ): Promise<DeleteTrackResponse> {
+    return this.client.delete<DeleteTrackResponse>(
+      `/musebase/playlists/${playlistId}/tracks/${trackId}`
+    );
   }
 
   /**
