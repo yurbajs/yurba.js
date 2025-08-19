@@ -35,6 +35,23 @@ export class MediaResource {
   }
 
   /**
+
+   * Add a new photo
+   * @param photo Binary photo data
+   * @param caption Photo caption
+   * @param mode Photo visibility mode
+   * @returns Photo data
+   */
+  async addPhoto(photo: Blob, caption: string, mode: 'public' | 'private' = 'public'): Promise<Photo> {
+    const formData = new FormData();
+    formData.append('photo', photo);
+    formData.append('caption', caption);
+    formData.append('mode', mode);
+    
+    return this.client.post<Photo>('/photos', formData);
+  }
+
+  /**
    * Delete photo
    * @param photoId Photo ID
    * @returns Deletion result

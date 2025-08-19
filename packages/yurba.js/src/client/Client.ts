@@ -2,18 +2,18 @@ import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
 import Logger, { LogLevel } from '../utils/Logger';
-import { 
-  CommandArgsSchema, 
-  CommandHandler, 
-  Message, 
-  YurbaError, 
-  WebSocketError, 
-  ApiRequestError, 
-  ClientOptions, 
-  MiddlewareFunction, 
-  MiddlewareConfig, 
-  UserModel, 
-  PhotoModel 
+import {
+  CommandArgsSchema,
+  CommandHandler,
+  Message,
+  YurbaError,
+  WebSocketError,
+  ApiRequestError,
+  ClientOptions,
+  MiddlewareFunction,
+  MiddlewareConfig,
+  UserModel,
+  PhotoModel,
 } from '@yurbajs/types';
 
 import WSM from './WebsocketManager';
@@ -21,7 +21,36 @@ import MessageManager from './MessageManager';
 import CommandManager from './CommandManager';
 import MiddlewareManager from './MiddlewareManager';
 
+import { YJSError } from './Error';
 
+// interface AppErrorOptions {
+//   code?: number | null;
+// }
+
+// class AppError extends Error {
+//   public code: number | null;
+//   public timestamp: Date;
+
+//   constructor(message: string, options: AppErrorOptions = {}) {
+//     super(message);
+//     this.name = this.constructor.name;
+//     this.code = options.code ?? null;
+//     this.timestamp = new Date();
+//     Error.captureStackTrace?.(this, this.constructor);
+//   }
+// }
+
+// class WebsocketError extends AppError {
+//   constructor(message: string, options?: { code?: number }) {
+//     super(message, { code: options?.code });
+//     this.logError();
+//   }
+
+//   private logError(): void {
+//     console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
+//     // sendToSentry(this);
+//   }
+// }
 
 // interface AppErrorOptions {
 //   code?: number | null;
@@ -60,22 +89,24 @@ interface DevConfig {
 
 let Dev: DevConfig = {
   debug: false,
-  level: LogLevel.DEBUG
+  level: LogLevel.DEBUG,
 };
 
 if (process.env.MODULES === 'yurbajs') {
   try {
     require('dotenv').config();
-    
+
     Dev = {
       debug: Boolean(process.env.DEBUG),
-      level: (process.env.LEVEL as unknown) as LogLevel
+      level: process.env.LEVEL as unknown as LogLevel,
     };
-  } catch {  
+  } catch {
     // no-op
   }
 }
-const logging = new Logger('Client', { level: (Dev.level as unknown) as LogLevel });
+const logging = new Logger('Client', {
+  level: Dev.level as unknown as LogLevel,
+});
 
 const log = (...args: unknown[]): void => {
   if (Dev.debug) {
@@ -89,28 +120,28 @@ const erlog = (...args: unknown[]): void => {
 
 /**
  * Main class for working with Yurba API
- * 
+ *
  * The Client class is the main entry point for interacting with the Yurba.one platform.
  * It provides methods for sending messages, registering commands, handling events,
  * and managing bot functionality.
- * 
+ *
  * @example Basic usage
  * ```typescript
  * import { Client } from 'yurba.js';
- * 
+ *
  * const client = new Client('your-token-here');
- * 
+ *
  * client.registerCommand('hello', { name: 'string' }, (message, args) => {
  *   message.reply(`Hello, ${args.name}!`);
  * });
- * 
+ *
  * client.on('ready', () => {
  *   console.log('Bot is ready!');
  * });
- * 
+ *
  * client.init();
  * ```
- * 
+ *
  * @example With options
  * ```typescript
  * const client = new Client('token', {
@@ -118,7 +149,7 @@ const erlog = (...args: unknown[]): void => {
  *   maxReconnectAttempts: 10
  * });
  * ```
- * 
+ *
  * @public
  * @extends EventEmitter
  * @category Client
@@ -139,14 +170,14 @@ class Client extends EventEmitter {
 
   /**
    * Creates a new Yurba client
-   * 
+   *
    * @param token - Authorization token from Yurba.one (must start with 'y.' and be at least 34 characters)
    * @param options - Client configuration options
    * @param options.prefix - Command prefix (default: '/')
    * @param options.maxReconnectAttempts - Maximum reconnection attempts (default: 5)
-   * 
+   *
    * @throws {YurbaError} When token format is invalid
-   * 
+   *
    * @example
    * ```typescript
    * const client = new Client('y.your-token-here', {
@@ -201,9 +232,11 @@ class Client extends EventEmitter {
     if (!token || typeof token !== 'string') {
       throw new YurbaError('Token must be a non-empty string');
     }
-    
+
     if (!token.startsWith('y.') || token.length < 34) {
-      throw new YurbaError('Invalid Yurba token format. Token should start with "y." and be at least 34 characters long');
+      throw new YurbaError(
+        'Invalid Yurba token format. Token should start with "y." and be at least 34 characters long'
+      );
     }
   }
 
@@ -220,26 +253,30 @@ class Client extends EventEmitter {
    * @param command Command name
    * @param argsSchema Command arguments schema
    * @param handler Command handler
-   * 
+   *
    * @example
    * client.registerCommand('hello', { name: 'string' }, (message, args) => {
    *   console.log(`Hello, ${args.name}!`);
    * });
-   * 
+   *
    * @example
    * client.registerCommand('add', { a: 'int', b: 'int' }, (message, args) => {
    *   const sum = args.a + args.b;
    *   message.reply(`The sum is ${sum}`);
    * });
    */
-  registerCommand(command: string, argsSchema: CommandArgsSchema, handler: CommandHandler): void {
+  registerCommand(
+    command: string,
+    argsSchema: CommandArgsSchema,
+    handler: CommandHandler
+  ): void {
     this.commandManager.registerCommand(command, argsSchema, handler);
   }
 
   /**
    * Returns list of registered commands
    * @returns {string[]} Array of command names
-   * 
+   *
    * @example
    * const commands = client.getCommands();
    * console.log('Registered commands:', commands);
@@ -255,7 +292,7 @@ class Client extends EventEmitter {
    */
   async init(): Promise<void> {
     this.checkToken();
-    
+
     try {
       const user = await this.api.users.getMe();
       this._user = user; // Store user data
@@ -267,18 +304,22 @@ class Client extends EventEmitter {
         this.reconnectAttempts = 0;
         this.emit('ready');
       });
-      
+
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: Message) => this.handleMessage(message));
+        this.wsm.on('message', (message: Message) =>
+          this.handleMessage(message)
+        );
         this.wsmMessageSubscribed = true;
       }
-      
+
       await this.wsm.connect(user as UserModel);
     } catch (error) {
       erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
-        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to initialize client: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
         undefined,
         '/get_me'
       );
@@ -299,18 +340,27 @@ class Client extends EventEmitter {
     }
 
     this.reconnectAttempts++;
-    log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-    
+    log(
+      `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`
+    );
+
     setTimeout(async () => {
       try {
         if (this._user) {
           await this.wsm.connect(this._user as UserModel);
         } else {
+          throw new YJSError('Not initialized', {
+            hint: 'Check if you called .init()',
+            code: 2,
+          });
           // Якщо немає користувача, тоді викликаємо init()
-  
         }
       } catch (error) {
-        const wsError = new WebSocketError(`Reconnect failed: ${error instanceof Error ? error.message : String(error)}`);
+        const wsError = new WebSocketError(
+          `Reconnect failed: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
         erlog('Reconnect failed:', wsError);
         this.emit('reconnectError', wsError);
       }
@@ -324,7 +374,10 @@ class Client extends EventEmitter {
    */
   private async handleCommandMessage(msg: Message): Promise<void> {
     try {
-      await this.commandManager.handleCommand(msg, this.messageManager.enhanceMessage.bind(this.messageManager));
+      await this.commandManager.handleCommand(
+        msg,
+        this.messageManager.enhanceMessage.bind(this.messageManager)
+      );
     } catch (err) {
       this.emit('commandError', { error: err, message: msg });
       if (err instanceof Error && err.message?.includes('not found')) {
@@ -343,7 +396,7 @@ class Client extends EventEmitter {
   private async handleMessage(message: Message): Promise<void> {
     try {
       // Execute all middleware
-      await this.middlewareManager.execute(message).catch(err => {
+      await this.middlewareManager.execute(message).catch((err) => {
         erlog('Middleware error:', err);
         this.emit('middlewareError', { error: err, message });
       });
@@ -354,7 +407,11 @@ class Client extends EventEmitter {
       this.messageManager.enhanceMessage(msg);
 
       // Handle commands
-      if (msg.Type === 'message' && msg.Text && msg.Text.startsWith(this.prefix)) {
+      if (
+        msg.Type === 'message' &&
+        msg.Text &&
+        msg.Text.startsWith(this.prefix)
+      ) {
         await this.handleCommandMessage(msg);
       }
 
@@ -436,7 +493,7 @@ class Client extends EventEmitter {
 
       const listener = (...args: any[]) => {
         try {
-          if (check(...args as T)) {
+          if (check(...(args as T))) {
             cleanup();
             if (multiple) {
               resolve(args);
@@ -537,7 +594,10 @@ class Client extends EventEmitter {
       await this.api.messages.delete(ID);
       return true;
     } catch (err) {
-      erlog('Error deleting message:', err instanceof Error ? err.message : err);
+      erlog(
+        'Error deleting message:',
+        err instanceof Error ? err.message : err
+      );
       return false;
     }
   }
@@ -607,7 +667,10 @@ class Client extends EventEmitter {
    * @param listener Callback function to remove
    * @returns Client instance
    */
-  removeListener(event: string | symbol, listener: (...args: any[]) => void): this {
+  removeListener(
+    event: string | symbol,
+    listener: (...args: any[]) => void
+  ): this {
     return super.removeListener(event, listener);
   }
 

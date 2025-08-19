@@ -1,9 +1,7 @@
-import { default as ReconnectingWebSocket } from "@yurbajs/ws";
-import { EventEmitter } from "events";
-import Logger, { LogLevel } from "../utils/Logger";
-import { 
-  IWebSocketManager
-} from "@yurbajs/types";
+import { default as ReconnectingWebSocket } from '@yurbajs/ws';
+import { EventEmitter } from 'events';
+import Logger, { LogLevel } from '../utils/Logger';
+import { IWebSocketManager } from '@yurbajs/types';
 
 // Локальні типи для WebSocket subscribe/unsubscribe
 interface WebSocketSubscribeData {
@@ -17,21 +15,22 @@ interface WebSocketUnsubscribeData {
   thing_id: number;
 }
 
-let logging = new Logger("WSM", { enabled: false });
+let logging = new Logger('WSM', { enabled: false });
 
 if (process.env.MODULES === 'WSM') {
   try {
     require('dotenv').config();
-    
+
     if (process.env.Debug) {
-      logging = new Logger("WSM", { enabled: true, level: (process.env.Level as unknown) as LogLevel });
+      logging = new Logger('WSM', {
+        enabled: true,
+        level: process.env.Level as unknown as LogLevel,
+      });
     }
   } catch {
     // no-op
   }
 }
-
-
 
 /**
  * WebSocket connection manager
@@ -67,20 +66,20 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       }
     );
 
-    this.ws.on("open", () => {
-      logging.info("WebSocket connection opened.");
+    this.ws.on('open', () => {
+      logging.info('WebSocket connection opened.');
 
       // Restore subscriptions
       this.restoreSubscriptions();
 
       // Subscribe to bot dialog
-      this.subscribeToEvents("dialog", botData.ID);
+      this.subscribeToEvents('dialog', botData.ID);
 
-      this.emit("ready"); // Emit "ready" event for Client
+      this.emit('ready'); // Emit "ready" event for Client
     });
 
-    this.ws.on("message", (data: string) => {
-      logging.debug("WebSocket received a message:", data);
+    this.ws.on('message', (data: string) => {
+      logging.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString());
         // Якщо є вкладене поле Message, використовуємо тільки його, але додаємо Type з raw
@@ -90,24 +89,24 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         } else {
           message = raw;
         }
-        this.emit("message", message);
+        this.emit('message', message);
       } catch (err) {
-        logging.error("Failed to parse WebSocket message:", err);
+        logging.error('Failed to parse WebSocket message:', err);
         this.emit(
-          "error",
+          'error',
           new Error(`Failed to parse WebSocket message: ${err}`)
         );
       }
     });
 
-    this.ws.on("close", (code) => {
+    this.ws.on('close', (code) => {
       logging.warn(`WebSocket connection closed with code ${code}.`);
-      this.emit("close", code); // Emit "close" event for Client
+      this.emit('close', code); // Emit "close" event for Client
     });
 
-    this.ws.on("error", (err: Error) => {
-      logging.error("WebSocket error:", err);
-      this.emit("error", err); // Emit "error" event for Client
+    this.ws.on('error', (err: Error) => {
+      logging.error('WebSocket error:', err);
+      this.emit('error', err); // Emit "error" event for Client
     });
 
     await this.waitForWebSocketOpen();
@@ -120,7 +119,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   public subscribeToEvents(category: string, thing_id: number): void {
     const subscribeData: WebSocketSubscribeData = {
-      command: "subscribe",
+      command: 'subscribe',
       category,
       thing_id,
     };
@@ -147,7 +146,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   public unsubscribeFromEvents(category: string, thing_id: number): void {
     const unsubscribeData: WebSocketUnsubscribeData = {
-      command: "unsubscribe",
+      command: 'unsubscribe',
       category,
       thing_id,
     };
@@ -178,11 +177,11 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @private
    */
   private restoreSubscriptions(): void {
-    logging.info("Restoring subscriptions...");
+    logging.info('Restoring subscriptions...');
     this.subscriptions.forEach((ids, category) => {
       ids.forEach((id) => {
         const subscribeData: WebSocketSubscribeData = {
-          command: "subscribe",
+          command: 'subscribe',
           category,
           thing_id: id,
         };
@@ -200,19 +199,19 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private waitForWebSocketOpen(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.ws && this.ws.isOpen()) {
-        logging.info("WebSocket already open.");
+        logging.info('WebSocket already open.');
         resolve();
         return;
       }
-      
-      logging.info("Waiting for WebSocket to open...");
+
+      logging.info('Waiting for WebSocket to open...');
 
       const onOpen = () => {
         if (this.connectionTimeoutId) {
           clearTimeout(this.connectionTimeoutId);
           this.connectionTimeoutId = null;
         }
-        this.ws?.removeListener("error", onError);
+        this.ws?.removeListener('error', onError);
         resolve();
       };
 
@@ -221,18 +220,18 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
           clearTimeout(this.connectionTimeoutId);
           this.connectionTimeoutId = null;
         }
-        this.ws?.removeListener("open", onOpen);
+        this.ws?.removeListener('open', onOpen);
         reject(err);
       };
 
-      this.ws?.once("open", onOpen);
-      this.ws?.once("error", onError);
+      this.ws?.once('open', onOpen);
+      this.ws?.once('error', onError);
 
       // Set connection timeout
       this.connectionTimeoutId = setTimeout(() => {
-        this.ws?.removeListener("open", onOpen);
-        this.ws?.removeListener("error", onError);
-        reject(new Error("WebSocket connection timeout"));
+        this.ws?.removeListener('open', onOpen);
+        this.ws?.removeListener('error', onError);
+        reject(new Error('WebSocket connection timeout'));
       }, 10000);
     });
   }
@@ -241,7 +240,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * Closes WebSocket connection
    */
   close(): void {
-    logging.info("Closing WebSocket connection...");
+    logging.info('Closing WebSocket connection...');
     if (this.connectionTimeoutId) {
       clearTimeout(this.connectionTimeoutId);
       this.connectionTimeoutId = null;

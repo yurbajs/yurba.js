@@ -1,8 +1,14 @@
 <script setup>
 import { useData } from 'vitepress'
+import { ref, onMounted } from 'vue'
 import links from '../../links.json'
 
 const { isDark } = useData()
+const isClient = ref(false)
+
+onMounted(() => {
+  isClient.value = true
+})
 </script>
 
 <template>
@@ -27,13 +33,13 @@ const { isDark } = useData()
           </div>
           <div class="action">
             <a class="Button" :href="links.github">
-              <img :src="isDark ? '/icons/github-mark-white.svg' : '/icons/github-mark.svg'" width="16" height="16" alt="GitHub">
+              <img :src="isClient && isDark ? '/icons/github-mark-white.svg' : '/icons/github-mark.svg'" width="16" height="16" alt="GitHub">
               GitHub
             </a>
           </div>
           <div class="action">
             <a class="Button" :href="links.yurba">
-              <img :src="isDark ? '/icons/yurba.svg' : '/icons/yurba-blue.svg'" width="16" height="16" alt="Yurba" class="yurba-icon">
+              <img :src="isClient && isDark ? '/icons/yurba.svg' : '/icons/yurba-blue.svg'" width="16" height="16" alt="Yurba" class="yurba-icon">
               Yurba
             </a>
           </div>
