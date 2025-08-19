@@ -51,7 +51,7 @@ export class MediaResource {
     formData.append('caption', caption);
     formData.append('mode', mode);
 
-    return this.client.post<Photo>('/photos/upload', formData);
+    return this.client.post<Photo>('/photos', formData);
   }
 
   /**
