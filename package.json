@@ -13,29 +13,23 @@
     "install:all": "pnpm install",
     "clean": "turbo run clean",
     "reset": "pnpm run clean && rm -rf node_modules packages/*/node_modules && pnpm install",
-
     "lint": "turbo run lint",
     "lint:fix": "lerna run lint -- --fix",
-
     "test": "turbo run test",
     "test:local": "pnpm run build:local && pnpm run test",
-
     "build": "turbo run build",
     "build:local": "pnpm run clean && pnpm run build",
     "dev": "lerna run build --watch",
     "all": "pnpm run lint && pnpm run test && pnpm run build",
-
     "docs": "pnpm run docs:clean && pnpm run build && npx typedoc && node apps/docs/scripts/docs.js",
     "docs:local": "pnpm run docs:clean && npx typedoc && node apps/docs/scripts/docs.js",
     "docs:serve": "pnpm run docs && npx http-server apps/docs/dist -p 3000 -o",
     "docs:clean": "rimraf apps/docs/dist",
     "docs:watch": "typedoc --watch",
-
     "guide:dev": "vitepress dev apps/guide",
     "guide:build": "vitepress build apps/guide",
     "guide:preview": "vitepress preview apps/guide",
     "guide:start": "pnpm run guide:build && pnpm run guide:preview",
-
     "publish": "turbo run lint test clean build && lerna publish"
   },
   "devDependencies": {
@@ -58,6 +52,7 @@
     "turbo": "^2.5.4",
     "type-coverage": "^2.29.7",
     "typedoc": "^0.28.7",
+    "typedoc-plugin-md": "^0.7.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0",
     "vitepress": "^1.6.3",
