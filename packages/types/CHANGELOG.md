@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.8](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@0.1.7...@yurbajs/types@0.1.8) (2025-08-19)
+
+**Note:** Version bump only for package @yurbajs/types
+
+
+
+
+
 ## [0.1.7](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@0.1.6...@yurbajs/types@0.1.7) (2025-07-20)
 
 **Note:** Version bump only for package @yurbajs/types
