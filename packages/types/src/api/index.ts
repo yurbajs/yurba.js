@@ -72,11 +72,11 @@ export interface Message {
 }
 
 export interface SendMessagePayload {
-    text:        string;
-    photos_list: Photo['ID'][];
-    replyTo:     Message['ID'] | null;
-    edit:        Message['ID'] | null;
-    attachments: AttachmentPayload[];
+    text?:        string | '';
+    photos_list?: Photo['ID'][] | [];
+    replyTo?:     Message['ID'] | null;
+    edit?:        Message['ID'] | null;
+    attachments?: AttachmentPayload[] | [];
 }
 
 export type DeleteMessageResponse = BaseDelete;
@@ -535,7 +535,9 @@ export type Attachment =
   | PostAttachment
   | TrackAttachment
   | FileAttachment
+  | VideoAttachment
   | RepostAttachment;
+  
 
 export interface BaseAttachment {
     ID: number;
@@ -558,18 +560,22 @@ export interface FileAttachment extends BaseAttachment {
     Item: FileItem;
 }
 
+export interface VideoAttachment extends BaseAttachment {
+    Type: AttachmentType.Video;
+    Item: VideoItem;
+}
+
 export interface RepostAttachment extends BaseAttachment {
     Type: AttachmentType.Post;
-    Item: Message;
+    Item: PostItem;
 }
 
 export enum AttachmentType {
-    "Video" = 'video',
-    "Track" = 'track',
-    "File" = 'file',
-    "Post" = 'post'
+    Video = 'video',
+    Track = 'track',
+    File = 'file',
+    Post = 'post'
 }
-
 // -------- FILE ATTACHMENTS --------
 export type FileItem = File
 

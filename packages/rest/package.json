@@ -38,5 +38,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "5830062bfe31a6bc3f1b8a0cf8142a58749c57e9"
+  "gitHead": "5830062bfe31a6bc3f1b8a0cf8142a58749c57e9",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.0"
+  }
 }

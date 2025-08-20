@@ -15,23 +15,10 @@ interface WebSocketUnsubscribeData {
   thing_id: number;
 }
 
-let logging = new Logger('WSM', { enabled: false });
-
-if (process.env.MODULES === 'WSM') {
-  try {
-    require('dotenv').config();
-
-    if (process.env.Debug) {
-      logging = new Logger('WSM', {
-        enabled: true,
-        level: process.env.Level as unknown as LogLevel,
-      });
-    }
-  } catch {
-    // no-op
-  }
-}
-
+const logging = new Logger('WSM', {
+  enabled: true,
+  level: process.env.Level as unknown as LogLevel,
+});
 /**
  * WebSocket connection manager
  * @extends EventEmitter
@@ -73,16 +60,18 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       this.restoreSubscriptions();
 
       // Subscribe to bot dialog
-      this.subscribeToEvents('dialog', botData.ID);
+      const subscribe_dialog = this.subscribeToEvents('dialog', botData.ID);
+      logging.info('Subscribed to dialog:', subscribe_dialog);
 
-      this.emit('ready'); // Emit "ready" event for Client
+      const ready_emit = this.emit('ready'); // Emit "ready" event for Client
+      logging.info('Ready emit:',ready_emit)
     });
 
     this.ws.on('message', (data: string) => {
       logging.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString());
-        // Якщо є вкладене поле Message, використовуємо тільки його, але додаємо Type з raw
+        logging.debug(raw)
         let message;
         if (raw.Message) {
           message = { ...raw.Message, Type: raw.Type || raw.Message.Type };

@@ -1,12 +1,11 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import { UserResource, MessageResource, DialogResource, PostResource, MediaResource, AuthResource } from './resources/';
+import { UserResource, DialogResource, PostResource, MediaResource, AuthResource } from './resources/';
 
 /**
  * Main REST client with all API resources
  */
 export class REST extends BaseClient {
   public readonly users: UserResource;
-  public readonly messages: MessageResource;
   public readonly dialogs: DialogResource;
   public readonly posts: PostResource;
   public readonly media: MediaResource;
@@ -16,7 +15,6 @@ export class REST extends BaseClient {
     super(token, options);
 
     this.users = new UserResource(this);
-    this.messages = new MessageResource(this);
     this.dialogs = new DialogResource(this);
     this.posts = new PostResource(this);
     this.media = new MediaResource(this);
@@ -30,7 +28,6 @@ export {
   RequestConfig,
   RateLimitConfig,
   UserResource,
-  MessageResource,
   DialogResource,
   PostResource,
   MediaResource,

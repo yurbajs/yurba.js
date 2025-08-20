@@ -1,29 +1,48 @@
 import { REST } from '../index';
-import { Dialog, DialogMember, CreateDialogPayload, DialogCreateType, CreateDialogResponse, CreatePrivateDialogResponse } from '@yurbajs/types';
+import {
+  Dialog,
+  DialogMember,
+  CreateDialogPayload,
+  CreateDialogResponse,
+  CreatePrivateDialogResponse,
+  SendMessagePayload,
+  Message,
+} from '@yurbajs/types';
 
 export class DialogResource {
   /**
-   * @internal
+   * @ignore
    */
   constructor(private client: REST) {}
 
   /**
    * Gets a dialog by identifier
+   * @group Dialog Core
    * @param id - Dialog identifier
    * @param code - Invitation code (optional)
-   * @since 0.1.7
-   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @since 0.1.10
+   * @returns {Promise<Dialog>} {@link Dialog} object
    * @throws {Error} If dialog not found
+   * @example
+   * ```javascript
+   * const dialog = await rest.dialogs.get(123);
+   * const privateDialog = await rest.dialogs.get(456, 'invite123');
+   * ```
    */
-  async get(id: number, code: string = ''): Promise<Dialog[]> {
-    return this.client.get<Dialog[]>(`/dialogs/${id}?code=${code}`);
+  async get(id: number, code: string = ''): Promise<Dialog> {
+    return this.client.get<Dialog>(`/dialogs/${id}?code=${code}`);
   }
 
   /**
-   * Gets all dialogs
+   * Gets all dialogs where the client is a member
+   * @group Dialog Core
+   * @since 0.1.10
    * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
-   * @since 0.1.7
    * @throws {Error} If dialogs cannot be retrieved
+   * @example
+   * ```javascript
+   * const dialogs = await rest.dialogs.getAll();
+   * ```
    */
   async getAll(): Promise<Dialog[]> {
     return this.client.get<Dialog[]>('/dialogs');
@@ -31,53 +50,84 @@ export class DialogResource {
 
   /**
    * Creates a new dialog
-   * @param name - Dialog name
-   * @param type - {@link DialogCreateType} Dialog creation type
-   * @param options - Optional dialog settings
-   * @param options.description - Optional dialog description
+   * @group Dialog Core
+   * @param payload - {@link CreateDialogPayload} Dialog creation data
    * @returns {Promise<CreateDialogResponse>} {@link CreateDialogResponse} Created dialog response
-   * @since 0.1.7
+   * @since 0.1.10
    * @throws {Error} If name or description is invalid
+   * @example
+   * ```javascript
+   * const dialog = await rest.dialogs.create({
+   *   name: "My Dialog",
+   *   description: "Discussion place",
+   *   type: "public"
+   * });
+   * ```
    */
-  async create(name: string, type: DialogCreateType, options?: { description?: string }): Promise<CreateDialogResponse> {
-    if (!name || name.length > 330) throw new Error('Invalid name');
-    if (options?.description && options.description.length > 330) throw new Error('Invalid description');
-    const payload: CreateDialogPayload = { name, type, ...options };
+  async create(payload: CreateDialogPayload): Promise<CreateDialogResponse> {
+    if (!payload.name || payload.name.length > 330)
+      throw new Error('Invalid name');
+    if (payload.description && payload.description.length > 330)
+      throw new Error('Invalid description');
+
     return this.client.post<CreateDialogResponse>('/dialogs', payload);
   }
 
   /**
    * Creates a private dialog with a user
+   * @group Dialog Core
    * @param userId - User identifier to create private dialog with
    * @returns {Promise<Dialog>} {@link Dialog} Created private dialog
-   * @since 0.1.7
+   * @since 0.1.10
    * @throws {Error} If user ID is invalid or user not found
+   * @example
+   * ```javascript
+   * const privateDialog = await rest.dialogs.createPrivate(12345);
+   * ```
    */
   async createPrivate(userId: number): Promise<Dialog> {
     if (userId < 1) throw new Error('Invalid user ID');
-    if (await this.client.get(`/user/${userId}`)){
-      return this.client.post<CreatePrivateDialogResponse>('/dialogs/private/', userId);
-    }
-    else throw new Error('Invalid user ID');
+    if (await this.client.get(`/user/${userId}`)) {
+      return this.client.post<CreatePrivateDialogResponse>(
+        '/dialogs/private/',
+        userId
+      );
+    } else throw new Error('Invalid user ID');
   }
-
 
   /**
    * Get dialog members
+   * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param page - Page number (default 0)
-   * @since 0.1.7
+   * @since 0.1.10
+   * @returns {Promise<DialogMember[]>} Array of {@link DialogMember} objects
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * const members = await rest.dialogs.getMembers(123);
+   * const nextPage = await rest.dialogs.getMembers(123, 1);
+   * ```
    */
   async getMembers(dialogId: number, page = 0): Promise<DialogMember[]> {
     if (dialogId < 1 || page < 0) throw new Error('Invalid parameters');
-    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, { page });
+    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, {
+      page,
+    });
   }
 
   /**
    * Add user to dialog
+   * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
-   * @since 0.1.7
+   * @since 0.1.10
+   * @returns {Promise<any>} Operation result
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * await rest.dialogs.addMember(123, 456);
+   * ```
    */
   async addMember(dialogId: number, userId: number): Promise<any> {
     if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
@@ -86,12 +136,108 @@ export class DialogResource {
 
   /**
    * Remove user from dialog
+   * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
-   * @since 0.1.7
+   * @since 0.1.10
+   * @returns {Promise<any>} Operation result
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * await rest.dialogs.removeMember(123, 456);
+   * ```
    */
   async removeMember(dialogId: number, userId: number): Promise<any> {
     if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
     return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
+  }
+
+  /**
+   * Get messages from dialog
+   * @group Dialog Messages
+   * @param dialogId - Dialog identifier
+   * @param lastId - Last message ID for pagination (optional)
+   * @since 0.1.10
+   * @returns {Promise<any[]>} Array of messages
+   * @example
+   * ```javascript
+   * const messages = await rest.dialogs.getMessages(123);
+   * const older_messages = await rest.dialogs.getMessages(123, 999);
+   * ```
+   */
+  async getMessages(dialogId: number, lastId?: number): Promise<any[]> {
+    const params = lastId ? { last_id: lastId } : {};
+    return this.client.get<any[]>(`/dialogs/${dialogId}/messages`, params);
+  }
+
+  /**
+   * Send message to dialog
+   * @group Dialog Messages
+   * @param dialogId - Dialog identifier
+   * @param payload - {@link SendMessagePayload} Message data
+   * @since 0.1.10
+   * @returns {Promise<Message>} {@link Message} Sent message
+   * @example
+   * ```javascript
+   * // Text message
+   * await rest.dialogs.sendMessage(123, { text: "Hello!" });
+   *
+   * // With photos and reply
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Check this",
+   *   photos_list: [-1112],
+   *   replyTo: 48561
+   * });
+   *
+   * // With attachments
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Media",
+   *   attachments: [
+   *     { Type: "video", Item: 28 },
+   *     { Type: "track", Item: 6422 },
+   *     { Type: "file", Item: 684 },
+   *     { Type: "post", Item: 3201 }
+   *   ]
+   * });
+   *
+   * // Edit message
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Updated",
+   *   edit: 12345
+   * });
+   * ```
+   */
+  async sendMessage(
+    dialogId: number,
+    payload: SendMessagePayload
+  ): Promise<Message> {
+    const messageData: SendMessagePayload = {
+      text: payload.text || '',
+      photos_list: payload.photos_list || [],
+      replyTo: payload.replyTo ?? null,
+      edit: payload.edit ?? null,
+      attachments: payload.attachments || [],
+    };
+
+    return this.client.post<Message>(
+      `/dialogs/${dialogId}/messages`,
+      messageData
+    );
+  }
+
+  /**
+   * Delete message
+   * @group Message Management
+   * @param messageId - Message identifier
+   * @since 0.1.10
+   * @returns {Promise<boolean>} Operation result
+   * @example
+   * ```javascript
+   * const deleted = await rest.dialogs.deleteMessage(12345);
+   * ```
+   */
+  async deleteMessage(messageId: number): Promise<boolean> {
+    await this.client.patch<any>(`/dialogs/messages/${messageId}`);
+    return this.client.delete<any>(`/dialogs/messages/${messageId}`);
   }
 }

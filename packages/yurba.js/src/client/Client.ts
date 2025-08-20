@@ -88,22 +88,22 @@ interface DevConfig {
 }
 
 let Dev: DevConfig = {
-  debug: false,
+  debug: true,
   level: LogLevel.DEBUG,
 };
 
-if (process.env.MODULES === 'yurbajs') {
-  try {
-    require('dotenv').config();
 
-    Dev = {
-      debug: Boolean(process.env.DEBUG),
-      level: process.env.LEVEL as unknown as LogLevel,
-    };
-  } catch {
-    // no-op
-  }
+try {
+  require('dotenv').config();
+
+  Dev = {
+    debug: Boolean(process.env.DEBUG),
+    level: process.env.LEVEL as unknown as LogLevel,
+  };
+} catch {
+  // no-op
 }
+
 const logging = new Logger('Client', {
   level: Dev.level as unknown as LogLevel,
 });
@@ -308,7 +308,8 @@ class Client extends EventEmitter {
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
         this.wsm.on('message', (message: Message) =>
-          this.handleMessage(message)
+{        console.log('YURBA.JS ::', JSON.stringify(message))
+        this.handleMessage(message)}
         );
         this.wsmMessageSubscribed = true;
       }
@@ -395,6 +396,8 @@ class Client extends EventEmitter {
    */
   private async handleMessage(message: Message): Promise<void> {
     try {
+      console.log('YURBA.JS ::' + message)
+
       // Execute all middleware
       await this.middlewareManager.execute(message).catch((err) => {
         erlog('Middleware error:', err);
@@ -415,10 +418,6 @@ class Client extends EventEmitter {
         await this.handleCommandMessage(msg);
       }
 
-      // Emit event with message type, але не дублюй 'message'
-      if (msg.Type !== 'message') {
-        this.emit(msg.Type, msg);
-      }
       this.emit('message', msg);
     } catch (error) {
       erlog('Error handling message:', error);

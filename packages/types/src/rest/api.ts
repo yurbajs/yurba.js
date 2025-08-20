@@ -5,15 +5,6 @@ export interface ApiHeaders {
     token: string;
   }
   
-  export interface MessageData {
-    text: string;
-    photos_list?: any[];
-    replyTo?: number | null;
-    edit?: number | null;
-    attachments?: any[];
-    repost?: any | null;
-  }
-  
   export interface PostData {
     content: string;
     photos_list?: any[];
