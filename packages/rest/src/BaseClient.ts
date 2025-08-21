@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { ApiError, RateLimiter, ErrorHandler } from './errors';
+import { userCache } from './cache';
 
 export interface BaseClientOptions {
   baseURL?: string;
@@ -34,6 +35,19 @@ export class BaseClient extends EventEmitter {
 
   constructor(token: string, options: BaseClientOptions = {}) {
     super();
+
+    if (!token) {
+      throw new Error('Token is required');
+    }
+    
+    if (!token.startsWith('y')) {
+      throw new Error('Invalid token format');
+    }
+    
+    this.validateAndCacheUser(token);
+
+
+
 
     this.options = {
       baseURL: 'https://api.yurba.one',
@@ -105,6 +119,29 @@ export class BaseClient extends EventEmitter {
       canMakeRequest: this.rateLimiter.canMakeRequest(),
       resetTime: this.rateLimiter.getResetTime()
     } : null;
+  }
+
+  private async validateAndCacheUser(token: string): Promise<void> {
+    const cached = userCache.get(token);
+    if (cached) return;
+
+    try {
+      const user = await this.get('/me');
+      userCache.set(token, {
+        id: user.ID,
+        name: user.Name,
+        surname: user.Surname,
+        link: user.Link,
+        avatar: user.Avatar,
+        timestamp: Date.now()
+      });
+    } catch {
+      throw new Error('Invalid token');
+    }
+  }
+
+  public getCachedUser(token: string) {
+    return userCache.get(token);
   }
 
   private async request<T>(method: string, url: string, data?: any, config?: RequestConfig): Promise<T> {

@@ -33,3 +33,6 @@ export {
   MediaResource,
   AuthResource
 };
+
+export { userCache } from './cache';
+export type { CachedUser } from './cache';
