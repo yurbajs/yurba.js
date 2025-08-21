@@ -7,6 +7,7 @@ import {
   CreatePrivateDialogResponse,
   SendMessagePayload,
   Message,
+  response,
 } from '@yurbajs/types';
 
 export class DialogResource {
@@ -108,7 +109,7 @@ export class DialogResource {
    * await rest.dialogs.join(123);
    * ```
    */
-  async join(dialogId: number): Promise<any> {
+  async join(dialogId: number): Promise<response> {
     if (dialogId < 1) throw new Error('Invalid parameters');
     const token = this.client['defaultHeaders']['token'];
     const user = this.client.getCachedUser(token);
@@ -128,7 +129,7 @@ export class DialogResource {
    * await rest.dialogs.leave(123);
    * ```
    */
-  async leave(dialogId: number): Promise<any> {
+  async leave(dialogId: number): Promise<response> {
     if (dialogId < 1) throw new Error('Invalid parameters');
     const token = this.client['defaultHeaders']['token'];
     const user = this.client.getCachedUser(token);
@@ -172,7 +173,7 @@ export class DialogResource {
    * await rest.dialogs.addMember(123, 456);
    * ```
    */
-  async addMember(dialogId: number, userId: number, code: string = ''): Promise<any> {
+  async addMember(dialogId: number, userId: number, code: string = ''): Promise<response> {
     if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
     return this.client.post(`/dialogs/${dialogId}/join/${userId}?code=${code}`, {});
   }
@@ -190,10 +191,27 @@ export class DialogResource {
    * await rest.dialogs.removeMember(123, 456);
    * ```
    */
-  async removeMember(dialogId: number, userId: number): Promise<any> {
+  async removeMember(dialogId: number, userId: number): Promise<response> {
     if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
     return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
   }
+
+
+  /**
+   * Get message (by id)
+   * @group Dialog Messages
+   * @param messageId - Message ID
+   * @since 1.0.0
+   * @returns {Promise<Message>} Array of messages
+   * @example
+   * ```javascript
+   * const messages = await rest.dialogs.getMessage(123);
+   * ```
+   */
+  async getMessage(dialogId: number): Promise<Message> {
+    return this.client.get<Message>(`/dialogs/${dialogId}/messages`);
+  }
+
 
   /**
    * Get messages from dialog
@@ -201,16 +219,16 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param lastId - Last message ID for pagination (optional)
    * @since 0.1.10
-   * @returns {Promise<any[]>} Array of messages
+   * @returns {Promise<Message[]>} Array of messages
    * @example
    * ```javascript
    * const messages = await rest.dialogs.getMessages(123);
    * const older_messages = await rest.dialogs.getMessages(123, 999);
    * ```
    */
-  async getMessages(dialogId: number, lastId?: number): Promise<any[]> {
+  async getMessages(dialogId: number, lastId?: number): Promise<Message[]> {
     const params = lastId ? { last_id: lastId } : {};
-    return this.client.get<any[]>(`/dialogs/${dialogId}/messages`, params);
+    return this.client.get<Message[]>(`/dialogs/${dialogId}/messages`, params);
   }
 
   /**
@@ -273,14 +291,14 @@ export class DialogResource {
    * @group Message Management
    * @param messageId - Message identifier
    * @since 0.1.10
-   * @returns {Promise<boolean>} Operation result
+   * @returns {Promise<response>} Operation result
    * @example
    * ```javascript
    * const deleted = await rest.dialogs.deleteMessage(12345);
    * ```
    */
-  async deleteMessage(messageId: number): Promise<boolean> {
-    await this.client.patch<any>(`/dialogs/messages/${messageId}`);
-    return this.client.delete<any>(`/dialogs/messages/${messageId}`);
+  async deleteMessage(messageId: number): Promise<response> {
+    await this.client.patch<undefined>(`/dialogs/messages/${messageId}`);
+    return this.client.delete<response>(`/dialogs/messages/${messageId}`);
   }
 }
