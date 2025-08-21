@@ -644,3 +644,8 @@ enum OnlineDisplayType {
   Invisible = 2,
   Custom = 3
 }
+
+export type response = {
+  detail?: string,
+  ok: boolean
+}
