@@ -19,18 +19,18 @@ describe('DialogResource', () => {
       const mockDialog = { id: 123, name: 'Test Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockDialog
+        json: async () => mockDialog,
       });
 
       const result = await dialogs.get(123);
-      
+
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/dialogs/123?code='),
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({
-            'Token': 'test-token'
-          })
+            token: 'test-token',
+          }),
         })
       );
       expect(result).toEqual(mockDialog);
@@ -40,11 +40,11 @@ describe('DialogResource', () => {
       const mockDialog = { id: 456, name: 'Private Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockDialog
+        json: async () => mockDialog,
       });
 
       await dialogs.get(456, 'invite123');
-      
+
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/dialogs/456?code=invite123'),
         expect.any(Object)
@@ -57,11 +57,11 @@ describe('DialogResource', () => {
       const mockMessage = { id: 1, text: 'Hello' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockMessage
+        json: async () => mockMessage,
       });
 
       const result = await dialogs.sendMessage(123, { text: 'Hello' });
-      
+
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/dialogs/123/messages'),
         expect.objectContaining({
@@ -71,8 +71,8 @@ describe('DialogResource', () => {
             photos_list: [],
             replyTo: null,
             edit: null,
-            attachments: []
-          })
+            attachments: [],
+          }),
         })
       );
       expect(result).toEqual(mockMessage);
@@ -82,17 +82,17 @@ describe('DialogResource', () => {
       const mockMessage = { id: 2, text: 'Media' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockMessage
+        json: async () => mockMessage,
       });
 
       await dialogs.sendMessage(123, {
         text: 'Media',
         attachments: [
-          { Type: 'Video', Item: 28 },
-          { Type: 'Track', Item: 6422 }
-        ]
+          { Type: 'video', Item: 28 },
+          { Type: 'track', Item: 6422 },
+        ],
       });
-      
+
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/dialogs/123/messages'),
         expect.objectContaining({
@@ -104,9 +104,9 @@ describe('DialogResource', () => {
             edit: null,
             attachments: [
               { Type: 'video', Item: 28 },
-              { Type: 'track', Item: 6422 }
-            ]
-          })
+              { Type: 'track', Item: 6422 },
+            ],
+          }),
         })
       );
     });
@@ -117,24 +117,26 @@ describe('DialogResource', () => {
       const mockResponse = { id: 789, name: 'New Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResponse
+        json: async () => mockResponse,
       });
 
       const result = await dialogs.create({
         name: 'New Dialog',
         description: 'Test description',
-        type: 'channel'
+        type: 'channel',
       });
-      
+
       expect(result).toEqual(mockResponse);
     });
 
     it('should throw error for invalid name', async () => {
-      await expect(dialogs.create({ name: '', type: 'channel' }))
-        .rejects.toThrow('Invalid name');
-      
-      await expect(dialogs.create({ name: 'a'.repeat(331), type: 'channel' }))
-        .rejects.toThrow('Invalid name');
+      await expect(
+        dialogs.create({ name: '', type: 'channel' })
+      ).rejects.toThrow('Invalid name');
+
+      await expect(
+        dialogs.create({ name: 'a'.repeat(331), type: 'channel' })
+      ).rejects.toThrow('Invalid name');
     });
   });
 });
