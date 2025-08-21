@@ -535,8 +535,7 @@ export type Attachment =
   | PostAttachment
   | TrackAttachment
   | FileAttachment
-  | VideoAttachment
-  | RepostAttachment;
+  | VideoAttachment;
   
 
 export interface BaseAttachment {
@@ -546,37 +545,27 @@ export interface BaseAttachment {
 }
 
 export interface PostAttachment extends BaseAttachment {
-    Type: AttachmentType.Post;
+    Type: 'post';
     Item: PostItem;
 }
 
 export interface TrackAttachment extends BaseAttachment {
-    Type: AttachmentType.Track;
+    Type: 'track'
     Item: TrackItem;
 }
 
 export interface FileAttachment extends BaseAttachment {
-    Type: AttachmentType.File;
+    Type: 'file'
     Item: FileItem;
 }
 
 export interface VideoAttachment extends BaseAttachment {
-    Type: AttachmentType.Video;
+    Type: 'video'
     Item: VideoItem;
 }
 
-export interface RepostAttachment extends BaseAttachment {
-    Type: AttachmentType.Post;
-    Item: PostItem;
-}
+export type AttachmentType = 'video' | 'track' | 'file' | 'post';
 
-export enum AttachmentType {
-    Video = 'video',
-    Track = 'track',
-    File = 'file',
-    Post = 'post'
-}
-// -------- FILE ATTACHMENTS --------
 export type FileItem = File
 
 // -------- MUSIC ATTACHMENTS --------
