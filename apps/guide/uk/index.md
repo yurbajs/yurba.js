@@ -63,7 +63,7 @@ Spacer1:
 CallToAction:
   title: Створюйте з Yurba.js
   description:  Перегляньте реальні проєкти та приклади створені з Yurba.js
-  buttonText: Переглянути проєкти
+  buttonText: Переглянути   
   link: /uk/showcase
 
 ---
