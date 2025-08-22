@@ -404,6 +404,11 @@ div[class*="language-"] {
   filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
 }
 
+/* Прибираємо тільки breadcrumbs, залишаємо заголовки */
+.DocSearch-Hit-path {
+  display: none !important;
+}
+
 /* Тільки для features PNG іконок */
 .VPFeatures .VPFeature img[src$=".png"] {
   transition: filter 0.3s ease !important;

@@ -240,41 +240,10 @@ export default defineConfig({
       options: {
         miniSearch: {
           searchOptions: {
-            combineWith: 'OR',
+            combineWith: 'AND',
             fuzzy: 0.2,
             prefix: true,
-            boost: { title: 15, text: 1, titles: 8 },
-            weights: { fuzzy: 0.7, prefix: 1.3, exact: 2.0 },
-            maxFuzzy: 2,
-            filter: (result) => {
-              return result.score > 0.1
-            },
-            boostDocument: (documentId, term) => {
-              // Підвищення релевантності для основних сторінок
-              if (documentId.includes('introduction') || documentId.includes('getting-started')) {
-                return 1.5
-              }
-              return 1
-            }
-          },
-          options: {
-            fields: ['title', 'titles', 'text'],
-            storeFields: ['title', 'titles', 'text'],
-            processTerm: (term) => {
-              return term.toLowerCase()
-                .replace(/[ії]/g, 'i')
-                .replace(/[єе]/g, 'e')
-                .replace(/['']/g, '')
-            },
-            extractField: (document, fieldName) => {
-              // Покращена екстракція тексту
-              const content = document[fieldName] || ''
-              return content.replace(/[\n\r\t]+/g, ' ').trim()
-            },
-            tokenize: (text) => {
-              return text.split(/[\s\-_.,;:!?()\[\]{}"']+/)
-                .filter(token => token.length > 1)
-            }
+            boost: { title: 4, text: 2, titles: 1 }
           }
         },
         _render(src, env, md) {
@@ -298,6 +267,7 @@ export default defineConfig({
                 backButtonTitle: 'Закрити пошук',
                 noResultsText: 'Немає результатів для',
                 detailedView: true,
+                previewLength: 62,
                 footer: {
                   selectText: 'вибрати',
                   selectKeyAriaLabel: 'enter',
