@@ -266,8 +266,7 @@ export default defineConfig({
                 resetButtonTitle: 'Скинути пошук',
                 backButtonTitle: 'Закрити пошук',
                 noResultsText: 'Немає результатів для',
-                detailedView: true,
-                previewLength: 62,
+
                 footer: {
                   selectText: 'вибрати',
                   selectKeyAriaLabel: 'enter',
@@ -291,7 +290,7 @@ export default defineConfig({
                 resetButtonTitle: 'Reset search',
                 backButtonTitle: 'Close search',
                 noResultsText: 'No results for',
-                detailedView: true,
+
                 footer: {
                   selectText: 'to select',
                   selectKeyAriaLabel: 'enter',
