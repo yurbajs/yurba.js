@@ -7,6 +7,7 @@ import './clean-style.css'
 import HeroActions from './components/HeroActions.vue'
 import SimpleHero from './components/SimpleHero.vue'
 import Spacer from './components/Spacer.vue'
+import CallToAction from './components/CallToAction.vue'
 import MyLayout from './MyLayout.vue'
 
 export default {
@@ -26,6 +27,15 @@ export default {
         }
         
         return components.length > 0 ? components : null
+      },
+      'home-features-after': () => {
+        const { frontmatter } = useData()
+        
+        if (frontmatter.value.CallToAction !== undefined) {
+          return h(CallToAction, frontmatter.value.CallToAction)
+        }
+        
+        return null
       }
     })
   },
@@ -33,6 +43,7 @@ export default {
     app.component('HeroActions', HeroActions)
     app.component('SimpleHero', SimpleHero)
     app.component('Spacer', Spacer)
+    app.component('CallToAction', CallToAction)
     
     // Автоматичне розгортання активних розділів sidebar
     if (typeof window !== 'undefined') {

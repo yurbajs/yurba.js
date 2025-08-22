@@ -85,7 +85,7 @@ export default defineConfig({
   },
 
   head: [
-    ['link', { rel: 'icon', href: '/logo.png' }],
+    ['link', { rel: 'icon', href: '/logo-c.png' }],
     ['link', { rel: 'apple-touch-icon', href: '/logo.png' }],
     ['meta', { name: 'theme-color', content: '#00c7be' }],
     ['meta', { name: 'author', content: 'RastGame' }],

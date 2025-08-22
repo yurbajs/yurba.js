@@ -52,12 +52,19 @@ features:
       src: /icons/sparkle.png
     title: Постійний розвиток
     details: Беремо і робимо.
-
   - icon:
       src: /icons/star.png
     title: Перша і єдина
     details: Сама перша і єдина повноцінна бібліотека для інтеграції з Yurba.one.
 
+Spacer1:
+  height: 4rem
+
+CallToAction:
+  title: Створюйте з Yurba.js
+  description:  Перегляньте реальні проєкти та приклади створені з Yurba.js
+  buttonText: Переглянути проєкти
+  link: /uk/showcase
 
 ---
 

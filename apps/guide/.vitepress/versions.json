@@ -1,17 +1,11 @@
 {
-  "current": "0.1.10+ (Beta)",
+  "current": "1.0.0",
   "versions": [
     {
-      "version": "0.1.10+",
-      "label": "v0.1.10 (current)",
+      "version": "1.0.0",
+      "label": "v1.0.0 (current)",
       "path": "/",
       "archived": false
-    },
-    {
-      "version": "0.1.9",
-      "label": "v0.1.9",
-      "path": "/archive/0.1.9",
-      "archived": true
     }
   ]
 }

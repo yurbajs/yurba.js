@@ -415,7 +415,7 @@ div[class*="language-"] {
 }
 
 :root:not(.dark) .VPFeatures .VPFeature img[src$=".png"] {
-  filter: brightness(0) invert(1) !important;
+  filter: brightness(0) !important;
 }
 
 .dark .VPFeatures .VPFeature img[src$=".png"] {
