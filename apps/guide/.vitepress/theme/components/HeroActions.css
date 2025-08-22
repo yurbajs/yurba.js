@@ -68,7 +68,7 @@
   box-shadow: 0 4px 12px rgba(65, 209, 255, 0.1);
 }
 
-.dark .yurba-icon {
+img[src*="yurba.svg"] {
   filter: brightness(0) invert(1);
 }
 
@@ -117,6 +117,16 @@
     font-size: 13px;
     white-space: nowrap;
   }
+}
+
+.external-link-icon {
+  margin-left: 4px;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+
+.Button:hover .external-link-icon {
+  opacity: 1;
 }
 
 @media (max-width: 480px) {

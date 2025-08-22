@@ -2,22 +2,37 @@
 import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import { useData } from 'vitepress'
 import './clean-style.css'
 import HeroActions from './components/HeroActions.vue'
 import SimpleHero from './components/SimpleHero.vue'
+import Spacer from './components/Spacer.vue'
 import MyLayout from './MyLayout.vue'
 
 export default {
   extends: DefaultTheme,
-  // Layout: MyLayout,
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
-      // https://vitepress.dev/guide/extending-default-theme#layout-slots
+      'home-hero-after': () => {
+        const { frontmatter } = useData()
+        const components = []
+        
+        if (frontmatter.value.HeroActions !== undefined) {
+          components.push(h(HeroActions))
+        }
+        
+        if (frontmatter.value.Spacer !== undefined) {
+          components.push(h(Spacer, { height: frontmatter.value.Spacer.height }))
+        }
+        
+        return components.length > 0 ? components : null
+      }
     })
   },
   enhanceApp({ app, router, siteData }) {
     app.component('HeroActions', HeroActions)
     app.component('SimpleHero', SimpleHero)
+    app.component('Spacer', Spacer)
     
     // Автоматичне розгортання активних розділів sidebar
     if (typeof window !== 'undefined') {

@@ -21,7 +21,13 @@ const members = [
 # Про Yurba.js
 
 ## Команда
-
+hero:
+  name: "Yurba.js"
+  text: "- Ну що, почнемо?"
+  tagline: "Потужна бібліотека для створення ботів та інтеграції з Yurba API."
+  image:
+    src: /banner.svg
+    alt: Банер Yurba.js 
 <VPTeamMembers size="small" :members />
 
 На цей момент весь проєкт створений, підтримується та розроблюється засновником - [RastGame](https://github.com/rastgame).

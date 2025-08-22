@@ -11,5 +11,3 @@ hero:
     alt: Yurba.js
 
 --- 
-
-<HeroActions />

@@ -371,3 +371,57 @@ div[class*="language-"] {
 .dark .VPSocialLinks .VPSocialLink:first-child svg {
   filter: brightness(0) saturate(100%) invert(1) !important;
 }
+
+/* ===== ІКОНКИ FEATURES ===== */
+.VPFeatures .VPFeature .icon img,
+.VPFeatures .VPFeature .VPImage img,
+.VPFeature .icon img,
+.VPFeature img {
+  transition: filter 0.3s ease !important;
+}
+
+/* Світла тема - білі іконки */
+:root:not(.dark) .VPFeatures .VPFeature .icon img,
+:root:not(.dark) .VPFeatures .VPFeature .VPImage img,
+:root:not(.dark) .VPFeature .icon img,
+:root:not(.dark) .VPFeature img {
+  filter: brightness(0) invert(1) !important;
+}
+
+/* Темна тема - градієнт */
+.dark .VPFeatures .VPFeature .icon img,
+.dark .VPFeatures .VPFeature .VPImage img,
+.dark .VPFeature .icon img,
+.dark .VPFeature img {
+  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
+}
+
+/* Hover ефект */
+.VPFeatures .VPFeature:hover .icon img,
+.VPFeatures .VPFeature:hover .VPImage img,
+.VPFeature:hover .icon img,
+.VPFeature:hover img {
+  filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
+}
+
+/* Тільки для features PNG іконок */
+.VPFeatures .VPFeature img[src$=".png"] {
+  transition: filter 0.3s ease !important;
+}
+
+:root:not(.dark) .VPFeatures .VPFeature img[src$=".png"] {
+  filter: brightness(0) invert(1) !important;
+}
+
+.dark .VPFeatures .VPFeature img[src$=".png"] {
+  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
+}
+
+/* Виключення для першої іконки */
+:root:not(.dark) .VPFeatures .VPFeature img[src*="yurba-developers"] {
+  filter: none !important;
+}
+
+.dark .VPFeatures .VPFeature img[src*="yurba-developers"] {
+  filter: none !important;
+}
