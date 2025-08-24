@@ -8,6 +8,7 @@ import {
   SendMessagePayload,
   Message,
   response,
+  responseMute
 } from '@yurbajs/types';
 
 export class DialogResource {
@@ -261,6 +262,19 @@ export class DialogResource {
    *   ]
    * });
    *
+   * // With new attachments
+   * import { File, Audio, Video, Photo }
+   * 
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Media",
+   *   attachments: [
+   *     New File('/path/to/file.txt'),
+   *     New Photo('/path/to/photo.png', { caption: "the file" }),
+   *     New Audio('/path/to/audio.mp3', { name: '', author: '', release: '', cover: '', mode: ''}),
+   *     New Video('/path/to/video.mp4')
+   *   ]
+   * });
+   * 
    * // Edit message
    * await rest.dialogs.sendMessage(123, {
    *   text: "Updated",
@@ -300,5 +314,20 @@ export class DialogResource {
   async deleteMessage(messageId: number): Promise<response> {
     await this.client.patch<undefined>(`/dialogs/messages/${messageId}`);
     return this.client.delete<response>(`/dialogs/messages/${messageId}`);
+  }
+
+  /**
+   * Mute/unmute dialog
+   * @group Dialog Core
+   * @param dialogId - Dialog identifier
+   * @since 1.0.0
+   * @returns {Promise<{mute: boolean, ok: number}>} Mute status response
+   * @example
+   * ```javascript
+   * const result = await rest.dialogs.mute(123);
+   * ```
+   */
+  async mute(dialogId: number): Promise<responseMute> {
+    return this.client.patch<responseMute>(`/dialogs/${dialogId}/mute`);
   }
 }
