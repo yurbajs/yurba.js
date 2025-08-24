@@ -184,6 +184,14 @@ export interface CreateDialogPayload {
     type:        DialogCreateType;
 }
 
+export interface UpdateDialogPayload {
+    name?: string;
+    description?: string; 
+    avatar?: Photo['ID'];
+    topic?: number;
+    private?: boolean;
+}
+
 export type CreateDialogResponse = DialogInfo;
 
 export type CreatePrivateDialogResponse = Dialog;

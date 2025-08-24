@@ -6,6 +6,7 @@ import {
   CreateDialogResponse,
   CreatePrivateDialogResponse,
   SendMessagePayload,
+  UpdateDialogPayload,
   Message,
   response,
   responseMute
@@ -204,12 +205,13 @@ export class DialogResource {
    * @param messageId - Message ID
    * @since 1.0.0
    * @returns {Promise<Message>} Array of messages
+   * @deprecated This method may not work due to restricted access to view all messages
    * @example
    * ```javascript
    * const messages = await rest.dialogs.getMessage(123);
    * ```
    */
-  async getMessage(dialogId: number): Promise<Message> {
+  async getMessage(dialogId: number): Promise<Message> { 
     return this.client.get<Message>(`/dialogs/${dialogId}/messages`);
   }
 
@@ -329,5 +331,38 @@ export class DialogResource {
    */
   async mute(dialogId: number): Promise<responseMute> {
     return this.client.patch<responseMute>(`/dialogs/${dialogId}/mute`);
+  }
+
+  /**
+   * Find dialogs by mask
+   * @group Dialog Core
+   * @param mask - Search mask
+   * @param data - Search data
+   * @param page - Page number (default 0)
+   * @since 1.0.0
+   * @returns {Promise<Dialog[]>} Dialog list
+   * @example
+   * ```javascript
+   * const results = await rest.dialogs.find('search', {}, 0);
+   * ```
+   */
+  async find(mask: string, data: any, page = 0): Promise<Dialog[]> {
+    return this.client.post<Dialog[]>(`/dialogs/find/${mask}?page=${page}`, data);
+  }
+
+  /**
+   * Update dialog
+   * @group Dialog Core
+   * @param dialogId - Dialog identifier
+   * @param payload - {@link UpdateDialogPayload} Dialog data
+   * @since 1.0.0
+   * @returns {Promise<response>} result
+   * @example
+   * ```javascript
+   * await rest.dialogs.update(123, { name: 'New Name' });
+   * ```
+   */
+  async update(dialogId: number, payload: UpdateDialogPayload): Promise<response> {
+    return this.client.patch<response>(`/dialogs/${dialogId}`, payload);
   }
 }
