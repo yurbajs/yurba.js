@@ -7,6 +7,7 @@ import { t, createNavItem } from './utils/i18n'
 export default defineConfig({
   title: "Yurba.js",
   titleTemplate: ":title",
+  srcExclude: ['**/README.md'],
   description: "The powerful library for creating bots and integrating with the Yurba API",
   base: '/',
   cleanUrls: false,

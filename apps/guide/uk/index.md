@@ -11,7 +11,7 @@ hero:
 
 HeroActions:
   - text: Посібник
-    link: /uk/getting-started
+    link: /uk/introduction
     theme: brand
   - text: Документація
     link: https://yurbajs.pages.dev/
