@@ -649,3 +649,9 @@ export type response = {
   detail?: string,
   ok: boolean
 }
+
+
+export type responseMute = {
+  mute: boolean,
+  ok: boolean
+}
