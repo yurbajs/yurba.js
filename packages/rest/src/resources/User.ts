@@ -30,14 +30,17 @@ export class UserResource {
   }
 
   /**
-   * Subscribe to user
+   * Get current user's friends
    * @group User Friends
-   * @param user - User ({tag}/{id}/u{id})
+   * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<SubscribeResponse>} Subscribe result
+   * @returns {Promise<User[]>} Current user's friends
    */
-  async subscribe(user: string | number ): Promise<SubscribeResponse> {
-    return this.client.patch<SubscribeResponse>(`/user/${user}/subscribe`);
+  async friends(page: number = 0): Promise<User[]> {
+    const token = this.client['defaultHeaders']['token'];
+    const user = this.client.getCachedUser(token);
+    if (!user) throw new Error('User not found in cache');
+    return this.client.get<User[]>(`/user/${user.id}/friends`, { page });
   }
 
   /**
@@ -52,6 +55,20 @@ export class UserResource {
     return this.client.get<User[]>(`/user/${user}/friends`, { page });
   }
 
+
+  /**
+   * Subscribe to user
+   * @group User Friends
+   * @param user - User ({tag}/{id}/u{id})
+   * @since 1.0.0
+   * @returns {Promise<SubscribeResponse>} Subscribe result
+   */
+  async subscribe(user: string | number ): Promise<SubscribeResponse> {
+    return this.client.patch<SubscribeResponse>(`/user/${user}/subscribe`);
+  }
+
+
+
   /**
    * Get incoming friend requests
    * @group User Friends
@@ -59,7 +76,7 @@ export class UserResource {
    * @since 1.0.0
    * @returns {Promise<User[]>} Incoming requests
    */
-  async getIncomingRequests(page: number): Promise<User[]> {
+  async incomingRequests(page: number = 0): Promise<User[]> {
     return this.client.get<User[]>('/incoming_requests', { page });
   }
 
@@ -70,7 +87,7 @@ export class UserResource {
    * @since 1.0.0
    * @returns {Promise<User[]>} Outgoing requests
    */
-  async getOutgoingRequests(page: number): Promise<User[]> {
+  async outgoingRequests(page: number = 0): Promise<User[]> {
     return this.client.get<User[]>('/outcoming_requests', { page });
   }
 
