@@ -586,7 +586,7 @@ class Client extends EventEmitter {
    */
   async getPhoto(photoId: string): Promise<PhotoModel | null> {
     try {
-      const response = await this.api.media.getPhoto(photoId);
+      const response = await this.api.photos.get(photoId);
       log(`Fetched photo ${photoId}`, response);
       return response;
     } catch (err) {
