@@ -106,7 +106,7 @@ export interface Post {
     IsAd:          boolean;
     Language:      Language;
     Repost:        Post | null;
-    Nsfw:          boolean;
+    Nsfw:          boolean; // Spoiler
 }
 
 export interface CreatePostPayload {
@@ -116,7 +116,7 @@ export interface CreatePostPayload {
     nsfw:        boolean;
     edit:        Post['ID'] | null;
     repost:      Post['ID'] | null;
-    timestamp:   number;
+    timestamp:   number | 0;
     attachments: AttachmentPayload[];
 }
 

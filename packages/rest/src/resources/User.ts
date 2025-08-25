@@ -33,12 +33,12 @@ export class UserResource {
    * Get user photos
    * @group Users Core
    * @param user - User ({tag}/{id}/u{id})
-   * @param options - Photo options
+   * @param page - Page number (default 0)
+   * @param mode - Photo mode (default 0)
    * @since 1.0.0
    * @returns {Promise<Photo[]>} User photos
    */
-  async getPhotos(user: string | number, options: { page?: number; mode?: 0 | 1 | 2 } = {}): Promise<Photo[]> {
-    const { page = 0, mode = 0 } = options;
+  async getPhotos(user: string | number, page: number = 0, mode: 0 | 1 | 2 = 0): Promise<Photo[]> {
     if (!user || page < 0 || ![0, 1, 2].includes(mode)) throw new Error('Invalid parameters');
     return this.client.get<Photo[]>(`/user/${user}/photos`, { page, mode });
   }
