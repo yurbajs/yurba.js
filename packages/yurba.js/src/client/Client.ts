@@ -14,6 +14,7 @@ import {
   MiddlewareConfig,
   UserModel,
   PhotoModel,
+  SendMessagePayload,
 } from '@yurbajs/types';
 
 import WSM from './WebsocketManager';
@@ -511,37 +512,48 @@ class Client extends EventEmitter {
   }
 
   /**
-   * Sends a message to a dialog
-   * @param dialogId Dialog ID
-   * @param text Message text
-   * @param replyToId ID of the message to reply to (optional)
-   * @param photos_list List of photos to attach (optional)
-   * @param attachments List of attachments (optional)
-   * @param edit ID of the message to edit (optional)
-   * @param repost Repost data (optional)
-   * @returns Promise that resolves with response data
+   * Send message to dialog
+   * @param dialogId - Dialog identifier
+   * @param payload - {@link SendMessagePayload} Message data
+   * @returns {Promise<Message>} {@link Message} Sent message
+   * @example
+   * ```javascript
+   * // Text message
+   * await client.sendMessage(123, { text: "Hello!" });
+   *
+   * // With photos and reply
+   * await client.sendMessage(123, {
+   *   text: "Check this",
+   *   photos_list: [-1112],
+   *   replyTo: 48561
+   * });
+   *
+   * // With attachments
+   * await client.sendMessage(123, {
+   *   text: "Media",
+   *   attachments: [
+   *     { Type: "video", Item: 28 },
+   *     { Type: "track", Item: 6422 },
+   *     { Type: "file", Item: 684 },
+   *     { Type: "post", Item: 3201 }
+   *   ]
+   * });
+   *
+   * // Edit message
+   * await client.sendMessage(123, {
+   *   text: "Updated",
+   *   edit: 12345
+   * });
+   * ```
    */
   async sendMessage(
     dialogId: number,
-    text: string,
-    replyToId: number | null = null,
-    photos_list: any[] | null = null,
-    attachments: any[] | null = null,
-    edit: number | null = null,
-    repost: any = null
+    payload: SendMessagePayload
   ): Promise<Message> {
     try {
-      log(`Sending message to dialog ${dialogId}: ${text}`);
-      const response = await this.api.messages.send(
-        dialogId,
-        text,
-        replyToId,
-        photos_list,
-        attachments,
-        edit,
-        repost
-      );
-      log(`Message sent to dialog ${dialogId}: ${text}`);
+      log(`Sending message to dialog ${dialogId}: ${payload.text}`);
+      const response = await this.api.dialogs.sendMessage(dialogId, payload);
+      log(`Message sent to dialog ${dialogId}: ${payload.text}`);
       return response;
     } catch (err) {
       if (err instanceof Error) {
@@ -590,7 +602,7 @@ class Client extends EventEmitter {
    */
   async deleteMessage(ID: number): Promise<boolean> {
     try {
-      await this.api.messages.delete(ID);
+      await this.api.dialogs.deleteMessage(ID);
       return true;
     } catch (err) {
       erlog(

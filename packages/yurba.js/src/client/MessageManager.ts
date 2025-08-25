@@ -29,12 +29,14 @@ export default class MessageManager implements IMessageManager {
       photos_list: any[] | null = null,
       attachments: any[] | null = null
     ) => {
-      return await this.api.messages.send(
+      return await this.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
-        text,
-        message.ID,
-        photos_list,
-        attachments
+        {
+          text,
+          replyTo: message.ID,
+          photos_list: photos_list || [],
+          attachments: attachments || []
+        }
       );
     };
 
@@ -47,26 +49,30 @@ export default class MessageManager implements IMessageManager {
       attachments: any[] | null = null,
       edit?: number | null
     ) => {
-      const response = await this.api.messages.send(
+      const response = await this.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
-        text,
-        message.ID,
-        photos_list,
-        attachments,
-        edit
+        {
+          text,
+          replyTo: message.ID,
+          photos_list: photos_list || [],
+          attachments: attachments || [],
+          edit: edit || null
+        }
       );
       (response as any).edit = async (
         newText: string,
         newPhotosList: any[] | null = photos_list,
         newAttachments: any[] | null = attachments
       ) => {
-        return await this.api.messages.send(
+        return await this.api.dialogs.sendMessage(
           message.Dialog?.ID as number,
-          newText,
-          message.ID,
-          newPhotosList,
-          newAttachments,
-          response.ID
+          {
+            text: newText,
+            replyTo: message.ID,
+            photos_list: newPhotosList || [],
+            attachments: newAttachments || [],
+            edit: response.ID
+          }
         );
       };
       return response;
@@ -76,7 +82,7 @@ export default class MessageManager implements IMessageManager {
      * Deletes the message
      */
     msg.delete = async () => {
-      await this.api.messages.delete(message.ID);
+      await this.api.dialogs.deleteMessage(message.ID);
     };
 
     /**
@@ -88,13 +94,15 @@ export default class MessageManager implements IMessageManager {
       photos_list?: any[] | null,
       attachments?: any[] | null
     ) => {
-      return await this.api.messages.send(
+      return await this.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
-        text || message.Text,
-        replyToId ?? message.ReplyTo?.ID ?? null,
-        photos_list || message.Photos,
-        attachments || message.Attachments,
-        message.ID
+        {
+          text: text || message.Text,
+          replyTo: replyToId ?? message.ReplyTo?.ID ?? null,
+          photos_list: photos_list || message.Photos || [],
+          attachments: attachments || message.Attachments || [],
+          edit: message.ID
+        }
       );
     };
 
