@@ -118,8 +118,7 @@ export class DialogResource {
    */
   async join(dialogId: number): Promise<response> {
     if (dialogId < 1) throw new Error('Invalid parameters');
-    const token = this.client['defaultHeaders']['token'];
-    const user = this.client.getCachedUser(token);
+    const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
     return this.client.post(`/dialogs/${dialogId}/join/${user.id}`, {});
   }
@@ -138,8 +137,7 @@ export class DialogResource {
    */
   async leave(dialogId: number): Promise<response> {
     if (dialogId < 1) throw new Error('Invalid parameters');
-    const token = this.client['defaultHeaders']['token'];
-    const user = this.client.getCachedUser(token);
+    const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
     return this.client.delete(`/dialogs/${dialogId}/leave/${user.id}`);
   }

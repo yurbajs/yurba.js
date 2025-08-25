@@ -149,8 +149,37 @@ export class BaseClient extends EventEmitter {
     }
   }
 
-  public getCachedUser(token: string): CachedUser | null {
-    return userCache.get(token);
+  public async getCachedUser(): Promise<CachedUser | null> {
+    const token = this.defaultHeaders['token'];
+    let cached = userCache.get(token);
+    if (!cached) {
+      try {
+        const user = await this.get('/get_me');
+        cached = {
+          id: user.ID,
+          name: user.Name,
+          surname: user.Surname,
+          link: user.Link,
+          avatar: user.Avatar,
+          timestamp: Date.now()
+        };
+        userCache.set(token, {
+          id: user.ID,
+          name: user.Name,
+          surname: user.Surname,
+          link: user.Link,
+          avatar: user.Avatar
+        });
+      } catch {
+        return null;
+      }
+    }
+    return cached;
+  }
+
+  public setCachedUser(user: Omit<CachedUser, 'timestamp'>): void {
+    const token = this.defaultHeaders['token'];
+    userCache.set(token, user);
   }
 
   public clearCache(): void {

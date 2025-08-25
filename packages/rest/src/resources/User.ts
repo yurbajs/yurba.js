@@ -37,8 +37,7 @@ export class UserResource {
    * @returns {Promise<User[]>} Current user's friends
    */
   async friends(page: number = 0): Promise<User[]> {
-    const token = this.client['defaultHeaders']['token'];
-    const user = this.client.getCachedUser(token);
+    const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
     return this.client.get<User[]>(`/user/${user.id}/friends`, { page });
   }
