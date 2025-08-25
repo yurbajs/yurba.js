@@ -1,5 +1,5 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource, SearchResource, ShopResource, AppResource } from './resources/';
+import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AccountResorce, FilesResource, VideoResource, SearchResource, ShopResource, AppResource } from './resources/';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -10,7 +10,7 @@ export class REST extends BaseClient {
   private _posts?: PostResource;
   private _musebase?: MusebaseResource;
   private _photos?: PhotosResource;
-  private _auth?: AuthResource;
+  private _auth?: AccountResorce;
   private _files?: FilesResource;
   private _video?: VideoResource;
   private _search?: SearchResource;
@@ -63,10 +63,10 @@ export class REST extends BaseClient {
     return this._photos!;
   }
 
-  get auth(): AuthResource {
+  get account(): AccountResorce {
     if (!this._auth) {
-      const { AuthResource } = require('./resources/Account');
-      this._auth = new AuthResource(this);
+      const { AccountResorce } = require('./resources/Account');
+      this._auth = new AccountResorce(this);
     }
     return this._auth!;
   }
@@ -131,7 +131,7 @@ export type {
   PostResource,
   PhotosResource,
   MusebaseResource,
-  AuthResource,
+  AccountResorce,
   FilesResource,
   VideoResource,
   SearchResource,

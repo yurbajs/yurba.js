@@ -1,6 +1,6 @@
 import { REST } from '../index';
 
-export class AuthResource {
+export class AccountResorce {
   /**
    * @ignore
    */
