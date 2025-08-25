@@ -387,8 +387,38 @@ export enum NotificationType {
   Gift = "gift",
   CommentPost = "comment_post",
 }
+export type GiftItem = Gift
 
-export type GiftItem = any; // Need to add
+export interface Gift {
+    ID:        number;
+    User:      User;
+    Target:    User;
+    Item:      Item;
+    Timestamp: number;
+}
+
+export interface Item {
+    ID:          number;
+    Name:        string;
+    Description: string;
+    Category:    number;
+    Cost:        number;
+    Sub:         number;
+    Type:        Type;
+    Animated:    number;
+}
+
+export interface Shop {
+    ID:          number;
+    Name:        string;
+    Description: string;
+    Items:       Item[];
+}
+
+export enum Type {
+    Gift = "gift",
+    Sub = "sub",
+}
 
 export interface CommentLikeItem {
   ID: number;
@@ -661,6 +691,38 @@ export interface VideoItem {
 }
 
 export type PostItem = Post;
+
+// -------- GIFT TYPES --------
+export interface Gift {
+    ID:        number;
+    User:      User;
+    Target:    User;
+    Item:      Item;
+    Timestamp: number;
+}
+
+export interface Item {
+    ID:          number;
+    Name:        string;
+    Description: string;
+    Category:    number;
+    Cost:        number;
+    Sub:         number;
+    Type:        Type;
+    Animated:    number;
+}
+
+export interface Shop {
+    ID:          number;
+    Name:        string;
+    Description: string;
+    Items:       Item[];
+}
+
+export enum Type {
+    Gift = "gift",
+    Sub = "sub",
+}
 
 // ================================
 // SYSTEM ENUMS & UTILITIES

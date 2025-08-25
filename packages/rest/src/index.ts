@@ -1,5 +1,5 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource, SearchResource } from './resources/';
+import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource, SearchResource, ShopResource } from './resources/';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -14,6 +14,7 @@ export class REST extends BaseClient {
   private _files?: FilesResource;
   private _video?: VideoResource;
   private _search?: SearchResource;
+  private _shop?: ShopResource;
 
   static create: (token: string, options?: BaseClientOptions) => REST;
 
@@ -92,6 +93,14 @@ export class REST extends BaseClient {
     }
     return this._search!;
   }
+
+  get shop(): ShopResource {
+    if (!this._shop) {
+      const { ShopResource } = require('./resources/Shop');
+      this._shop = new ShopResource(this);
+    }
+    return this._shop!;
+  }
 }
 
 // Static factory method
@@ -116,7 +125,8 @@ export type {
   AuthResource,
   FilesResource,
   VideoResource,
-  SearchResource
+  SearchResource,
+  ShopResource
 } from './resources/';
 
 // Default export for convenience
