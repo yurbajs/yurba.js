@@ -19,7 +19,7 @@
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs": "pnpm run predocs && pnpm run docs:build",
-    "docs:preview": "vitepress preview apps/guide"
+    "docs:preview": "vitepress preview"
   },
   "devDependencies": {
     "typedoc": "^0.28.7",

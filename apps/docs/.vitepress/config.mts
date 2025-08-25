@@ -14,7 +14,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'API', link: '/api/' },
+      { text: 'API Reference', link: '/api/' },
       { text: 'Guide', link: 'https://yurba.js.org' }
     ],
     sidebar: {
@@ -29,9 +29,15 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/yurbajs/yurba.js' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' }
     ],
-    footer: {
-      message: 'Released under the Apache-2.0 License.',
-      copyright: 'Copyright © 2024 RastGame'
+    search: {
+      provider: 'local'
     }
+  },
+  markdown: {
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark'
+    },
+    lineNumbers: true
   }
 });
