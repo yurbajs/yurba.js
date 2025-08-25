@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.0](https://github.com/yurbajs/yurba.js/compare/yurba.js@0.1.12...yurba.js@1.0.0-next.0) (2025-08-25)
+
+
+### Bug Fixes
+
+* **yurba.js:** fix getphoto ([e6b1c9a](https://github.com/yurbajs/yurba.js/commit/e6b1c9a4e9075a3732c9fb33f03fd5cfa377e12c))
+* **yurba.js:** Temporary fix ([5da2441](https://github.com/yurbajs/yurba.js/commit/5da2441d58e7a03824f785b53c0b8dd1bed80257))
+
+
+
+
+
 ## [0.1.12](https://github.com/yurbajs/yurba.js/compare/yurba.js@0.1.11...yurba.js@0.1.12) (2025-08-19)
 
 **Note:** Version bump only for package yurba.js

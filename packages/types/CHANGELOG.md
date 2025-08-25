@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.0](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@0.1.8...@yurbajs/types@1.0.0-next.0) (2025-08-25)
+
+
+### Bug Fixes
+
+* **types:** correct for dialogs types ([0931e83](https://github.com/rastgame/yurba.js/commit/0931e83c523d7e5d6b475b4e7346392b1846e4f7))
+
+
+### Features
+
+* **rest & types:** add types ([064bade](https://github.com/rastgame/yurba.js/commit/064badedc17454bd4b9d4ff203527883df423d11))
+* **rest:** add app.ts ([975418a](https://github.com/rastgame/yurba.js/commit/975418aceaa3841442c27b5d401b8e90cc4d2829))
+* **rest:** add shop.ts ([10f0ef3](https://github.com/rastgame/yurba.js/commit/10f0ef3d6ed73f9bc2b456e88b40051f0dc69855))
+* **rest:** add users to search ([171e092](https://github.com/rastgame/yurba.js/commit/171e092ecbca738d1d0fe408a015743fdf7ae5d5))
+* **types:** add basic response from yurba api (response) ([885e053](https://github.com/rastgame/yurba.js/commit/885e0534bd37536d7ba7847d1d9fa06aa09213e6))
+
+
+
+
+
 ## [0.1.8](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@0.1.7...@yurbajs/types@0.1.8) (2025-08-19)
 
 **Note:** Version bump only for package @yurbajs/types

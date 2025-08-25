@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.0](https://github.com/rastgame/yurba.js/compare/@yurbajs/ws@0.1.7...@yurbajs/ws@1.0.0-next.0) (2025-08-25)
+
+
+### Bug Fixes
+
+* **DOCS:** correct source links and correct example for ws ([6b74680](https://github.com/rastgame/yurba.js/commit/6b74680d517b91fb53da97da01e6b87d46a927d4))
+
+
+
+
+
 ## [0.1.7](https://github.com/rastgame/yurba.js/compare/@yurbajs/ws@0.1.6...@yurbajs/ws@0.1.7) (2025-08-19)
 
 **Note:** Version bump only for package @yurbajs/ws

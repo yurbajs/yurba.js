@@ -1,6 +1,6 @@
 {
   "name": "@yurbajs/rest",
-  "version": "0.1.9",
+  "version": "1.0.0-next.0",
   "description": "REST client for Yurba API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

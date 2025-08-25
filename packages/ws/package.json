@@ -1,6 +1,6 @@
 {
   "name": "@yurbajs/ws",
-  "version": "0.1.7",
+  "version": "1.0.0-next.0",
   "description": "WebSocket client for yurba.one",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
