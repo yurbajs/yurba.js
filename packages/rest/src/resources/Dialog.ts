@@ -356,13 +356,19 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param payload - {@link UpdateDialogPayload} Dialog data
    * @since 1.0.0
-   * @returns {Promise<response>} result
+   * @returns {Promise<response>} Operation result
+   * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * await rest.dialogs.update(123, { name: 'New Name' });
+   * await rest.dialogs.update(123, { description: 'Updated description' });
    * ```
    */
   async update(dialogId: number, payload: UpdateDialogPayload): Promise<response> {
+    if (dialogId < 1) throw new Error('Invalid dialog ID');
+    if (payload.name && payload.name.length > 330) throw new Error('Invalid name');
+    if (payload.description && payload.description.length > 330) throw new Error('Invalid description');
+    
     return this.client.patch<response>(`/dialogs/${dialogId}`, payload);
   }
 }
