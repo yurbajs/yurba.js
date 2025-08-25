@@ -23,6 +23,7 @@ export class MusebaseResource {
    * Gets a track by identifier
    * @group Tracks
    * @param trackId - Track identifier
+   * @since 1.0.0
    * @returns {Promise<Track>} {@link Track} object
    * @example
    * ```javascript
@@ -44,6 +45,7 @@ export class MusebaseResource {
    * @param release - Release information
    * @param description - Playlist description
    * @param cover - Cover photo ID
+   * @since 1.0.0
    * @returns {Promise<Playlist>} {@link Playlist} Created playlist
    * @example
    * ```javascript
@@ -59,6 +61,7 @@ export class MusebaseResource {
    * Gets a playlist by identifier
    * @group Playlists
    * @param playlistId - Playlist identifier
+   * @since 1.0.0
    * @returns {Promise<Playlist>} {@link Playlist} object
    * @example
    * ```javascript
@@ -73,6 +76,7 @@ export class MusebaseResource {
    * Gets user playlists by tag
    * @group Playlists
    * @param tag - User tag
+   * @since 1.0.0
    * @returns {Promise<Playlist[]>} Array of {@link Playlist} objects
    * @example
    * ```javascript
@@ -91,6 +95,7 @@ export class MusebaseResource {
    * @param release - Release information
    * @param description - Playlist description
    * @param cover - Cover photo ID
+   * @since 1.0.0
    * @returns {Promise<EditPlaylistResponse>} Update response
    * @example
    * ```javascript
@@ -106,6 +111,7 @@ export class MusebaseResource {
    * Deletes a playlist
    * @group Playlists
    * @param playlistId - Playlist identifier
+   * @since 1.0.0
    * @returns {Promise<DeletePlaylistResponse>} Delete response
    * @example
    * ```javascript
@@ -121,6 +127,7 @@ export class MusebaseResource {
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @param trackId - Track identifier
+   * @since 1.0.0
    * @returns {Promise<BaseOkay>} Operation result
    * @example
    * ```javascript
@@ -136,6 +143,7 @@ export class MusebaseResource {
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @param trackId - Track identifier
+   * @since 1.0.0
    * @returns {Promise<DeleteTrackResponse>} Delete response
    * @example
    * ```javascript

@@ -596,6 +596,11 @@ export enum Status {
   None = '',
 }
 
+export interface SubscribeResponse {
+    RelationshipState:   RelationshipState;
+}
+
+
 export enum RelationshipState {
   None = '',
   Strangers = 'strangers',

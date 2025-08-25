@@ -18,6 +18,7 @@ export class PhotosResource {
    * @group Photos Core
    * @param page - Page number (optional)
    * @param mode - Set to 'private' for private photos (optional)
+   * @since 1.0.0
    * @returns {Promise<Photo[]>} Array of {@link Photo} objects
    * @example
    * ```javascript
@@ -38,6 +39,7 @@ export class PhotosResource {
    * Gets a photo by identifier
    * @group Photos Core
    * @param photoId - Photo identifier
+   * @since 1.0.0
    * @returns {Promise<Photo>} {@link Photo} object
    * @example
    * ```javascript
@@ -55,6 +57,7 @@ export class PhotosResource {
    * @param caption - Photo caption
    * @param mode - Photo visibility mode
    * @param filename - Custom filename (optional)
+   * @since 1.0.0
    * @returns {Promise<Photo>} {@link Photo} Uploaded photo
    * @example
    * ```javascript
@@ -101,6 +104,7 @@ export class PhotosResource {
    * Delete a photo
    * @group Photos Core
    * @param photoId - Photo identifier
+   * @since 1.0.0
    * @returns {Promise<DeletePhotoResponse>} Delete response
    * @example
    * ```javascript
