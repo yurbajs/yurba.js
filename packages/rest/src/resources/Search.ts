@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { Dialog, FindDialogPayload } from '@yurbajs/types';
+import { Dialog, FindDialogPayload, User, FindUserPayload } from '@yurbajs/types';
 
 export class SearchResource {
   /**
@@ -53,5 +53,43 @@ export class SearchResource {
    */
   async dialogs(query: string, payload: FindDialogPayload, page: number = 0): Promise<Dialog[]> {
     return this.client.post<Dialog[]>(`/dialogs/find/${query}?page=${page}`, payload);
+  }
+
+  /**
+   * Find users
+   * @group Search
+   * @param payload - Search filters
+   * @param page - Page number (default 0)
+   * @since 1.0.0
+   * @returns {Promise<User[]>} User list
+   * @example
+   * ```javascript
+   * // Basic search
+   * const users = await rest.search.users({
+   *   sort: 0,
+   *   country: 0,
+   *   region: 0,
+   *   city: 0,
+   *   worksAt: "",
+   *   relationships: 0,
+   *   online: 0,
+   *   avatar: 0
+   * });
+   * 
+   * // Search married users from Ukraine
+   * const marriedUsers = await rest.search.users({
+   *   sort: 0,
+   *   country: 228, // Ukraine
+   *   region: 0,
+   *   city: 0,
+   *   worksAt: "",
+   *   relationships: RelationshipStatus.Married,
+   *   online: 1,
+   *   avatar: 0
+   * });
+   * ```
+   */
+  async users(payload: FindUserPayload, page: number = 0): Promise<User[]> {
+    return this.client.post<User[]>(`/users/find?page=${page}`, payload);
   }
 }
