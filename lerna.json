@@ -14,28 +14,9 @@
     "version": {
       "conventionalCommits": true,
       "allowBranch": ["main", "dev"],
-      "changelogPreset": {
-        "name": "conventionalcommits",
-        "types": {
-          "feat": {
-            "section": "Features",
-            "bump": "minor"
-          },
-          "fix": {
-            "section": "Bug Fixes",
-            "bump": "patch"
-          },
-          "perf": {
-            "section": "Performance Improvements",
-            "bump": "patch"
-          },
-          "refactor": {
-            "section": "Code Refactoring",
-            "bump": "patch"
-          }
-        }
-      },
-      "exact": true
+      "changelogPreset": "angular",
+      "exact": true,
+      "forcePublish": true
     },
     "publish": {
       "conventionalCommits": true,
