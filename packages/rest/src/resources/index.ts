@@ -6,3 +6,4 @@ export { MusebaseResource } from './Musebase';
 export { PhotosResource } from './Photos';
 export { FilesResource } from './Files';
 export { VideoResource } from './Video';
+export { SearchResource } from './Search';

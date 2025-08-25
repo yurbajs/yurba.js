@@ -1,5 +1,5 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource } from './resources/';
+import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource, SearchResource } from './resources/';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -13,6 +13,7 @@ export class REST extends BaseClient {
   private _auth?: AuthResource;
   private _files?: FilesResource;
   private _video?: VideoResource;
+  private _search?: SearchResource;
 
   static create: (token: string, options?: BaseClientOptions) => REST;
 
@@ -83,6 +84,14 @@ export class REST extends BaseClient {
     }
     return this._video!;
   }
+
+  get search(): SearchResource {
+    if (!this._search) {
+      const { SearchResource } = require('./resources/Search');
+      this._search = new SearchResource(this);
+    }
+    return this._search!;
+  }
 }
 
 // Static factory method
@@ -106,7 +115,8 @@ export type {
   MusebaseResource,
   AuthResource,
   FilesResource,
-  VideoResource
+  VideoResource,
+  SearchResource
 } from './resources/';
 
 // Default export for convenience
