@@ -96,8 +96,17 @@ export class BaseClient extends EventEmitter {
 
   public async uploadFile<T = any>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<T> {
     const headers = { ...this.defaultHeaders, ...config?.headers };
-    delete headers['Content-Type'];
-    return this.request<T>('POST', this.buildUrl(endpoint), formData, { ...config, headers });
+    delete headers['Content-Type']; // Let browser set multipart boundary
+    
+    const uploadConfig = {
+      ...config,
+      headers: {
+        'Accept': 'application/json',
+        'token': headers['token']
+      }
+    };
+    
+    return this.request<T>('POST', this.buildUrl(endpoint), formData, uploadConfig);
   }
 
   public cancelRequest(endpoint: string): void {
@@ -135,7 +144,7 @@ export class BaseClient extends EventEmitter {
         link: user.Link,
         avatar: user.Avatar
       });
-    } catch (error) {
+    } catch {
       throw new ApiError('Token validation failed', 401, undefined, '/me', 'GET');
     }
   }
@@ -193,11 +202,24 @@ export class BaseClient extends EventEmitter {
     const timeout = config?.timeout ?? this.options.timeout;
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-    const headers = { ...this.defaultHeaders, ...config?.headers };
+    let headers = { ...this.defaultHeaders, ...config?.headers };
+    let body: any;
+    
+    if (data instanceof FormData) {
+      // For FormData, only keep essential headers
+      headers = {
+        'Accept': 'application/json',
+        'token': headers['token']
+      };
+      body = data;
+    } else {
+      body = data ? JSON.stringify(data) : undefined;
+    }
+    
     const options: RequestInit = {
       method,
       headers,
-      body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
+      body,
       signal
     };
 

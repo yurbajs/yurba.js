@@ -1,5 +1,7 @@
 import { REST } from '../index';
 import { Photo, DeletePhotoResponse } from '@yurbajs/types';
+import { readFileSync } from 'fs';
+import { extname } from 'path';
 
 export class PhotosResource {
   /**
@@ -10,6 +12,27 @@ export class PhotosResource {
   /* 
   //               { Photos Core }
   */
+
+  /**
+   * Gets all photos (up to 12 per page)
+   * @group Photos Core
+   * @param page - Page number (optional)
+   * @param mode - Set to 'private' for private photos (optional)
+   * @returns {Promise<Photo[]>} Array of {@link Photo} objects
+   * @example
+   * ```javascript
+   * const photos = await rest.photos.getAll(2);
+   * const privatePhotos = await rest.photos.getAll(0, 'private');
+   * ```
+   */
+  async getAll(page?: number, mode?: 'private'): Promise<Photo[]> {
+    const params = new URLSearchParams();
+    if (page !== undefined) params.append('page', page.toString());
+    if (mode === 'private') params.append('mode', 'private');
+    
+    const query = params.toString();
+    return this.client.get<Photo[]>(`/photos${query ? `?${query}` : ''}`);
+  }
 
   /**
    * Gets a photo by identifier
@@ -28,20 +51,46 @@ export class PhotosResource {
   /**
    * Upload a photo
    * @group Photos Core
-   * @param photo - Photo buffer or blob
+   * @param input - Path to photo file or Buffer
    * @param caption - Photo caption
    * @param mode - Photo visibility mode
+   * @param filename - Custom filename (optional)
    * @returns {Promise<Photo>} {@link Photo} Uploaded photo
    * @example
    * ```javascript
-   * const photo = await rest.photos.upload(buffer, 'My photo', 'public');
+   * const photo = await rest.photos.upload('путь до фото', 'My photo', 'public');
+   * // or with Buffer
+   * const photo = await rest.photos.upload(buffer, 'My photo', 'public', 'image.png');
    * ```
    */
-  async upload(photo: Buffer, caption: string = '', mode: 'public' | 'private' = 'public'): Promise<Photo> {
-    const formData = new FormData();
-    const blob = new Blob([photo], { type: 'image/png' });
+  async upload(input: string | Buffer, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
+    let buffer: Buffer;
+    let ext: string;
     
-    formData.append('photo', blob, `photo-${Date.now()}.png`);
+    if (typeof input === 'string') {
+      buffer = readFileSync(input);
+      ext = extname(input).toLowerCase();
+    } else {
+      buffer = input;
+      ext = filename ? extname(filename).toLowerCase() : '.png';
+    }
+    
+    const mimeTypes: Record<string, string> = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.webp': 'image/webp',
+      '.gif': 'image/gif',
+      '.bmp': 'image/bmp',
+      '.tiff': 'image/tiff',
+      '.svg': 'image/svg+xml'
+    };
+    
+    const mimeType = mimeTypes[ext] || 'image/jpeg';
+    const formData = new FormData();
+    const blob = new Blob([new Uint8Array(buffer)], { type: mimeType });
+    
+    formData.append('photo', blob, filename || `photo-${Date.now()}${ext}`);
     formData.append('caption', caption);
     formData.append('mode', mode);
 
