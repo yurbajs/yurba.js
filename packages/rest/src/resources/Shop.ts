@@ -3,15 +3,19 @@ import { Shop, Item } from '@yurbajs/types';
 
 export class ShopResource {
   /**
-   * @internal
+   * @ignore
    */
   constructor(private client: REST) {}
 
+  /* 
+  //               { Shop }
+  */
+
   /**
-   * Get shop categories and items
+   * Gets shop categories and items
    * @group Shop
    * @since 1.0.0
-   * @returns {Promise<Shop[]>} Shop categories with items
+   * @returns {Promise<Shop[]>} Array of {@link Shop} objects
    * @example
    * ```javascript
    * const shop = await rest.shop.get();
@@ -22,10 +26,10 @@ export class ShopResource {
   }
 
   /**
-   * Get user inventory
+   * Gets user inventory
    * @group Shop
    * @since 1.0.0
-   * @returns {Promise<Item[]>} User's inventory items
+   * @returns {Promise<Item[]>} Array of {@link Item} objects
    * @example
    * ```javascript
    * const inventory = await rest.shop.inventory();
