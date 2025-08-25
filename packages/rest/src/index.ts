@@ -17,8 +17,6 @@ export class REST extends BaseClient {
   private _shop?: ShopResource;
   private _apps?: AppResource;
 
-  static create: (token: string, options?: BaseClientOptions) => REST;
-
   constructor(token: string, options?: BaseClientOptions) {
     super(token, options);
   }
@@ -111,9 +109,6 @@ export class REST extends BaseClient {
     return this._apps!;
   }
 }
-
-// Static factory method
-REST.create = (token: string, options?: BaseClientOptions) => new REST(token, options);
 
 // Re-exports
 export {
