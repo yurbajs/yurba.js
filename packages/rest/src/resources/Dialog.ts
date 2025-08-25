@@ -19,6 +19,10 @@ export class DialogResource {
    */
   constructor(private client: REST) {}
 
+  /* 
+  //               { Dialog Core }
+  */
+
   /**
    * Gets a dialog by identifier
    * @group Dialog Core
@@ -140,185 +144,6 @@ export class DialogResource {
     return this.client.delete(`/dialogs/${dialogId}/leave/${user.id}`);
   }
 
-
-  /**
-   * Get dialog members
-   * @group Dialog Members
-   * @param dialogId - Dialog identifier
-   * @param page - Page number (default 0)
-   * @since 0.1.10
-   * @returns {Promise<DialogMember[]>} Array of {@link DialogMember} objects
-   * @throws {Error} If parameters are invalid
-   * @example
-   * ```javascript
-   * const members = await rest.dialogs.getMembers(123);
-   * const nextPage = await rest.dialogs.getMembers(123, 1);
-   * ```
-   */
-  async getMembers(dialogId: number, page = 0): Promise<DialogMember[]> {
-    if (dialogId < 1 || page < 0) throw new Error('Invalid parameters');
-    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, {
-      page,
-    });
-  }
-
-
-  /**
-   * Add user to dialog
-   * @group Dialog Members
-   * @param dialogId - Dialog identifier
-   * @param userId - User identifier
-   * @since 0.1.10
-   * @returns {Promise<any>} Operation result
-   * @throws {Error} If parameters are invalid
-   * @example
-   * ```javascript
-   * await rest.dialogs.addMember(123, 456);
-   * ```
-   */
-  async addMember(dialogId: number, userId: number, code: string = ''): Promise<response> {
-    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
-    return this.client.post(`/dialogs/${dialogId}/join/${userId}?code=${code}`, {});
-  }
-
-  /**
-   * Remove user from dialog
-   * @group Dialog Members
-   * @param dialogId - Dialog identifier
-   * @param userId - User identifier
-   * @since 0.1.10
-   * @returns {Promise<any>} Operation result
-   * @throws {Error} If parameters are invalid
-   * @example
-   * ```javascript
-   * await rest.dialogs.removeMember(123, 456);
-   * ```
-   */
-  async removeMember(dialogId: number, userId: number): Promise<response> {
-    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
-    return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
-  }
-
-
-  /**
-   * Get message (by id)
-   * @group Dialog Messages
-   * @param messageId - Message ID
-   * @since 1.0.0
-   * @returns {Promise<Message>} Array of messages
-   * @deprecated This method may not work due to restricted access to view all messages
-   * @example
-   * ```javascript
-   * const messages = await rest.dialogs.getMessage(123);
-   * ```
-   */
-  async getMessage(dialogId: number): Promise<Message> { 
-    return this.client.get<Message>(`/dialogs/${dialogId}/messages`);
-  }
-
-
-  /**
-   * Get messages from dialog
-   * @group Dialog Messages
-   * @param dialogId - Dialog identifier
-   * @param lastId - Last message ID for pagination (optional)
-   * @since 0.1.10
-   * @returns {Promise<Message[]>} Array of messages
-   * @example
-   * ```javascript
-   * const messages = await rest.dialogs.getMessages(123);
-   * const older_messages = await rest.dialogs.getMessages(123, 999);
-   * ```
-   */
-  async getMessages(dialogId: number, lastId?: number): Promise<Message[]> {
-    const params = lastId ? { last_id: lastId } : {};
-    return this.client.get<Message[]>(`/dialogs/${dialogId}/messages`, params);
-  }
-
-  /**
-   * Send message to dialog
-   * @group Dialog Messages
-   * @param dialogId - Dialog identifier
-   * @param payload - {@link SendMessagePayload} Message data
-   * @since 0.1.10
-   * @returns {Promise<Message>} {@link Message} Sent message
-   * @example
-   * ```javascript
-   * // Text message
-   * await rest.dialogs.sendMessage(123, { text: "Hello!" });
-   *
-   * // With photos and reply
-   * await rest.dialogs.sendMessage(123, {
-   *   text: "Check this",
-   *   photos_list: [-1112],
-   *   replyTo: 48561
-   * });
-   *
-   * // With attachments
-   * await rest.dialogs.sendMessage(123, {
-   *   text: "Media",
-   *   attachments: [
-   *     { Type: "video", Item: 28 },
-   *     { Type: "track", Item: 6422 },
-   *     { Type: "file", Item: 684 },
-   *     { Type: "post", Item: 3201 }
-   *   ]
-   * });
-   *
-   * // With new attachments
-   * import { File, Audio, Video, Photo }
-   * 
-   * await rest.dialogs.sendMessage(123, {
-   *   text: "Media",
-   *   attachments: [
-   *     New File('/path/to/file.txt'),
-   *     New Photo('/path/to/photo.png', { caption: "the file" }),
-   *     New Audio('/path/to/audio.mp3', { name: '', author: '', release: '', cover: '', mode: ''}),
-   *     New Video('/path/to/video.mp4')
-   *   ]
-   * });
-   * 
-   * // Edit message
-   * await rest.dialogs.sendMessage(123, {
-   *   text: "Updated",
-   *   edit: 12345
-   * });
-   * ```
-   */
-  async sendMessage(
-    dialogId: number,
-    payload: SendMessagePayload
-  ): Promise<Message> {
-    const messageData: SendMessagePayload = {
-      text: payload.text || '',
-      photos_list: payload.photos_list || [],
-      replyTo: payload.replyTo ?? null,
-      edit: payload.edit ?? null,
-      attachments: payload.attachments || [],
-    };
-
-    return this.client.post<Message>(
-      `/dialogs/${dialogId}/messages`,
-      messageData
-    );
-  }
-
-  /**
-   * Delete message
-   * @group Message Management
-   * @param messageId - Message identifier
-   * @since 0.1.10
-   * @returns {Promise<response>} Operation result
-   * @example
-   * ```javascript
-   * const deleted = await rest.dialogs.deleteMessage(12345);
-   * ```
-   */
-  async deleteMessage(messageId: number): Promise<response> {
-    await this.client.patch<undefined>(`/dialogs/messages/${messageId}`);
-    return this.client.delete<response>(`/dialogs/messages/${messageId}`);
-  }
-
   /**
    * Mute/unmute dialog
    * @group Dialog Core
@@ -402,5 +227,190 @@ export class DialogResource {
     if (payload.description && payload.description.length > 330) throw new Error('Invalid description');
     
     return this.client.patch<response>(`/dialogs/${dialogId}`, payload);
+  }
+
+  /* 
+  //               { Dialog Members }
+  */
+
+  /**
+   * Get dialog members
+   * @group Dialog Members
+   * @param dialogId - Dialog identifier
+   * @param page - Page number (default 0)
+   * @since 0.1.10
+   * @returns {Promise<DialogMember[]>} Array of {@link DialogMember} objects
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * const members = await rest.dialogs.getMembers(123);
+   * const nextPage = await rest.dialogs.getMembers(123, 1);
+   * ```
+   */
+  async getMembers(dialogId: number, page = 0): Promise<DialogMember[]> {
+    if (dialogId < 1 || page < 0) throw new Error('Invalid parameters');
+    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, {
+      page,
+    });
+  }
+
+
+  /**
+   * Add user to dialog
+   * @group Dialog Members
+   * @param dialogId - Dialog identifier
+   * @param userId - User identifier
+   * @since 0.1.10
+   * @returns {Promise<any>} Operation result
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * await rest.dialogs.addMember(123, 456);
+   * ```
+   */
+  async addMember(dialogId: number, userId: number, code: string = ''): Promise<response> {
+    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
+    return this.client.post(`/dialogs/${dialogId}/join/${userId}?code=${code}`, {});
+  }
+
+  /**
+   * Remove user from dialog
+   * @group Dialog Members
+   * @param dialogId - Dialog identifier
+   * @param userId - User identifier
+   * @since 0.1.10
+   * @returns {Promise<any>} Operation result
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * await rest.dialogs.removeMember(123, 456);
+   * ```
+   */
+  async removeMember(dialogId: number, userId: number): Promise<response> {
+    if (dialogId < 1 || userId < 1) throw new Error('Invalid parameters');
+    return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
+  }
+
+  /* 
+  //               { Dialog Messages }
+  */
+
+  /**
+   * Get message (by id)
+   * @group Dialog Messages
+   * @param messageId - Message ID
+   * @since 1.0.0
+   * @returns {Promise<Message>} Array of messages
+   * @deprecated This method may not work due to restricted access to view all messages
+   * @example
+   * ```javascript
+   * const messages = await rest.dialogs.getMessage(123);
+   * ```
+   */
+  async getMessage(dialogId: number): Promise<Message> { 
+    return this.client.get<Message>(`/dialogs/${dialogId}/messages`);
+  }
+
+
+  /**
+   * Get messages from dialog
+   * @group Dialog Messages
+   * @param dialogId - Dialog identifier
+   * @param lastId - Last message ID for pagination (optional)
+   * @since 0.1.10
+   * @returns {Promise<Message[]>} Array of messages
+   * @example
+   * ```javascript
+   * const messages = await rest.dialogs.getMessages(123);
+   * const older_messages = await rest.dialogs.getMessages(123, 999);
+   * ```
+   */
+  async getMessages(dialogId: number, lastId?: number): Promise<Message[]> {
+    const params = lastId ? { last_id: lastId } : {};
+    return this.client.get<Message[]>(`/dialogs/${dialogId}/messages`, params);
+  }
+
+  /**
+   * Send message to dialog
+   * @group Dialog Messages
+   * @param dialogId - Dialog identifier
+   * @param payload - {@link SendMessagePayload} Message data
+   * @since 0.1.10
+   * @returns {Promise<Message>} {@link Message} Sent message
+   * @example
+   * ```javascript
+   * // Text message
+   * await rest.dialogs.sendMessage(123, { text: "Hello!" });
+   *
+   * // With photos and reply
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Check this",
+   *   photos_list: [-1112],
+   *   replyTo: 48561
+   * });
+   *
+   * // With attachments
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Media",
+   *   attachments: [
+   *     { Type: "video", Item: 28 },
+   *     { Type: "track", Item: 6422 },
+   *     { Type: "file", Item: 684 },
+   *     { Type: "post", Item: 3201 }
+   *   ]
+   * });
+   *
+   * // With new attachments
+   * import { File, Audio, Video, Photo } from '@yurbajs/utils'
+   * 
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Media",
+   *   attachments: [
+   *     New File('/path/to/file.txt'),
+   *     New Photo('/path/to/photo.png', { caption: "the file" }),
+   *     New Audio('/path/to/audio.mp3', { name: '', author: '', release: '', cover: '', mode: ''}),
+   *     New Video('/path/to/video.mp4')
+   *   ]
+   * });
+   * 
+   * // Edit message
+   * await rest.dialogs.sendMessage(123, {
+   *   text: "Updated",
+   *   edit: 12345
+   * });
+   * ```
+   */
+  async sendMessage(
+    dialogId: number,
+    payload: SendMessagePayload
+  ): Promise<Message> {
+    const messageData: SendMessagePayload = {
+      text: payload.text || '',
+      photos_list: payload.photos_list || [],
+      replyTo: payload.replyTo ?? null,
+      edit: payload.edit ?? null,
+      attachments: payload.attachments || [],
+    };
+
+    return this.client.post<Message>(
+      `/dialogs/${dialogId}/messages`,
+      messageData
+    );
+  }
+
+  /**
+   * Delete message
+   * @group Dialog Messages
+   * @param messageId - Message identifier
+   * @since 0.1.10
+   * @returns {Promise<response>} Operation result
+   * @example
+   * ```javascript
+   * const deleted = await rest.dialogs.deleteMessage(12345);
+   * ```
+   */
+  async deleteMessage(messageId: number): Promise<response> {
+    await this.client.patch<undefined>(`/dialogs/messages/${messageId}`);
+    return this.client.delete<response>(`/dialogs/messages/${messageId}`);
   }
 }
