@@ -2,7 +2,9 @@
   "version": "independent",
   "updateInternalDependencies": "none",
   "npmClient": "pnpm",
-  "ignorePrivate": true,
+  "packages": [
+    "packages/*"
+  ],
   "ignoreChanges": [
     "**/*.md",
     "**/*.test.ts",
