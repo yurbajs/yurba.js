@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, SubscribeResponse, FindUserPayload } from '@yurbajs/types';
+import { User, SubscribeResponse, FindUserPayload, Gift } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -52,6 +52,31 @@ export class UserResource {
    */
   async getFriends(user: string | number, page: number): Promise<User[]> {
     return this.client.get<User[]>(`/user/${user}/friends`, { page });
+  }
+
+  /**
+   * Get current user's gifts
+   * @group User Gifts
+   * @param page - Page number (default 0)
+   * @since 1.0.0
+   * @returns {Promise<Gift[]>} Current user's gifts
+   */
+  async gifts(page: number = 0): Promise<Gift[]> {
+    const user = await this.client.getCachedUser();
+    if (!user) throw new Error('User not found in cache');
+    return this.client.get<Gift[]>(`/user/${user.id}/gifts`, { page });
+  }
+
+  /**
+   * Get user gifts
+   * @group User Gifts
+   * @param user - User ({tag}/{id}/u{id})
+   * @param page - Page number (default 0)
+   * @since 1.0.0
+   * @returns {Promise<Gift[]>} User gifts
+   */
+  async getGifts(user: string | number, page: number = 0): Promise<Gift[]> {
+    return this.client.get<Gift[]>(`/user/${user}/gifts`, { page });
   }
 
 
