@@ -7,6 +7,7 @@ import {
   CreatePrivateDialogResponse,
   SendMessagePayload,
   UpdateDialogPayload,
+  FindDialogPayload,
   Message,
   response,
   responseMute
@@ -334,10 +335,10 @@ export class DialogResource {
   }
 
   /**
-   * Find dialogs by mask
+   * Find dialogs
    * @group Dialog Core
-   * @param mask - Search mask
-   * @param data - Search data
+   * @param query - Search mask
+   * @param payload - Search data
    * @param page - Page number (default 0)
    * @since 1.0.0
    * @returns {Promise<Dialog[]>} Dialog list
@@ -346,8 +347,8 @@ export class DialogResource {
    * const results = await rest.dialogs.find('search', {}, 0);
    * ```
    */
-  async find(mask: string, data: any, page = 0): Promise<Dialog[]> {
-    return this.client.post<Dialog[]>(`/dialogs/find/${mask}?page=${page}`, data);
+  async find(query: string, payload: FindDialogPayload, page: number = 0): Promise<Dialog[]> {
+    return this.client.post<Dialog[]>(`/dialogs/find/${query}?page=${page}`, payload);
   }
 
   /**
