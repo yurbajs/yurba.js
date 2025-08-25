@@ -3,18 +3,23 @@ import { Dialog, FindDialogPayload, User, FindUserPayload, Track } from '@yurbaj
 
 export class SearchResource {
   /**
-   * @internal
+   * @ignore
    */
   constructor(private client: REST) {}
 
+  /* 
+  //               { Search }
+  */
+
   /**
-   * Find dialogs
+   * Finds dialogs
    * @group Search
    * @param query - Search mask
-   * @param payload - Search data
+   * @param payload - {@link FindDialogPayload} Search data
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<Dialog[]>} Dialog list
+   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * // Basic search
@@ -52,16 +57,19 @@ export class SearchResource {
    * ```
    */
   async dialogs(query: string, payload: FindDialogPayload, page: number = 0): Promise<Dialog[]> {
+    if (!query || page < 0) throw new Error('Invalid parameters');
+    if (!payload) throw new Error('Invalid search payload');
     return this.client.post<Dialog[]>(`/dialogs/find/${query}?page=${page}`, payload);
   }
 
   /**
-   * Find users
+   * Finds users
    * @group Search
-   * @param payload - Search filters
+   * @param payload - {@link FindUserPayload} Search filters
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<User[]>} User list
+   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * // Basic search
@@ -90,16 +98,18 @@ export class SearchResource {
    * ```
    */
   async users(payload: FindUserPayload, page: number = 0): Promise<User[]> {
+    if (!payload || page < 0) throw new Error('Invalid parameters');
     return this.client.post<User[]>(`/users/find?page=${page}`, payload);
   }
 
   /**
-   * Find tracks
+   * Finds tracks
    * @group Search
    * @param query - Song name or artist
    * @param page - Page number (optional)
    * @since 1.0.0
-   * @returns {Promise<Track[]>} Track list
+   * @returns {Promise<Track[]>} Array of {@link Track} objects
+   * @throws {Error} If query is invalid or page is negative
    * @example
    * ```javascript
    * // Search by song name
@@ -113,6 +123,8 @@ export class SearchResource {
    * ```
    */
   async tracks(query: string, page?: number): Promise<Track[]> {
+    if (!query) throw new Error('Invalid query');
+    if (page !== undefined && page < 0) throw new Error('Invalid page number');
     const url = page !== undefined ? `/musebase/find/${query}?page=${page}` : `/musebase/find/${query}`;
     return this.client.get<Track[]>(url);
   }

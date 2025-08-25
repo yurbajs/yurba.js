@@ -91,7 +91,7 @@ export class PostResource {
    */
   async edit(postId: number, data: CreatePostPayload): Promise<Post> {
     if (postId < 1) throw new Error('Invalid post ID');
-    if (!data || (!data.text && !data.photos_list?.length)) throw new Error('Invalid post data');
+    if (!data || (!data.content && !data.photos_list?.length)) throw new Error('Invalid post data');
     return this.client.patch<Post>(`/posts/${postId}`, data);
   }
 
