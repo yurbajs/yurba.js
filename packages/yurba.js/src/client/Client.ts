@@ -295,8 +295,8 @@ class Client extends EventEmitter {
     this.checkToken();
 
     try {
-      const user = await this.api.users.getMe();
-      this._user = user; // Store user data
+      const user = await this.api.users.me();
+      this._user = user; 
 
       log('User data:', user);
 
@@ -570,7 +570,7 @@ class Client extends EventEmitter {
    */
   async getUser(userTag: string): Promise<UserModel | null> {
     try {
-      const response = await this.api.users.getByTag(userTag);
+      const response = await this.api.users.get(userTag);
       log(`Fetched user ${userTag}`, response);
       return response;
     } catch (err) {
