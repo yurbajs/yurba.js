@@ -1,5 +1,5 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource } from './resources/';
+import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource } from './resources/';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -11,6 +11,7 @@ export class REST extends BaseClient {
   private _musebase?: MusebaseResource;
   private _photos?: PhotosResource;
   private _auth?: AuthResource;
+  private _files?: FilesResource;
 
   static create: (token: string, options?: BaseClientOptions) => REST;
 
@@ -65,6 +66,14 @@ export class REST extends BaseClient {
     }
     return this._auth!;
   }
+
+  get files(): FilesResource {
+    if (!this._files) {
+      const { FilesResource } = require('./resources/Files');
+      this._files = new FilesResource(this);
+    }
+    return this._files!;
+  }
 }
 
 // Static factory method
@@ -86,7 +95,8 @@ export type {
   PostResource,
   PhotosResource,
   MusebaseResource,
-  AuthResource
+  AuthResource,
+  FilesResource
 } from './resources/';
 
 // Default export for convenience
