@@ -54,7 +54,6 @@ export class PostResource {
    */
   async create(tag: string, data: CreatePostPayload): Promise<Post> {
     if (!tag || tag.length > 255) throw new Error('Invalid tag');
-    if (!data || (!data.content)) throw new Error('Invalid post data');
     const resolvedUser = await this.client.resolveUser(tag);
     return this.client.post<Post>(`/user/${resolvedUser}/post`, data);
   }

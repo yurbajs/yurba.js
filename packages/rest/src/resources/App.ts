@@ -1,17 +1,28 @@
 import { REST } from '../index';
-import { App, AppToken, CreateAppPayload, BaseOkay, User } from '@yurbajs/types';
+import {
+  App,
+  AppToken,
+  CreateAppPayload,
+  BaseOkay,
+  User
+} from '@yurbajs/types';
 
 export class AppResource {
   /**
-   * @internal
+   * @ignore
    */
   constructor(private client: REST) {}
 
+  /* 
+  //               { Apps Core }
+  */
+
   /**
-   * Get all apps
+   * Gets all apps
    * @group Apps Core
    * @since 1.0.0
-   * @returns {Promise<App[]>} Array of apps
+   * @returns {Promise<App[]>} Array of {@link App} objects
+   * @throws {Error} If apps cannot be retrieved
    * @example
    * ```javascript
    * const apps = await rest.apps.getAll();
@@ -22,11 +33,12 @@ export class AppResource {
   }
 
   /**
-   * Create new app
+   * Creates a new app
    * @group Apps Core
-   * @param payload - App creation data
+   * @param payload - {@link CreateAppPayload} App creation data
+   * @returns {Promise<App>} {@link App} Created app
    * @since 1.0.0
-   * @returns {Promise<App>} Created app
+   * @throws {Error} If payload is invalid
    * @example
    * ```javascript
    * const app = await rest.apps.create({
@@ -36,113 +48,135 @@ export class AppResource {
    * ```
    */
   async create(payload: CreateAppPayload): Promise<App> {
+    if (!payload.name || payload.name.length > 255) throw new Error('Invalid name');
+    if (!payload.redirectUrl) throw new Error('Invalid redirect URL');
     return this.client.post<App>('/apps', payload);
   }
 
   /**
-   * Get app by public key
+   * Gets an app by public key
    * @group Apps Core
    * @param publicKey - App public key
    * @since 1.0.0
-   * @returns {Promise<App>} App information
+   * @returns {Promise<App>} {@link App} object
+   * @throws {Error} If public key is invalid or app not found
    * @example
    * ```javascript
    * const app = await rest.apps.get('public_key_here');
    * ```
    */
   async get(publicKey: string): Promise<App> {
+    if (!publicKey || publicKey.length < 1) throw new Error('Invalid public key');
     return this.client.get<App>(`/apps/${publicKey}`);
   }
 
   /**
-   * Delete app
+   * Deletes an app
    * @group Apps Core
    * @param appId - App identifier
    * @since 1.0.0
-   * @returns {Promise<BaseOkay>} Operation result
+   * @returns {Promise<BaseOkay>} {@link BaseOkay} Delete response
+   * @throws {Error} If app ID is invalid
    * @example
    * ```javascript
    * await rest.apps.delete(123);
    * ```
    */
   async delete(appId: number): Promise<BaseOkay> {
+    if (appId < 1) throw new Error('Invalid app ID');
     return this.client.delete<BaseOkay>(`/apps/${appId}`);
   }
 
+  /* 
+  //               { App Tokens }
+  */
+
   /**
-   * Get app token
+   * Gets app token
    * @group App Tokens
    * @param publicKey - App public key
    * @since 1.0.0
-   * @returns {Promise<AppToken>} App token information
+   * @returns {Promise<AppToken>} {@link AppToken} object
+   * @throws {Error} If public key is invalid
    * @example
    * ```javascript
    * const token = await rest.apps.getToken('public_key_here');
    * ```
    */
   async getToken(publicKey: string): Promise<AppToken> {
+    if (!publicKey || publicKey.length < 1) throw new Error('Invalid public key');
     return this.client.get<AppToken>(`/apps/${publicKey}/token`);
   }
 
   /**
-   * Create app token
+   * Creates app token
    * @group App Tokens
    * @param publicKey - App public key
    * @param redirectUrl - Redirect URL
    * @since 1.0.0
-   * @returns {Promise<AppToken>} Created app token
+   * @returns {Promise<AppToken>} {@link AppToken} Created app token
+   * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * const token = await rest.apps.createToken('public_key_here', 'https://example.com/callback');
    * ```
    */
   async createToken(publicKey: string, redirectUrl: string): Promise<AppToken> {
+    if (!publicKey || publicKey.length < 1) throw new Error('Invalid public key');
+    if (!redirectUrl) throw new Error('Invalid redirect URL');
     return this.client.post<AppToken>(`/apps/${publicKey}/token?redirectUrl=${redirectUrl}`, {});
   }
 
   /**
-   * Get app tokens
+   * Gets app tokens
    * @group App Tokens
    * @param publicKey - App public key
    * @since 1.0.0
-   * @returns {Promise<AppToken[]>} Array of app tokens
+   * @returns {Promise<AppToken[]>} Array of {@link AppToken} objects
+   * @throws {Error} If public key is invalid
    * @example
    * ```javascript
    * const tokens = await rest.apps.getTokens('public_key_here');
    * ```
    */
   async getTokens(publicKey: string): Promise<AppToken[]> {
+    if (!publicKey || publicKey.length < 1) throw new Error('Invalid public key');
     return this.client.get<AppToken[]>(`/apps/${publicKey}/tokens`);
   }
 
   /**
-   * Delete app token
+   * Deletes app token
    * @group App Tokens
    * @param token - App token
    * @since 1.0.0
-   * @returns {Promise<BaseOkay>} Operation result
+   * @returns {Promise<BaseOkay>} {@link BaseOkay} Delete response
+   * @throws {Error} If token is invalid
    * @example
    * ```javascript
    * await rest.apps.deleteToken('token_here');
    * ```
    */
   async deleteToken(token: string): Promise<BaseOkay> {
+    if (!token || token.length < 1) throw new Error('Invalid token');
     return this.client.delete<BaseOkay>(`/apps/tokens/${token}`);
   }
 
   /**
-   * Get user by app token
+   * Gets user by app token
    * @group App Tokens
    * @param token - App token
    * @param secretKey - App secret key
    * @since 1.0.0
-   * @returns {Promise<User>} User information
+   * @returns {Promise<User>} {@link User} object
+   * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * const user = await rest.apps.getUser('token_here', 'secret_key_here');
    * ```
    */
   async getUser(token: string, secretKey: string): Promise<User> {
+    if (!token || token.length < 1) throw new Error('Invalid token');
+    if (!secretKey || secretKey.length < 1) throw new Error('Invalid secret key');
     return this.client.get<User>(`/apps/user/${token}`, {}, {
       headers: { 'Secret-Key': secretKey }
     });
