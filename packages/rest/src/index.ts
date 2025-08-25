@@ -1,5 +1,5 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource } from './resources/';
+import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AuthResource, FilesResource, VideoResource } from './resources/';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -12,6 +12,7 @@ export class REST extends BaseClient {
   private _photos?: PhotosResource;
   private _auth?: AuthResource;
   private _files?: FilesResource;
+  private _video?: VideoResource;
 
   static create: (token: string, options?: BaseClientOptions) => REST;
 
@@ -74,6 +75,14 @@ export class REST extends BaseClient {
     }
     return this._files!;
   }
+
+  get video(): VideoResource {
+    if (!this._video) {
+      const { VideoResource } = require('./resources/Video');
+      this._video = new VideoResource(this);
+    }
+    return this._video!;
+  }
 }
 
 // Static factory method
@@ -96,7 +105,8 @@ export type {
   PhotosResource,
   MusebaseResource,
   AuthResource,
-  FilesResource
+  FilesResource,
+  VideoResource
 } from './resources/';
 
 // Default export for convenience
