@@ -1,17 +1,22 @@
 export interface CachedUser {
-  id: number;
-  name: string;
-  surname: string;
-  link: string;
-  avatar: number;
-  timestamp: number;
+  readonly id: number;
+  readonly name: string;
+  readonly surname: string;
+  readonly link: string;
+  readonly avatar: number;
+  readonly timestamp: number;
 }
 
 class UserCache {
-  private cache = new Map<string, CachedUser>();
+  private readonly cache = new Map<string, CachedUser>();
   private readonly TTL = 5 * 60 * 1000; // 5 minutes
+  private cleanupTimer?: NodeJS.Timeout;
 
-  set(token: string, user: CachedUser): void {
+  constructor() {
+    this.startCleanupTimer();
+  }
+
+  set(token: string, user: Omit<CachedUser, 'timestamp'>): void {
     this.cache.set(token, { ...user, timestamp: Date.now() });
   }
 
@@ -19,7 +24,7 @@ class UserCache {
     const cached = this.cache.get(token);
     if (!cached) return null;
     
-    if (Date.now() - cached.timestamp > this.TTL) {
+    if (this.isExpired(cached)) {
       this.cache.delete(token);
       return null;
     }
@@ -27,8 +32,46 @@ class UserCache {
     return cached;
   }
 
+  has(token: string): boolean {
+    return this.get(token) !== null;
+  }
+
+  delete(token: string): boolean {
+    return this.cache.delete(token);
+  }
+
   clear(): void {
     this.cache.clear();
+  }
+
+  size(): number {
+    return this.cache.size;
+  }
+
+  private isExpired(user: CachedUser): boolean {
+    return Date.now() - user.timestamp > this.TTL;
+  }
+
+  private startCleanupTimer(): void {
+    this.cleanupTimer = setInterval(() => {
+      for (const [token, user] of this.cache.entries()) {
+        if (this.isExpired(user)) {
+          this.cache.delete(token);
+        }
+      }
+    }, this.TTL);
+
+    // Don't keep the process alive
+    if (this.cleanupTimer.unref) {
+      this.cleanupTimer.unref();
+    }
+  }
+
+  destroy(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+    }
+    this.clear();
   }
 }
 

@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { ApiError, RateLimiter, ErrorHandler } from './errors';
-import { userCache } from './cache';
+import { userCache, type CachedUser } from './cache';
 
 export interface BaseClientOptions {
   baseURL?: string;
@@ -36,15 +36,13 @@ export class BaseClient extends EventEmitter {
   constructor(token: string, options: BaseClientOptions = {}) {
     super();
 
-    if (!token) {
-      throw new Error('Token is required');
+    if (!token?.trim()) {
+      throw new ApiError('Token is required', 400);
     }
     
-    if (!token.startsWith('y')) {
-      throw new Error('Invalid token format');
+    if (!token.startsWith('y') || token.length < 10) {
+      throw new ApiError('Invalid token format', 401);
     }
-    
-    this.validateAndCacheUser(token);
 
 
 
@@ -63,10 +61,13 @@ export class BaseClient extends EventEmitter {
     this.defaultHeaders = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': '@yurbajs/REST',
+      'User-Agent': `@yurbajs/rest@${process.env.npm_package_version || '0.1.9'}`,
       'token': token,
       ...this.options.headers
     };
+
+    // Validate token asynchronously on first request
+    this.validateAndCacheUser(token).catch(() => {});
   }
 
   public setRateLimit(config: RateLimitConfig): void {
@@ -132,16 +133,19 @@ export class BaseClient extends EventEmitter {
         name: user.Name,
         surname: user.Surname,
         link: user.Link,
-        avatar: user.Avatar,
-        timestamp: Date.now()
+        avatar: user.Avatar
       });
-    } catch {
-      throw new Error('Invalid token');
+    } catch (error) {
+      throw new ApiError('Token validation failed', 401, undefined, '/me', 'GET');
     }
   }
 
-  public getCachedUser(token: string) {
+  public getCachedUser(token: string): CachedUser | null {
     return userCache.get(token);
+  }
+
+  public clearCache(): void {
+    userCache.clear();
   }
 
   private async request<T>(method: string, url: string, data?: any, config?: RequestConfig): Promise<T> {
