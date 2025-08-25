@@ -1,0 +1,34 @@
+{
+  "types": {
+    "feat": {
+      "section": "Features"
+    },
+    "fix": {
+      "section": "Bug Fixes"
+    },
+    "chore": {
+      "hidden": true
+    },
+    "docs": {
+      "section": "Documentation"
+    },
+    "style": {
+      "hidden": true
+    },
+    "refactor": {
+      "section": "Code Refactoring"
+    },
+    "perf": {
+      "section": "Performance Improvements"
+    },
+    "test": {
+      "hidden": true
+    }
+  },
+  "commitUrlFormat": "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
+  "compareUrlFormat": "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
+  "userUrlFormat": "{{host}}/{{user}}",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+  "issuePrefixes": ["#"]
+}

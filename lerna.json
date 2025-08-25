@@ -2,11 +2,24 @@
   "version": "independent",
   "updateInternalDependencies": "none",
   "npmClient": "pnpm",
+  "ignoreChanges": [
+    "**/*.md",
+    "**/*.test.ts",
+    "**/test/**"
+  ],
   "command": {
+    "version": {
+      "conventionalCommits": true,
+      "allowBranch": ["main", "dev"],
+      "changelogPreset": "angular",
+      "exact": true,
+      "ignorePrivate": true
+    },
     "publish": {
       "conventionalCommits": true,
       "message": "chore(release): publish",
-      "registry": "https://registry.npmjs.org/"
+      "registry": "https://registry.npmjs.org/",
+      "ignorePrivate": true
     },
     "run": {
       "npmClient": "pnpm",
