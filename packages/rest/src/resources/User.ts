@@ -67,6 +67,17 @@ export class UserResource {
     return this.client.patch<SubscribeResponse>(`/user/${user}/subscribe`);
   }
 
+  /**
+   * Get user relationships
+   * @group User Friends
+   * @param user - User ({tag}/{id}/u{id})
+   * @since 1.0.0
+   * @returns {Promise<any>} Relationships data
+   */
+  async getRelationships(user: string | number): Promise<any> {
+    return this.client.get<any>(`/user/${user}/relationships`);
+  }
+
 
 
   /**
@@ -101,16 +112,4 @@ export class UserResource {
   async ignoreIncomingRequest(userId: number): Promise<any> {
     return this.client.delete<any>(`/incoming_requests/${userId}`);
   }
-
-  /**
-   * Get user relationships
-   * @group User Friends
-   * @param tag - User tag
-   * @since 1.0.0
-   * @returns {Promise<any>} Relationships data
-   */
-  async getRelationships(tag: string): Promise<any> {
-    return this.client.get<any>(`/user/${tag}/relationships`);
-  }
-
 }
