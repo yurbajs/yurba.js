@@ -41,7 +41,8 @@ export class UserResource {
    */
   async get(user: string | number): Promise<User> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
-    return this.client.get<User>(`/user/${user}`);
+    const resolvedUser = await this.client.resolveUser(user);
+    return this.client.get<User>(`/user/${resolvedUser}`);
   }
 
   /* 
@@ -84,7 +85,8 @@ export class UserResource {
    */
   async getFriends(user: string | number, page: number): Promise<User[]> {
     if (!user || page < 0) throw new Error('Invalid parameters');
-    return this.client.get<User[]>(`/user/${user}/friends`, { page });
+    const resolvedUser = await this.client.resolveUser(user);
+    return this.client.get<User[]>(`/user/${resolvedUser}/friends`, { page });
   }
 
   /* 
@@ -127,7 +129,8 @@ export class UserResource {
    */
   async getGifts(user: string | number, page: number = 0): Promise<Gift[]> {
     if (!user || page < 0) throw new Error('Invalid parameters');
-    return this.client.get<Gift[]>(`/user/${user}/gifts`, { page });
+    const resolvedUser = await this.client.resolveUser(user);
+    return this.client.get<Gift[]>(`/user/${resolvedUser}/gifts`, { page });
   }
 
 
@@ -146,7 +149,8 @@ export class UserResource {
    */
   async subscribe(user: string | number ): Promise<SubscribeResponse> {
     if (!user) throw new Error('Invalid user identifier');
-    return this.client.patch<SubscribeResponse>(`/user/${user}/subscribe`);
+    const resolvedUser = await this.client.resolveUser(user);
+    return this.client.patch<SubscribeResponse>(`/user/${resolvedUser}/subscribe`);
   }
 
   /**
@@ -163,7 +167,8 @@ export class UserResource {
    */
   async getRelationships(user: string | number): Promise<any> {
     if (!user) throw new Error('Invalid user identifier');
-    return this.client.get<any>(`/user/${user}/relationships`);
+    const resolvedUser = await this.client.resolveUser(user);
+    return this.client.get<any>(`/user/${resolvedUser}/relationships`);
   }
 
 

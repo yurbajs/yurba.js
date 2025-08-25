@@ -30,9 +30,10 @@ export class PostResource {
    */
   async get(tag: string, lastId: number = 0, lang: Language = 0, feed: boolean = false): Promise<Post[]> {
     if (!tag || tag.length > 255) throw new Error('Invalid tag');
+    const resolvedUser = await this.client.resolveUser(tag);
     const params: any = { last_id: lastId, feed };
     if (lang) params.lang = lang;
-    return this.client.get<Post[]>(`/user/${tag}/posts`, params);
+    return this.client.get<Post[]>(`/user/${resolvedUser}/posts`, params);
   }
 
   /**
@@ -54,7 +55,8 @@ export class PostResource {
   async create(tag: string, data: CreatePostPayload): Promise<Post> {
     if (!tag || tag.length > 255) throw new Error('Invalid tag');
     if (!data || (!data.content)) throw new Error('Invalid post data');
-    return this.client.post<Post>(`/user/${tag}/post`, data);
+    const resolvedUser = await this.client.resolveUser(tag);
+    return this.client.post<Post>(`/user/${resolvedUser}/post`, data);
   }
 
   /**

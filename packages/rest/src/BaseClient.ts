@@ -186,6 +186,15 @@ export class BaseClient extends EventEmitter {
     userCache.clear();
   }
 
+  public async resolveUser(user: string | number): Promise<string | number> {
+    if (user === '@me') {
+      const cachedUser = await this.getCachedUser();
+      if (!cachedUser) throw new Error('User not found in cache');
+      return cachedUser.id;
+    }
+    return user;
+  }
+
   private async request<T>(method: string, url: string, data?: any, config?: RequestConfig): Promise<T> {
     const endpoint = new URL(url).pathname;
     const maxRetries = config?.retry?.attempts ?? this.options.maxRetries;
