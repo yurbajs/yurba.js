@@ -110,14 +110,14 @@ export interface Post {
 }
 
 export interface CreatePostPayload {
-    content:     string;
-    photos_list: Photo['ID'][];
-    language:    Language;
-    nsfw:        boolean;
+    content:     string | '';
+    photos_list: Photo['ID'][] | [];
+    language:    Language | null;
+    nsfw:        boolean | false;
     edit:        Post['ID'] | null;
     repost:      Post['ID'] | null;
     timestamp:   number | 0;
-    attachments: AttachmentPayload[];
+    attachments: AttachmentPayload[] | [];
 }
 
 export interface Likes {
@@ -389,24 +389,6 @@ export enum NotificationType {
 }
 export type GiftItem = Gift
 
-export interface Gift {
-    ID:        number;
-    User:      User;
-    Target:    User;
-    Item:      Item;
-    Timestamp: number;
-}
-
-export interface Item {
-    ID:          number;
-    Name:        string;
-    Description: string;
-    Category:    number;
-    Cost:        number;
-    Sub:         number;
-    Type:        Type;
-    Animated:    number;
-}
 
 export interface Shop {
     ID:          number;
@@ -415,7 +397,26 @@ export interface Shop {
     Items:       Item[];
 }
 
-export enum Type {
+export interface Gift {
+    ID:        number;
+    User:      User;
+    Target:    User;
+    Item:      ShopItem;
+    Timestamp: number;
+}
+
+export interface ShopItem {
+    ID:          number;
+    Name:        string;
+    Description: string;
+    Category:    number;
+    Cost:        number;
+    Sub:         number;
+    Type:        ShopItemType;
+    Animated:    number;
+}
+
+export enum ShopItemType {
     Gift = "gift",
     Sub = "sub",
 }
@@ -697,7 +698,7 @@ export interface Gift {
     ID:        number;
     User:      User;
     Target:    User;
-    Item:      Item;
+    Item:      ShopItem;
     Timestamp: number;
 }
 

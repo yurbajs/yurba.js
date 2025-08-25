@@ -53,7 +53,7 @@ export class PostResource {
    */
   async create(tag: string, data: CreatePostPayload): Promise<Post> {
     if (!tag || tag.length > 255) throw new Error('Invalid tag');
-    if (!data || (!data.text && !data.photos_list?.length)) throw new Error('Invalid post data');
+    if (!data || (!data.content)) throw new Error('Invalid post data');
     return this.client.post<Post>(`/user/${tag}/post`, data);
   }
 
