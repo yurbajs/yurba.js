@@ -1,34 +1,41 @@
 {
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ],
   "types": {
     "feat": {
-      "section": "Features"
+      "section": "Features",
+      "bump": "minor"
     },
     "fix": {
-      "section": "Bug Fixes"
+      "section": "Bug Fixes",
+      "bump": "patch"
+    },
+    "perf": {
+      "section": "Performance Improvements",
+      "bump": "patch"
+    },
+    "refactor": {
+      "section": "Code Refactoring",
+      "bump": "patch"
     },
     "chore": {
       "hidden": true
     },
     "docs": {
-      "section": "Documentation"
+      "section": "Documentation",
+      "bump": false
     },
     "style": {
       "hidden": true
-    },
-    "refactor": {
-      "section": "Code Refactoring"
-    },
-    "perf": {
-      "section": "Performance Improvements"
     },
     "test": {
       "hidden": true
     }
   },
-  "commitUrlFormat": "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
-  "compareUrlFormat": "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
-  "issueUrlFormat": "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
-  "userUrlFormat": "{{host}}/{{user}}",
   "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
   "issuePrefixes": ["#"]
 }
