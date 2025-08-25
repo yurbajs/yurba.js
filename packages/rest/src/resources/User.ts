@@ -3,79 +3,130 @@ import { User, SubscribeResponse, FindUserPayload, Gift } from '@yurbajs/types';
 
 export class UserResource {
   /**
-   * @internal
+   * @ignore
    */
   constructor(private client: REST) {}
 
+  /* 
+  //               { Users Core }
+  */
+
   /**
-   * Get me
+   * Gets current user information
    * @group Users Core
    * @since 1.0.0
-   * @returns {Promise<User>} Current user
+   * @returns {Promise<User>} {@link User} Current user
+   * @example
+   * ```javascript
+   * const me = await rest.users.me();
+   * ```
    */
   async me(): Promise<User> {
     return this.client.get<User>('/get_me');
   }
 
   /**
-   * Get user 
+   * Gets user by identifier
    * @group Users Core
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
-   * @returns {Promise<User>} User information
+   * @returns {Promise<User>} {@link User} User information
+   * @throws {Error} If user identifier is invalid
+   * @example
+   * ```javascript
+   * const user = await rest.users.get('username');
+   * const userById = await rest.users.get(12345);
+   * const userByUid = await rest.users.get('u12345');
+   * ```
    */
   async get(user: string | number): Promise<User> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     return this.client.get<User>(`/user/${user}`);
   }
 
+  /* 
+  //               { User Friends }
+  */
+
   /**
-   * Get current user's friends
+   * Gets current user's friends
    * @group User Friends
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<User[]>} Current user's friends
+   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @throws {Error} If user not found in cache
+   * @example
+   * ```javascript
+   * const friends = await rest.users.friends();
+   * const nextPage = await rest.users.friends(1);
+   * ```
    */
   async friends(page: number = 0): Promise<User[]> {
+    if (page < 0) throw new Error('Invalid page number');
     const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
     return this.client.get<User[]>(`/user/${user.id}/friends`, { page });
   }
 
   /**
-   * Get user friends
-   * @group Users Core
+   * Gets user friends
+   * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} User friends
+   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * const friends = await rest.users.getFriends('username', 0);
+   * const friendsById = await rest.users.getFriends(12345, 1);
+   * ```
    */
   async getFriends(user: string | number, page: number): Promise<User[]> {
+    if (!user || page < 0) throw new Error('Invalid parameters');
     return this.client.get<User[]>(`/user/${user}/friends`, { page });
   }
 
+  /* 
+  //               { User Gifts }
+  */
+
   /**
-   * Get current user's gifts
+   * Gets current user's gifts
    * @group User Gifts
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<Gift[]>} Current user's gifts
+   * @returns {Promise<Gift[]>} Array of {@link Gift} objects
+   * @throws {Error} If user not found in cache or page is invalid
+   * @example
+   * ```javascript
+   * const gifts = await rest.users.gifts();
+   * const nextPage = await rest.users.gifts(1);
+   * ```
    */
   async gifts(page: number = 0): Promise<Gift[]> {
+    if (page < 0) throw new Error('Invalid page number');
     const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
     return this.client.get<Gift[]>(`/user/${user.id}/gifts`, { page });
   }
 
   /**
-   * Get user gifts
+   * Gets user gifts
    * @group User Gifts
    * @param user - User ({tag}/{id}/u{id})
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<Gift[]>} User gifts
+   * @returns {Promise<Gift[]>} Array of {@link Gift} objects
+   * @throws {Error} If parameters are invalid
+   * @example
+   * ```javascript
+   * const gifts = await rest.users.getGifts('username');
+   * const giftsById = await rest.users.getGifts(12345, 1);
+   * ```
    */
   async getGifts(user: string | number, page: number = 0): Promise<Gift[]> {
+    if (!user || page < 0) throw new Error('Invalid parameters');
     return this.client.get<Gift[]>(`/user/${user}/gifts`, { page });
   }
 
@@ -85,55 +136,88 @@ export class UserResource {
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
-   * @returns {Promise<SubscribeResponse>} Subscribe result
+   * @returns {Promise<SubscribeResponse>} {@link SubscribeResponse} Subscribe result
+   * @throws {Error} If user identifier is invalid
+   * @example
+   * ```javascript
+   * const result = await rest.users.subscribe('username');
+   * const resultById = await rest.users.subscribe(12345);
+   * ```
    */
   async subscribe(user: string | number ): Promise<SubscribeResponse> {
+    if (!user) throw new Error('Invalid user identifier');
     return this.client.patch<SubscribeResponse>(`/user/${user}/subscribe`);
   }
 
   /**
-   * Get user relationships
+   * Gets user relationships
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
    * @returns {Promise<any>} Relationships data
+   * @throws {Error} If user identifier is invalid
+   * @example
+   * ```javascript
+   * const relationships = await rest.users.getRelationships('username');
+   * ```
    */
   async getRelationships(user: string | number): Promise<any> {
+    if (!user) throw new Error('Invalid user identifier');
     return this.client.get<any>(`/user/${user}/relationships`);
   }
 
 
 
   /**
-   * Get incoming friend requests
+   * Gets incoming friend requests
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} Incoming requests
+   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @throws {Error} If page number is invalid
+   * @example
+   * ```javascript
+   * const requests = await rest.users.incomingRequests();
+   * const nextPage = await rest.users.incomingRequests(1);
+   * ```
    */
   async incomingRequests(page: number = 0): Promise<User[]> {
+    if (page < 0) throw new Error('Invalid page number');
     return this.client.get<User[]>('/incoming_requests', { page });
   }
 
   /**
-   * Get outgoing friend requests
+   * Gets outgoing friend requests
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} Outgoing requests
+   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @throws {Error} If page number is invalid
+   * @example
+   * ```javascript
+   * const requests = await rest.users.outgoingRequests();
+   * const nextPage = await rest.users.outgoingRequests(1);
+   * ```
    */
   async outgoingRequests(page: number = 0): Promise<User[]> {
+    if (page < 0) throw new Error('Invalid page number');
     return this.client.get<User[]>('/outcoming_requests', { page });
   }
 
   /**
-   * Ignore incoming friend request
+   * Ignores incoming friend request
    * @group User Friends
    * @param userId - User identifier
    * @since 1.0.0
    * @returns {Promise<any>} Operation result
+   * @throws {Error} If user ID is invalid
+   * @example
+   * ```javascript
+   * await rest.users.ignoreIncomingRequest(12345);
+   * ```
    */
   async ignoreIncomingRequest(userId: number): Promise<any> {
+    if (userId < 1) throw new Error('Invalid user ID');
     return this.client.delete<any>(`/incoming_requests/${userId}`);
   }
 

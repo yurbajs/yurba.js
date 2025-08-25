@@ -12,18 +12,24 @@ export class FilesResource {
   //               { Files Core }
   */
 
+  /* 
+  //               { Files Core }
+  */
+
   /**
    * Gets a file by identifier
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0
    * @returns {Promise<File>} {@link File} object
+   * @throws {Error} If file ID is invalid
    * @example
    * ```javascript
    * const file = await rest.files.get(23);
    * ```
    */
   async get(fileId: number): Promise<File> {
+    if (fileId < 1) throw new Error('Invalid file ID');
     return this.client.get<File>(`/files/${fileId}`);
   }
 
@@ -33,6 +39,7 @@ export class FilesResource {
    * @param page - Page number (optional)
    * @since 1.0.0
    * @returns {Promise<File[]>} Array of {@link File} objects
+   * @throws {Error} If page number is invalid
    * @example
    * ```javascript
    * const files = await rest.files.getAll();
@@ -40,6 +47,7 @@ export class FilesResource {
    * ```
    */
   async getAll(page?: number): Promise<File[]> {
+    if (page !== undefined && page < 0) throw new Error('Invalid page number');
     const params = new URLSearchParams();
     if (page !== undefined) params.append('page', page.toString());
     
@@ -48,12 +56,13 @@ export class FilesResource {
   }
 
   /**
-   * Upload a file
+   * Uploads a file
    * @group Files Core
    * @param input - Path to file or Buffer
    * @param filename - Custom filename (optional)
    * @since 1.0.0
    * @returns {Promise<File>} {@link File} Uploaded file
+   * @throws {Error} If input is invalid
    * @example
    * ```javascript
    * const file = await rest.files.upload('/path/to/file.txt');
@@ -62,6 +71,8 @@ export class FilesResource {
    * ```
    */
   async upload(input: string | Buffer, filename?: string): Promise<File> {
+    if (!input) throw new Error('Invalid input');
+    
     let buffer: Buffer;
     let name: string;
     
@@ -82,17 +93,19 @@ export class FilesResource {
   }
 
   /**
-   * Delete a file
+   * Deletes a file
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0
-   * @returns {Promise<BaseDelete>} Delete response
+   * @returns {Promise<BaseDelete>} {@link BaseDelete} Delete response
+   * @throws {Error} If file ID is invalid
    * @example
    * ```javascript
    * await rest.files.delete(14);
    * ```
    */
   async delete(fileId: number): Promise<BaseDelete> {
+    if (fileId < 1) throw new Error('Invalid file ID');
     return this.client.delete<BaseDelete>(`/files/${fileId}`);
   }
 }
