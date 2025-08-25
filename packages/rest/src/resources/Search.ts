@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { Dialog, FindDialogPayload, User, FindUserPayload } from '@yurbajs/types';
+import { Dialog, FindDialogPayload, User, FindUserPayload, Track } from '@yurbajs/types';
 
 export class SearchResource {
   /**
@@ -91,5 +91,29 @@ export class SearchResource {
    */
   async users(payload: FindUserPayload, page: number = 0): Promise<User[]> {
     return this.client.post<User[]>(`/users/find?page=${page}`, payload);
+  }
+
+  /**
+   * Find tracks
+   * @group Search
+   * @param query - Song name or artist
+   * @param page - Page number (optional)
+   * @since 1.0.0
+   * @returns {Promise<Track[]>} Track list
+   * @example
+   * ```javascript
+   * // Search by song name
+   * const tracks = await rest.search.tracks('Bohemian Rhapsody');
+   * 
+   * // Search by artist
+   * const artistTracks = await rest.search.tracks('Queen');
+   * 
+   * // With pagination
+   * const moreTracks = await rest.search.tracks('rock', 1);
+   * ```
+   */
+  async tracks(query: string, page?: number): Promise<Track[]> {
+    const url = page !== undefined ? `/musebase/find/${query}?page=${page}` : `/musebase/find/${query}`;
+    return this.client.get<Track[]>(url);
   }
 }

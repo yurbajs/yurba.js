@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, SubscribeResponse } from '@yurbajs/types';
+import { User, SubscribeResponse, FindUserPayload } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -110,5 +110,32 @@ export class UserResource {
    */
   async ignoreIncomingRequest(userId: number): Promise<any> {
     return this.client.delete<any>(`/incoming_requests/${userId}`);
+  }
+
+  /**
+   * Find users
+   * @group User Core
+   * @param payload - Search filters
+   * @param page - Page number (default 0)
+   * @since 1.0.0
+   * @returns {Promise<User[]>} User list
+   * @deprecated Use rest.search.users() instead
+   * @example
+   * ```javascript
+   * // Use rest.search.users() instead
+   * const users = await rest.search.users({
+   *   sort: 0,
+   *   country: 0,
+   *   region: 0,
+   *   city: 0,
+   *   worksAt: "",
+   *   relationships: 0,
+   *   online: 0,
+   *   avatar: 0
+   * });
+   * ```
+   */
+  async find(payload: FindUserPayload, page: number = 0): Promise<User[]> {
+    return this.client.search.users(payload, page);
   }
 }

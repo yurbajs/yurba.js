@@ -153,4 +153,22 @@ export class MusebaseResource {
   async removeTrackFromPlaylist(playlistId: number, trackId: number): Promise<DeleteTrackResponse> {
     return this.client.delete<DeleteTrackResponse>(`/musebase/playlists/${playlistId}/tracks/${trackId}`);
   }
+
+  /**
+   * Find tracks
+   * @group Tracks
+   * @param query - Song name or artist
+   * @param page - Page number (optional)
+   * @since 1.0.0
+   * @returns {Promise<Track[]>} Track list
+   * @deprecated Use rest.search.tracks() instead
+   * @example
+   * ```javascript
+   * // Use rest.search.tracks() instead
+   * const tracks = await rest.search.tracks('Bohemian Rhapsody');
+   * ```
+   */
+  async find(query: string, page?: number): Promise<Track[]> {
+    return this.client.search.tracks(query, page);
+  }
 }
