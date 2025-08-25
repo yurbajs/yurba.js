@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, Photo, SubscribeResponse } from '@yurbajs/types';
+import { User, SubscribeResponse } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -27,20 +27,6 @@ export class UserResource {
   async get(user: string | number): Promise<User> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     return this.client.get<User>(`/user/${user}`);
-  }
-
-  /**
-   * Get user photos
-   * @group Users Core
-   * @param user - User ({tag}/{id}/u{id})
-   * @param page - Page number (default 0)
-   * @param mode - Photo mode (default 0)
-   * @since 1.0.0
-   * @returns {Promise<Photo[]>} User photos
-   */
-  async getPhotos(user: string | number, page: number = 0, mode: 0 | 1 | 2 = 0): Promise<Photo[]> {
-    if (!user || page < 0 || ![0, 1, 2].includes(mode)) throw new Error('Invalid parameters');
-    return this.client.get<Photo[]>(`/user/${user}/photos`, { page, mode });
   }
 
   /**
