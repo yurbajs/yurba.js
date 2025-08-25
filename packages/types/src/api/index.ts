@@ -725,6 +725,30 @@ export enum Type {
     Sub = "sub",
 }
 
+// -------- APP TYPES --------
+export interface App {
+    ID:          number;
+    Name:        string;
+    PublicKey:   string;
+    SecretKey:   string;
+    RedirectUrl: string;
+    Timestamp:   number;
+}
+
+export interface AppToken {
+    Token:     string;
+    App:       App;
+    User:      number;
+    LastBeen:  number;
+    Timestamp: number;
+    IP:        string;
+}
+
+export interface CreateAppPayload {
+    name:        string;
+    redirectUrl: string;
+}
+
 // ================================
 // SYSTEM ENUMS & UTILITIES
 // ================================

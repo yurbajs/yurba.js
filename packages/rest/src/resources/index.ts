@@ -8,3 +8,4 @@ export { FilesResource } from './Files';
 export { VideoResource } from './Video';
 export { SearchResource } from './Search';
 export { ShopResource } from './Shop';
+export { AppResource } from './App';
