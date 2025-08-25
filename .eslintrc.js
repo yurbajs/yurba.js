@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['**/tests/test.js'],
   extends: [
     '@typescript-eslint/recommended',
     'prettier'
