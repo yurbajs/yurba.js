@@ -100,8 +100,15 @@ export const ErrorHandler = {
     try {
       const errorData: unknown = await response.json();
       errorBody = JSON.stringify(errorData);
-      if (errorData && typeof errorData === 'object' && errorData !== null && 'detail' in errorData && typeof (errorData as { detail?: unknown }).detail === 'string') {
-        errorMessage = this.mapApiError((errorData as { detail: string }).detail);
+      if (
+        errorData &&
+        typeof errorData === 'object' &&
+        errorData !== null &&
+        'detail' in errorData &&
+        typeof (errorData as { detail?: unknown }).detail === 'string'
+      ) {
+        const detail = (errorData as { detail: string }).detail;
+        errorMessage = this.mapApiError(detail);
       }
     } catch {
       errorBody = await response.text();

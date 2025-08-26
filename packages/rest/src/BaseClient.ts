@@ -138,12 +138,19 @@ export class BaseClient extends EventEmitter {
     try {
       const userData: unknown = await this.get('/me');
       if (userData && typeof userData === 'object' && userData !== null) {
+        const data = userData as {
+          ID?: unknown;
+          Name?: unknown;
+          Surname?: unknown;
+          Link?: unknown;
+          Avatar?: unknown;
+        };
         userCache.set(token, {
-          id: 'ID' in userData && typeof (userData as { ID: unknown }).ID === 'number' ? (userData as { ID: number }).ID : 0,
-          name: 'Name' in userData && typeof (userData as { Name: unknown }).Name === 'string' ? (userData as { Name: string }).Name : '',
-          surname: 'Surname' in userData && typeof (userData as { Surname: unknown }).Surname === 'string' ? (userData as { Surname: string }).Surname : '',
-          link: 'Link' in userData && typeof (userData as { Link: unknown }).Link === 'string' ? (userData as { Link: string }).Link : '',
-          avatar: 'Avatar' in userData && typeof (userData as { Avatar: unknown }).Avatar === 'number' ? (userData as { Avatar: number }).Avatar : 0
+          id: typeof data.ID === 'number' ? data.ID : 0,
+          name: typeof data.Name === 'string' ? data.Name : '',
+          surname: typeof data.Surname === 'string' ? data.Surname : '',
+          link: typeof data.Link === 'string' ? data.Link : '',
+          avatar: typeof data.Avatar === 'number' ? data.Avatar : 0
         });
       }
     } catch {
@@ -158,12 +165,19 @@ export class BaseClient extends EventEmitter {
       try {
         const userData: unknown = await this.get('/get_me');
         if (userData && typeof userData === 'object' && userData !== null) {
+          const data = userData as {
+            ID?: unknown;
+            Name?: unknown;
+            Surname?: unknown;
+            Link?: unknown;
+            Avatar?: unknown;
+          };
           cached = {
-            id: 'ID' in userData && typeof (userData as { ID: unknown }).ID === 'number' ? (userData as { ID: number }).ID : 0,
-            name: 'Name' in userData && typeof (userData as { Name: unknown }).Name === 'string' ? (userData as { Name: string }).Name : '',
-            surname: 'Surname' in userData && typeof (userData as { Surname: unknown }).Surname === 'string' ? (userData as { Surname: string }).Surname : '',
-            link: 'Link' in userData && typeof (userData as { Link: unknown }).Link === 'string' ? (userData as { Link: string }).Link : '',
-            avatar: 'Avatar' in userData && typeof (userData as { Avatar: unknown }).Avatar === 'number' ? (userData as { Avatar: number }).Avatar : 0,
+            id: typeof data.ID === 'number' ? data.ID : 0,
+            name: typeof data.Name === 'string' ? data.Name : '',
+            surname: typeof data.Surname === 'string' ? data.Surname : '',
+            link: typeof data.Link === 'string' ? data.Link : '',
+            avatar: typeof data.Avatar === 'number' ? data.Avatar : 0,
             timestamp: Date.now()
           };
           userCache.set(token, {
@@ -272,7 +286,7 @@ export class BaseClient extends EventEmitter {
 
     try {
       if (this.options.debug) {
-        this.emit('request', { method, url, data: data as unknown, headers });
+        this.emit('request', { method, url, data, headers });
       }
 
       const response = await fetch(url, options);

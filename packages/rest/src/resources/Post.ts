@@ -32,7 +32,7 @@ export class PostResource {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     const resolvedUser = await this.client.resolveUser(user);
     const params: Record<string, unknown> = { last_id: payload.lastId || 0, feed: payload.feed || false };
-    if ('lang' in payload && payload.lang) params.lang = (payload as { lang: unknown }).lang;
+    if ('lang' in payload && payload.lang) params.lang = payload.lang;
     return this.client.get<Post[]>(`/user/${resolvedUser}/posts`, params);
   }
 

@@ -21,92 +21,62 @@ export class REST extends BaseClient {
     super(token, options);
   }
 
-  get users(): UserResource {
-    if (!this._users) {
-      const { UserResource } = require('./resources/User') as { UserResource: new (client: REST) => UserResource };
-      this._users = new UserResource(this);
+  private _getResource<T>(
+    resource: T | undefined,
+    resourceName: string,
+    modulePath: string
+  ): T {
+    if (!resource) {
+      const module = require(modulePath) as { [key: string]: new (client: REST) => T };
+      resource = new module[resourceName](this);
+      // @ts-ignore - We are setting the private property
+      this[`_${resourceName.toLowerCase()}`] = resource;
     }
-    return this._users!;
+    return resource;
+  }
+
+  get users(): UserResource {
+    return this._getResource(this._users, 'UserResource', './resources/User');
   }
 
   get dialogs(): DialogResource {
-    if (!this._dialogs) {
-      const { DialogResource } = require('./resources/Dialog') as { DialogResource: new (client: REST) => DialogResource };
-      this._dialogs = new DialogResource(this);
-    }
-    return this._dialogs!;
+    return this._getResource(this._dialogs, 'DialogResource', './resources/Dialog');
   }
 
   get posts(): PostResource {
-    if (!this._posts) {
-      const { PostResource } = require('./resources/Post') as { PostResource: new (client: REST) => PostResource };
-      this._posts = new PostResource(this);
-    }
-    return this._posts!;
+    return this._getResource(this._posts, 'PostResource', './resources/Post');
   }
 
   get musebase(): MusebaseResource {
-    if (!this._musebase) {
-      const { MusebaseResource } = require('./resources/Musebase') as { MusebaseResource: new (client: REST) => MusebaseResource };
-      this._musebase = new MusebaseResource(this);
-    }
-    return this._musebase!;
+    return this._getResource(this._musebase, 'MusebaseResource', './resources/Musebase');
   }
 
   get photos(): PhotosResource {
-    if (!this._photos) {
-      const { PhotosResource } = require('./resources/Photos') as { PhotosResource: new (client: REST) => PhotosResource };
-      this._photos = new PhotosResource(this);
-    }
-    return this._photos!;
+    return this._getResource(this._photos, 'PhotosResource', './resources/Photos');
   }
 
   get account(): AccountResorce {
-    if (!this._auth) {
-      const { AccountResorce } = require('./resources/Account') as { AccountResorce: new (client: REST) => AccountResorce };
-      this._auth = new AccountResorce(this);
-    }
-    return this._auth!;
+    return this._getResource(this._auth, 'AccountResorce', './resources/Account');
   }
 
   get files(): FilesResource {
-    if (!this._files) {
-      const { FilesResource } = require('./resources/Files') as { FilesResource: new (client: REST) => FilesResource };
-      this._files = new FilesResource(this);
-    }
-    return this._files!;
+    return this._getResource(this._files, 'FilesResource', './resources/Files');
   }
 
   get video(): VideoResource {
-    if (!this._video) {
-      const { VideoResource } = require('./resources/Video') as { VideoResource: new (client: REST) => VideoResource };
-      this._video = new VideoResource(this);
-    }
-    return this._video!;
+    return this._getResource(this._video, 'VideoResource', './resources/Video');
   }
 
   get search(): SearchResource {
-    if (!this._search) {
-      const { SearchResource } = require('./resources/Search') as { SearchResource: new (client: REST) => SearchResource };
-      this._search = new SearchResource(this);
-    }
-    return this._search!;
+    return this._getResource(this._search, 'SearchResource', './resources/Search');
   }
 
   get shop(): ShopResource {
-    if (!this._shop) {
-      const { ShopResource } = require('./resources/Shop') as { ShopResource: new (client: REST) => ShopResource };
-      this._shop = new ShopResource(this);
-    }
-    return this._shop!;
+    return this._getResource(this._shop, 'ShopResource', './resources/Shop');
   }
 
   get apps(): AppResource {
-    if (!this._apps) {
-      const { AppResource } = require('./resources/App') as { AppResource: new (client: REST) => AppResource };
-      this._apps = new AppResource(this);
-    }
-    return this._apps!;
+    return this._getResource(this._apps, 'AppResource', './resources/App');
   }
 }
 
