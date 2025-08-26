@@ -109,6 +109,13 @@ export interface Post {
     Nsfw:          boolean; // Spoiler
 }
 
+export interface GetPostPayload {
+    lastId?: number;
+    lang?: number | Language;
+    feed?: boolean;
+}
+
+
 export interface CreatePostPayload {
     content:     string | '';
     photos_list: Photo['ID'][] | [];
