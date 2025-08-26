@@ -301,8 +301,8 @@ export class BaseClient extends EventEmitter {
         await ErrorHandler.handleResponse(response, endpoint, method);
       }
 
-      const data: T = await response.json();
-      return data;
+      const responseData: T = await response.json();
+      return responseData;
 
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
@@ -321,18 +321,16 @@ export class BaseClient extends EventEmitter {
   private buildUrl(endpoint: string, queryParams: Record<string, unknown> = {}): string {
     const url = new URL(`${this.baseURL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`);
 
-    for (const key in queryParams) {
-      if (Object.prototype.hasOwnProperty.call(queryParams, key)) {
-        const value: unknown = queryParams[key];
-        if (value !== undefined && value !== null) {
-          if (Array.isArray(value)) {
-            value.forEach((v: unknown) => url.searchParams.append(key, String(v)));
-          } else {
-            url.searchParams.append(key, String(value));
-          }
+    Object.entries(queryParams).forEach(([key, value]: [string, unknown]) => {
+      if (value !== undefined && value !== null) {
+        if (Array.isArray(value)) {
+          const arrayValue: unknown[] = value;
+          arrayValue.forEach((v: unknown) => url.searchParams.append(key, String(v)));
+        } else {
+          url.searchParams.append(key, String(value));
         }
       }
-    }
+    });
 
     return url.toString();
   }
