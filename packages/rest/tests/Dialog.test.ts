@@ -9,7 +9,7 @@ describe('DialogResource', () => {
   let dialogs: DialogResource;
 
   beforeEach(() => {
-    rest = new REST('test-token');
+    rest = new REST('y.test-token-1234567890');
     dialogs = rest.dialogs;
     jest.clearAllMocks();
   });
@@ -29,7 +29,7 @@ describe('DialogResource', () => {
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({
-            token: 'test-token',
+            token: 'y.test-token-1234567890',
           }),
         })
       );
