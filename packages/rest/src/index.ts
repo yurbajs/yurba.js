@@ -23,7 +23,7 @@ export class REST extends BaseClient {
 
   get users(): UserResource {
     if (!this._users) {
-      const { UserResource } = require('./resources/User');
+      const { UserResource } = require('./resources/User') as { UserResource: any };
       this._users = new UserResource(this);
     }
     return this._users!;
@@ -31,7 +31,7 @@ export class REST extends BaseClient {
 
   get dialogs(): DialogResource {
     if (!this._dialogs) {
-      const { DialogResource } = require('./resources/Dialog');
+      const { DialogResource } = require('./resources/Dialog') as { DialogResource: any };
       this._dialogs = new DialogResource(this);
     }
     return this._dialogs!;
@@ -39,7 +39,7 @@ export class REST extends BaseClient {
 
   get posts(): PostResource {
     if (!this._posts) {
-      const { PostResource } = require('./resources/Post');
+      const { PostResource } = require('./resources/Post') as { PostResource: any };
       this._posts = new PostResource(this);
     }
     return this._posts!;
@@ -47,7 +47,7 @@ export class REST extends BaseClient {
 
   get musebase(): MusebaseResource {
     if (!this._musebase) {
-      const { MusebaseResource } = require('./resources/Musebase');
+      const { MusebaseResource } = require('./resources/Musebase') as { MusebaseResource: any };
       this._musebase = new MusebaseResource(this);
     }
     return this._musebase!;
@@ -55,7 +55,7 @@ export class REST extends BaseClient {
 
   get photos(): PhotosResource {
     if (!this._photos) {
-      const { PhotosResource } = require('./resources/Photos');
+      const { PhotosResource } = require('./resources/Photos') as { PhotosResource: any };
       this._photos = new PhotosResource(this);
     }
     return this._photos!;
@@ -63,7 +63,7 @@ export class REST extends BaseClient {
 
   get account(): AccountResorce {
     if (!this._auth) {
-      const { AccountResorce } = require('./resources/Account');
+      const { AccountResorce } = require('./resources/Account') as { AccountResorce: any };
       this._auth = new AccountResorce(this);
     }
     return this._auth!;
@@ -71,7 +71,7 @@ export class REST extends BaseClient {
 
   get files(): FilesResource {
     if (!this._files) {
-      const { FilesResource } = require('./resources/Files');
+      const { FilesResource } = require('./resources/Files') as { FilesResource: any };
       this._files = new FilesResource(this);
     }
     return this._files!;
@@ -79,7 +79,7 @@ export class REST extends BaseClient {
 
   get video(): VideoResource {
     if (!this._video) {
-      const { VideoResource } = require('./resources/Video');
+      const { VideoResource } = require('./resources/Video') as { VideoResource: any };
       this._video = new VideoResource(this);
     }
     return this._video!;

@@ -94,14 +94,14 @@ export const ErrorHandler = {
    * Handle response errors consistently
    */
   async handleResponse(response: Response, endpoint?: string, method?: string): Promise<never> {
-    let errorBody: string;
+    let errorBody: string | undefined;
     let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
 
     try {
-      const errorData = await response.json();
+      const errorData: unknown = await response.json();
       errorBody = JSON.stringify(errorData);
-      if (errorData.detail) {
-        errorMessage = this.mapApiError(errorData.detail);
+      if (errorData && typeof errorData === 'object' && errorData !== null && 'detail' in errorData && typeof (errorData as { detail?: unknown }).detail === 'string') {
+        errorMessage = this.mapApiError((errorData as { detail: string }).detail);
       }
     } catch {
       errorBody = await response.text();

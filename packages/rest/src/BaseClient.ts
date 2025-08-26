@@ -136,14 +136,16 @@ export class BaseClient extends EventEmitter {
     if (cached) return;
 
     try {
-      const user = await this.get('/me');
-      userCache.set(token, {
-        id: user.ID,
-        name: user.Name,
-        surname: user.Surname,
-        link: user.Link,
-        avatar: user.Avatar
-      });
+      const userData: unknown = await this.get('/me');
+      if (userData && typeof userData === 'object' && userData !== null) {
+        userCache.set(token, {
+          id: 'ID' in userData && typeof (userData as { ID: unknown }).ID === 'number' ? (userData as { ID: number }).ID : 0,
+          name: 'Name' in userData && typeof (userData as { Name: unknown }).Name === 'string' ? (userData as { Name: string }).Name : '',
+          surname: 'Surname' in userData && typeof (userData as { Surname: unknown }).Surname === 'string' ? (userData as { Surname: string }).Surname : '',
+          link: 'Link' in userData && typeof (userData as { Link: unknown }).Link === 'string' ? (userData as { Link: string }).Link : '',
+          avatar: 'Avatar' in userData && typeof (userData as { Avatar: unknown }).Avatar === 'number' ? (userData as { Avatar: number }).Avatar : 0
+        });
+      }
     } catch {
       throw new ApiError('Token validation failed', 401, undefined, '/me', 'GET');
     }
@@ -154,22 +156,24 @@ export class BaseClient extends EventEmitter {
     let cached = userCache.get(token);
     if (!cached) {
       try {
-        const user = await this.get('/get_me');
-        cached = {
-          id: user.ID,
-          name: user.Name,
-          surname: user.Surname,
-          link: user.Link,
-          avatar: user.Avatar,
-          timestamp: Date.now()
-        };
-        userCache.set(token, {
-          id: user.ID,
-          name: user.Name,
-          surname: user.Surname,
-          link: user.Link,
-          avatar: user.Avatar
-        });
+        const userData: unknown = await this.get('/get_me');
+        if (userData && typeof userData === 'object' && userData !== null) {
+          cached = {
+            id: 'ID' in userData && typeof (userData as { ID: unknown }).ID === 'number' ? (userData as { ID: number }).ID : 0,
+            name: 'Name' in userData && typeof (userData as { Name: unknown }).Name === 'string' ? (userData as { Name: string }).Name : '',
+            surname: 'Surname' in userData && typeof (userData as { Surname: unknown }).Surname === 'string' ? (userData as { Surname: string }).Surname : '',
+            link: 'Link' in userData && typeof (userData as { Link: unknown }).Link === 'string' ? (userData as { Link: string }).Link : '',
+            avatar: 'Avatar' in userData && typeof (userData as { Avatar: unknown }).Avatar === 'number' ? (userData as { Avatar: number }).Avatar : 0,
+            timestamp: Date.now()
+          };
+          userCache.set(token, {
+            id: cached.id,
+            name: cached.name,
+            surname: cached.surname,
+            link: cached.link,
+            avatar: cached.avatar
+          });
+        }
       } catch {
         return null;
       }
@@ -200,13 +204,13 @@ export class BaseClient extends EventEmitter {
     const maxRetries = config?.retry?.attempts ?? this.options.maxRetries;
     const retryDelay = config?.retry?.delay ?? this.options.retryDelay;
 
-    let lastError: Error;
+    let lastError: Error | undefined;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await this.executeRequest<T>(method, url, data, config, endpoint);
-      } catch (error) {
-        lastError = error as Error;
+      } catch (error: unknown) {
+        lastError = error instanceof Error ? error : new Error(String(error));
 
         if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) {
           throw error;
@@ -218,7 +222,12 @@ export class BaseClient extends EventEmitter {
       }
     }
 
-    throw lastError!;
+    if (lastError) {
+      throw lastError;
+    }
+    
+    // This should never happen, but TypeScript needs it for safety
+    throw new Error('Unknown error occurred');
   }
 
   private async executeRequest<T>(method: string, url: string, data?: any, config?: RequestConfig, endpoint?: string): Promise<T> {
@@ -241,7 +250,7 @@ export class BaseClient extends EventEmitter {
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     let headers = { ...this.defaultHeaders, ...config?.headers };
-    let body: any;
+    let body: BodyInit | undefined;
     
     if (data instanceof FormData) {
       // For FormData, only keep essential headers
@@ -263,7 +272,7 @@ export class BaseClient extends EventEmitter {
 
     try {
       if (this.options.debug) {
-        this.emit('request', { method, url, data, headers });
+        this.emit('request', { method, url, data: data as unknown, headers });
       }
 
       const response = await fetch(url, options);
@@ -278,7 +287,8 @@ export class BaseClient extends EventEmitter {
         await ErrorHandler.handleResponse(response, endpoint, method);
       }
 
-      return await response.json() as T;
+      const data: T = await response.json();
+      return data;
 
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
@@ -287,20 +297,20 @@ export class BaseClient extends EventEmitter {
 
       if (error instanceof ApiError) throw error;
 
-      throw new ApiError(`Network error: ${(error as Error).message}`, 0, undefined, endpoint, method);
+      throw new ApiError(`Network error: ${error instanceof Error ? error.message : String(error)}`, 0, undefined, endpoint, method);
     } finally {
       clearTimeout(timeoutId);
       if (endpoint) this.abortControllers.delete(endpoint);
     }
   }
 
-  private buildUrl(endpoint: string, queryParams: Record<string, any> = {}): string {
+  private buildUrl(endpoint: string, queryParams: Record<string, unknown> = {}): string {
     const url = new URL(`${this.baseURL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`);
 
     Object.entries(queryParams).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         if (Array.isArray(value)) {
-          value.forEach(v => url.searchParams.append(key, String(v)));
+          value.forEach((v: unknown) => url.searchParams.append(key, String(v)));
         } else {
           url.searchParams.append(key, String(value));
         }

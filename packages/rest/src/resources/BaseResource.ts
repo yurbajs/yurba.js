@@ -46,7 +46,7 @@ export abstract class BaseResource {
    * @param name - Parameter name for error message
    * @throws {Error} If value is invalid
    */
-  protected validateRequired(value: any, name: string): void {
+  protected validateRequired(value: unknown, name: string): void {
     if (!value) throw new Error(`${name} is required`);
   }
 }
