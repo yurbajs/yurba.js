@@ -32,5 +32,3 @@ coverage/
 *.log
 
 # Test files
-test.js
-tests/test.js
