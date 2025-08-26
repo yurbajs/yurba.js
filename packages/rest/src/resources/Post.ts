@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { CreatePostPayload, Post, DeletePostResponse, Language } from '@yurbajs/types';
+import { CreatePostPayload, GetPostPayload, Post, DeletePostResponse } from '@yurbajs/types';
 
 export class PostResource {
   /**
@@ -15,26 +15,24 @@ export class PostResource {
    * Gets posts from user
    * @group Posts Core
    * @param user - User ({tag}/{id}/u{id}/@me)
-   * @param lastId - Last post ID for pagination
-   * @param lang - Language filter
-   * @param feed - Feed mode
+   * @param payload - {@link GetPostPayload} Get posts parameters
    * @since 1.0.0
    * @returns {Promise<Post[]>} Array of {@link Post} objects
    * @throws {Error} If user is invalid
    * @example
    * ```javascript
-   * const posts = await rest.posts.get('username');
-   * const postsById = await rest.posts.get(12345);
-   * const postsByUid = await rest.posts.get('u12345');
-   * const myPosts = await rest.posts.get('@me');
-   * const olderPosts = await rest.posts.get('username', 123);
+   * const posts = await rest.posts.get('username', {});
+   * const postsById = await rest.posts.get(12345, {});
+   * const postsByUid = await rest.posts.get('u12345', {});
+   * const myPosts = await rest.posts.get('@me', {});
+   * const olderPosts = await rest.posts.get('username', { lastId: 123 });
    * ```
    */
-  async get(user: string | number, lastId: number = 0, lang: Language = 0, feed: boolean = false): Promise<Post[]> {
+  async get(user: string | number, payload: GetPostPayload): Promise<Post[]> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     const resolvedUser = await this.client.resolveUser(user);
-    const params: any = { last_id: lastId, feed };
-    if (lang) params.lang = lang;
+    const params: any = { last_id: payload.lastId || 0, feed: payload.feed || false };
+    if (payload.lang) params.lang = payload.lang;
     return this.client.get<Post[]>(`/user/${resolvedUser}/posts`, params);
   }
 
@@ -42,7 +40,7 @@ export class PostResource {
    * Creates a new post
    * @group Posts Core
    * @param user - User ({tag}/{id}/u{id}/@me)
-   * @param data - {@link CreatePostPayload} Post data
+   * @param payload - {@link CreatePostPayload} Post data
    * @since 1.0.0
    * @returns {Promise<Post>} {@link Post} Created post
    * @throws {Error} If user or data is invalid
@@ -81,11 +79,11 @@ export class PostResource {
    * });
    * ```
    */
-  async create(user: string | number, data: CreatePostPayload): Promise<Post> {
+  async create(user: string | number, payload: CreatePostPayload): Promise<Post> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
-    if (!data || !data.content) throw new Error('Invalid post data');
+    if (!payload || !payload.content) throw new Error('Invalid post data');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.post<Post>(`/user/${resolvedUser}/post`, data);
+    return this.client.post<Post>(`/user/${resolvedUser}/post`, payload);
   }
 
   /**
