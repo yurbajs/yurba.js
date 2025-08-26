@@ -341,7 +341,7 @@ export enum Status {
   None = '',
 }
 
-export interface SubscribeResponse {
+export interface RelationshipsResult {
     RelationshipState:   RelationshipState;
 }
 

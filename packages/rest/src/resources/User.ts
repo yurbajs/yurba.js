@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, SubscribeResponse, FindUserPayload, Gift } from '@yurbajs/types';
+import { User, RelationshipsResult, FindUserPayload, Gift } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -139,7 +139,7 @@ export class UserResource {
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
-   * @returns {Promise<SubscribeResponse>} {@link SubscribeResponse} Subscribe result
+   * @returns {Promise<RelationshipsResult>} {@link RelationshipsResult} Subscribe result
    * @throws {Error} If user identifier is invalid
    * @example
    * ```javascript
@@ -147,10 +147,10 @@ export class UserResource {
    * const resultById = await rest.users.subscribe(12345);
    * ```
    */
-  async subscribe(user: string | number ): Promise<SubscribeResponse> {
+  async subscribe(user: string | number ): Promise<RelationshipsResult> {
     if (!user) throw new Error('Invalid user identifier');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.patch<SubscribeResponse>(`/user/${resolvedUser}/subscribe`);
+    return this.client.patch<RelationshipsResult>(`/user/${resolvedUser}/subscribe`);
   }
 
   /**
@@ -158,17 +158,17 @@ export class UserResource {
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
-   * @returns {Promise<any>} Relationships data
+   * @returns {Promise<RelationshipsResult>} Relationships data
    * @throws {Error} If user identifier is invalid
    * @example
    * ```javascript
    * const relationships = await rest.users.getRelationships('username');
    * ```
    */
-  async getRelationships(user: string | number): Promise<any> {
+  async getRelationships(user: string | number): Promise<RelationshipsResult> {
     if (!user) throw new Error('Invalid user identifier');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.get<any>(`/user/${resolvedUser}/relationships`);
+    return this.client.get<RelationshipsResult>(`/user/${resolvedUser}/relationships`);
   }
 
 
