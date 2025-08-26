@@ -104,11 +104,12 @@ export const ErrorHandler = {
         errorData &&
         typeof errorData === 'object' &&
         errorData !== null &&
-        'detail' in errorData &&
-        typeof (errorData as { detail?: unknown }).detail === 'string'
+        'detail' in errorData
       ) {
-        const detail = (errorData as { detail: string }).detail;
-        errorMessage = this.mapApiError(detail);
+        const detailObj = errorData as { detail?: unknown };
+        if (typeof detailObj.detail === 'string') {
+          errorMessage = this.mapApiError(detailObj.detail);
+        }
       }
     } catch {
       errorBody = await response.text();

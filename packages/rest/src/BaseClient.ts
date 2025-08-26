@@ -321,15 +321,18 @@ export class BaseClient extends EventEmitter {
   private buildUrl(endpoint: string, queryParams: Record<string, unknown> = {}): string {
     const url = new URL(`${this.baseURL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`);
 
-    Object.entries(queryParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach((v: unknown) => url.searchParams.append(key, String(v)));
-        } else {
-          url.searchParams.append(key, String(value));
+    for (const key in queryParams) {
+      if (Object.prototype.hasOwnProperty.call(queryParams, key)) {
+        const value: unknown = queryParams[key];
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((v: unknown) => url.searchParams.append(key, String(v)));
+          } else {
+            url.searchParams.append(key, String(value));
+          }
         }
       }
-    });
+    }
 
     return url.toString();
   }
