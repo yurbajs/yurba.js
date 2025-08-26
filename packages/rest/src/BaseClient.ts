@@ -74,27 +74,27 @@ export class BaseClient extends EventEmitter {
     this.rateLimiter = new RateLimiter(config);
   }
 
-  public async get<T = any>(endpoint: string, queryParams: Record<string, any> = {}, config?: RequestConfig): Promise<T> {
+  public async get<T = unknown>(endpoint: string, queryParams: Record<string, unknown> = {}, config?: RequestConfig): Promise<T> {
     return this.request<T>('GET', this.buildUrl(endpoint, queryParams), undefined, config);
   }
 
-  public async post<T = any>(endpoint: string, data: any = {}, config?: RequestConfig): Promise<T> {
+  public async post<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     return this.request<T>('POST', this.buildUrl(endpoint), data, config);
   }
 
-  public async put<T = any>(endpoint: string, data: any = {}, config?: RequestConfig): Promise<T> {
+  public async put<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     return this.request<T>('PUT', this.buildUrl(endpoint), data, config);
   }
 
-  public async patch<T = any>(endpoint: string, data: any = {}, config?: RequestConfig): Promise<T> {
+  public async patch<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     return this.request<T>('PATCH', this.buildUrl(endpoint), data, config);
   }
 
-  public async delete<T = any>(endpoint: string, config?: RequestConfig): Promise<T> {
+  public async delete<T = unknown>(endpoint: string, config?: RequestConfig): Promise<T> {
     return this.request<T>('DELETE', this.buildUrl(endpoint), undefined, config);
   }
 
-  public async uploadFile<T = any>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<T> {
+  public async uploadFile<T = unknown>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<T> {
     const headers = { ...this.defaultHeaders, ...config?.headers };
     delete headers['Content-Type']; // Let browser set multipart boundary
     
@@ -199,7 +199,7 @@ export class BaseClient extends EventEmitter {
     return user;
   }
 
-  private async request<T>(method: string, url: string, data?: any, config?: RequestConfig): Promise<T> {
+  private async request<T>(method: string, url: string, data?: unknown, config?: RequestConfig): Promise<T> {
     const endpoint = new URL(url).pathname;
     const maxRetries = config?.retry?.attempts ?? this.options.maxRetries;
     const retryDelay = config?.retry?.delay ?? this.options.retryDelay;
@@ -230,7 +230,7 @@ export class BaseClient extends EventEmitter {
     throw new Error('Unknown error occurred');
   }
 
-  private async executeRequest<T>(method: string, url: string, data?: any, config?: RequestConfig, endpoint?: string): Promise<T> {
+  private async executeRequest<T>(method: string, url: string, data?: unknown, config?: RequestConfig, endpoint?: string): Promise<T> {
     if (this.rateLimiter && !this.rateLimiter.canMakeRequest()) {
       throw new ApiError(
         `Rate limit exceeded. Reset at ${new Date(this.rateLimiter.getResetTime()).toISOString()}`,
