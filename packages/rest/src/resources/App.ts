@@ -4,7 +4,7 @@ import {
   AppToken,
   CreateAppPayload,
   BaseOkay,
-  User
+  Author
 } from '@yurbajs/types';
 
 export class AppResource {
@@ -167,17 +167,17 @@ export class AppResource {
    * @param token - App token
    * @param secretKey - App secret key
    * @since 1.0.0
-   * @returns {Promise<User>} {@link User} object
+   * @returns {Promise<Author>} {@link Author} object
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
    * const user = await rest.apps.getUser('token_here', 'secret_key_here');
    * ```
    */
-  async getUser(token: string, secretKey: string): Promise<User> {
+  async getUser(token: string, secretKey: string): Promise<Author> {
     if (!token || token.length < 1) throw new Error('Invalid token');
     if (!secretKey || secretKey.length < 1) throw new Error('Invalid secret key');
-    return this.client.get<User>(`/apps/user/${token}`, {}, {
+    return this.client.get<Author>(`/apps/user/${token}`, {}, {
       headers: { 'Secret-Key': secretKey }
     });
   }

@@ -244,6 +244,7 @@ export enum DialogVerify {
 }
 
 // -------- USER TYPES --------
+// Short model user
 export interface Author {
     ID:                number;
     Name:              string;
