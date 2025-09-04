@@ -288,9 +288,6 @@ export class BaseClient extends EventEmitter {
       if (this.options.debug) {
         this.emit('request', { method, url, data, headers });
       }
-
-      console.log(`Making ${method} request to: ${url}`);
-      console.log('Headers:', headers);
       
       const response = await fetch(url, options);
 
