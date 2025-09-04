@@ -116,5 +116,31 @@ export const ErrorHandler = {
     }
 
     throw new ApiError(errorMessage, response.status, errorBody, endpoint, method);
+  },
+
+  /**
+   * Handle response errors with pre-read text
+   */
+  async handleResponseText(responseText: string, status: number, endpoint?: string, method?: string): Promise<never> {
+    let errorMessage = `API request failed: ${status}`;
+
+    try {
+      const errorData: unknown = JSON.parse(responseText);
+      if (
+        errorData &&
+        typeof errorData === 'object' &&
+        errorData !== null &&
+        'detail' in errorData
+      ) {
+        const detailObj = errorData as { detail?: unknown };
+        if (typeof detailObj.detail === 'string') {
+          errorMessage = this.mapApiError(detailObj.detail);
+        }
+      }
+    } catch {
+      // responseText is not JSON, use as is
+    }
+
+    throw new ApiError(errorMessage, status, responseText, endpoint, method);
   }
 };
