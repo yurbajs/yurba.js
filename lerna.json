@@ -22,7 +22,8 @@
       "conventionalCommits": true,
       "message": "chore(release): publish",
       "registry": "https://registry.npmjs.org/",
-      "skipNpm": false
+      "skipNpm": false,
+      "skipBump": true
     },
     "run": {
       "npmClient": "pnpm",
