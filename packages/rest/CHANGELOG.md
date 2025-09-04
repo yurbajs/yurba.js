@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.2](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.1...@yurbajs/rest@1.0.0-next.2) (2025-09-04)
+
+
+### Bug Fixes
+
+* **rest:** add GetPostPayload for post.ts: get ([7c42cd5](https://github.com/rastgame/yurba.js/commit/7c42cd5a68866a6834bbe98c1194cded0eb38b1c))
+* **rest:** correct dialogs create private ([42dc616](https://github.com/rastgame/yurba.js/commit/42dc616c3c426ae2952f1bfc07fa35db04a32a4f))
+* **rest:** resourse app, correct getUser response interface (from User in to -> Author (Short User Model) ([0399e0e](https://github.com/rastgame/yurba.js/commit/0399e0e831de96d679d07b8ab44c14ee80dca986))
+* **rest:** small fix ([13120c5](https://github.com/rastgame/yurba.js/commit/13120c59912f761b3e18b2c39122c8186c45c9cd))
+
+
+### Features
+
+* **rest:** add tests ([1278702](https://github.com/rastgame/yurba.js/commit/12787022f0ff0d8a09df715a68cd8a3723950cde))
+
+
+
+
+
 # [1.0.0-next.1](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.0...@yurbajs/rest@1.0.0-next.1) (2025-08-25)
 
 **Note:** Version bump only for package @yurbajs/rest

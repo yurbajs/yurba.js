@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.2](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@1.0.0-next.1...@yurbajs/types@1.0.0-next.2) (2025-09-04)
+
+
+### Bug Fixes
+
+* **rest:** resourse app, correct getUser response interface (from User in to -> Author (Short User Model) ([0399e0e](https://github.com/rastgame/yurba.js/commit/0399e0e831de96d679d07b8ab44c14ee80dca986))
+
+
+### Features
+
+* **types:** add GetPostPayload ([2e1306d](https://github.com/rastgame/yurba.js/commit/2e1306d3ff975d1f6e84d8f01fd1b841c559245e))
+
+
+
+
+
 # [1.0.0-next.1](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@1.0.0-next.0...@yurbajs/types@1.0.0-next.1) (2025-08-25)
 
 **Note:** Version bump only for package @yurbajs/types
