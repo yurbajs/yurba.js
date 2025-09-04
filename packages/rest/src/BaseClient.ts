@@ -289,6 +289,9 @@ export class BaseClient extends EventEmitter {
         this.emit('request', { method, url, data, headers });
       }
 
+      console.log(`Making ${method} request to: ${url}`);
+      console.log('Headers:', headers);
+      
       const response = await fetch(url, options);
 
       if (this.rateLimiter) this.rateLimiter.recordRequest();
@@ -297,11 +300,13 @@ export class BaseClient extends EventEmitter {
         this.emit('response', { method, url, status: response.status, statusText: response.statusText });
       }
 
+      const responseText = await response.text();
+      
       if (!response.ok) {
-        await ErrorHandler.handleResponse(response, endpoint, method);
+        await ErrorHandler.handleResponseText(responseText, response.status, endpoint, method);
       }
 
-      const responseData: T = await response.json();
+      const responseData: T = responseText ? JSON.parse(responseText) : null;
       return responseData;
 
     } catch (error) {
