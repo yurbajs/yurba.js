@@ -95,12 +95,10 @@ export class DialogResource {
    */
   async createPrivate(userId: number): Promise<Dialog> {
     if (userId < 1) throw new Error('Invalid user ID');
-    if (await this.client.get(`/user/${userId}`)) {
-      return this.client.post<CreatePrivateDialogResponse>(
-        '/dialogs/private/',
-        userId
-      );
-    } else throw new Error('Invalid user ID');
+    return this.client.post<CreatePrivateDialogResponse>(
+      '/dialogs/private/',
+      { userId }
+    );
   }
 
 
