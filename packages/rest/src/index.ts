@@ -1,5 +1,15 @@
 import { BaseClient, ApiError, BaseClientOptions, RequestConfig, RateLimitConfig } from './BaseClient';
-import type { UserResource, DialogResource, PostResource, PhotosResource, MusebaseResource, AccountResorce, FilesResource, VideoResource, SearchResource, ShopResource, AppResource } from './resources/';
+import { UserResource } from './resources/User';
+import { DialogResource } from './resources/Dialog';
+import { PostResource } from './resources/Post';
+import { PhotosResource } from './resources/Photos';
+import { MusebaseResource } from './resources/Musebase';
+import { AccountResorce } from './resources/Account';
+import { FilesResource } from './resources/Files';
+import { VideoResource } from './resources/Video';
+import { SearchResource } from './resources/Search';
+import { ShopResource } from './resources/Shop';
+import { AppResource } from './resources/App';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -21,62 +31,61 @@ export class REST extends BaseClient {
     super(token, options);
   }
 
-  private _getResource<T>(
-    resource: T | undefined,
-    resourceName: string,
-    modulePath: string
-  ): T {
-    if (!resource) {
-      const module = require(modulePath) as { [key: string]: new (client: REST) => T };
-      resource = new module[resourceName](this);
-      // @ts-ignore - We are setting the private property
-      this[`_${resourceName.toLowerCase()}`] = resource;
-    }
-    return resource;
-  }
+
 
   get users(): UserResource {
-    return this._getResource(this._users, 'UserResource', './resources/User');
+    if (!this._users) this._users = new UserResource(this);
+    return this._users;
   }
 
   get dialogs(): DialogResource {
-    return this._getResource(this._dialogs, 'DialogResource', './resources/Dialog');
+    if (!this._dialogs) this._dialogs = new DialogResource(this);
+    return this._dialogs;
   }
 
   get posts(): PostResource {
-    return this._getResource(this._posts, 'PostResource', './resources/Post');
+    if (!this._posts) this._posts = new PostResource(this);
+    return this._posts;
   }
 
   get musebase(): MusebaseResource {
-    return this._getResource(this._musebase, 'MusebaseResource', './resources/Musebase');
+    if (!this._musebase) this._musebase = new MusebaseResource(this);
+    return this._musebase;
   }
 
   get photos(): PhotosResource {
-    return this._getResource(this._photos, 'PhotosResource', './resources/Photos');
+    if (!this._photos) this._photos = new PhotosResource(this);
+    return this._photos;
   }
 
   get account(): AccountResorce {
-    return this._getResource(this._auth, 'AccountResorce', './resources/Account');
+    if (!this._auth) this._auth = new AccountResorce(this);
+    return this._auth;
   }
 
   get files(): FilesResource {
-    return this._getResource(this._files, 'FilesResource', './resources/Files');
+    if (!this._files) this._files = new FilesResource(this);
+    return this._files;
   }
 
   get video(): VideoResource {
-    return this._getResource(this._video, 'VideoResource', './resources/Video');
+    if (!this._video) this._video = new VideoResource(this);
+    return this._video;
   }
 
   get search(): SearchResource {
-    return this._getResource(this._search, 'SearchResource', './resources/Search');
+    if (!this._search) this._search = new SearchResource(this);
+    return this._search;
   }
 
   get shop(): ShopResource {
-    return this._getResource(this._shop, 'ShopResource', './resources/Shop');
+    if (!this._shop) this._shop = new ShopResource(this);
+    return this._shop;
   }
 
   get apps(): AppResource {
-    return this._getResource(this._apps, 'AppResource', './resources/App');
+    if (!this._apps) this._apps = new AppResource(this);
+    return this._apps;
   }
 }
 
@@ -90,7 +99,7 @@ export {
 
 export { userCache } from './cache';
 export type { CachedUser } from './cache';
-export type {
+export {
   UserResource,
   DialogResource,
   PostResource,
@@ -102,7 +111,7 @@ export type {
   SearchResource,
   ShopResource,
   AppResource
-} from './resources/';
+};
 
 // Default export for convenience
 export default REST;
