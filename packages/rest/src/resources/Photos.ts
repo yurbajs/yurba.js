@@ -13,10 +13,6 @@ export class PhotosResource {
   //               { Photos Core }
   */
 
-  /* 
-  //               { Photos Core }
-  */
-
   /**
    * Gets all photos (up to 12 per page)
    * @group Photos Core
