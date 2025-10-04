@@ -12,10 +12,6 @@ export class FilesResource {
   //               { Files Core }
   */
 
-  /* 
-  //               { Files Core }
-  */
-
   /**
    * Gets a file by identifier
    * @group Files Core

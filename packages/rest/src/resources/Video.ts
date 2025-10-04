@@ -12,10 +12,6 @@ export class VideoResource {
   //               { Video Core }
   */
 
-  /* 
-  //               { Video Core }
-  */
-
   /**
    * Gets a video by identifier
    * @group Video Core

@@ -11,7 +11,7 @@ const members = [
     title: 'Founder | developer | tester | others..',
     links: [
       { icon: 'github', link: 'https://github.com/rastgame' },
-      { icon: 'https://yurba.js.org/icons/yurba.svg', link: 'https://github.com/rastgame' }
+      { icon: 'yurba', link: 'https://github.com/rastgame' }
     ]
   }
 ]
@@ -20,21 +20,17 @@ const members = [
 
 # Про Yurba.js
 
+Потужна бібліотека для створення ботів та інтеграції з API Yurba.
+
 ## Команда
-hero:
-  name: "Yurba.js"
-  text: "- Ну що, почнемо?"
-  tagline: "Потужна бібліотека для створення ботів та інтеграції з Yurba API."
-  image:
-    src: /banner.svg
-    alt: Банер Yurba.js 
+
 <VPTeamMembers size="small" :members />
 
 На цей момент весь проєкт створений, підтримується та розроблюється засновником - [RastGame](https://github.com/rastgame).
 
 ## Мета
 
-Наша мета проста: надати розробникам, які працюють з api.yurba.one, зручну та просту бібліотеку з усім необхідним функціоналом. Ця бібліотека призначена не лише для розробників ботів, але й для всіх, хто потребує інтеграції з api.yurba.one. Саме тому всі пакети є незалежними: [REST](https://github.com/yurbajs/yurba.js/tree/main/packages/rest) призначений виключно для роботи з API Yurba, а основна бібліотека [Yurba.js](https://github.com/yurbajs/yurba.js/tree/main/packages/yurba.js) — для створення ботів. Ми віримо в:
+Наша мета проста: надати розробникам, які працюють з Yurba.one або ж його API, зручну та просту бібліотеку з усім необхідним функціоналом. Ця бібліотека призначена не лише для розробників ботів, але й для всіх, хто потребує інтеграції з api.yurba.one. Саме тому всі пакети є незалежними: [REST](https://github.com/yurbajs/yurba.js/tree/main/packages/rest) призначений виключно для роботи з API Yurba, а основна бібліотека [Yurba.js](https://github.com/yurbajs/yurba.js/tree/main/packages/yurba.js) — для створення ботів. Ми віримо в:
 
 - **Простоту** - Робимо розробку ботів доступною для розробників будь-якого рівня
 - **Продуктивність** - Забезпечуємо швидкість та ефективність нашої бібліотеки
