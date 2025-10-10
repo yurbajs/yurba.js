@@ -300,7 +300,7 @@ class Client extends EventEmitter {
 
       log('User data:', user);
 
-      this.wsm.on('ready', () => {
+      this.wsm.once('ready', () => {
         this.isReady = true;
         this.reconnectAttempts = 0;
         this.emit('ready');
