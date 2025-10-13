@@ -382,7 +382,8 @@ class Client extends EventEmitter {
       );
     } catch (err) {
       this.emit('commandError', { error: err, message: msg });
-      if (err instanceof Error && err.message?.includes('not found')) {
+      // Тільки викликати unknownCommand якщо це справді невідома команда
+      if (err instanceof Error && err.message?.includes('Command "') && err.message?.includes('" not found.')) {
         this.emit('unknownCommand', msg.Text, msg);
       }
     }
