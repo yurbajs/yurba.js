@@ -1,6 +1,6 @@
 {
   "name": "@yurbajs/events",
-  "version": "1.0.0-next.2",
+  "version": "1.0.0-next.3",
   "description": "Event emitter for YurbaJS bot framework",
   "module": "dist/events.mjs",
   "main": "dist/events.js",
