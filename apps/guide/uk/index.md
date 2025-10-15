@@ -60,11 +60,5 @@ features:
 Spacer1:
   height: 4rem
 
-CallToAction:
-  title: Створюйте з Yurba.js
-  description:  Перегляньте реальні проєкти та приклади створені з Yurba.js
-  buttonText: Переглянути   
-  link: /uk/showcase
-
 ---
 

@@ -85,7 +85,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
           'error',
           new Error(`Failed to parse WebSocket message: ${err}`)
         );
-      }
+      } 
     });
 
     this.ws.on('close', (code) => {

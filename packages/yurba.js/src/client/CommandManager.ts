@@ -41,7 +41,6 @@ export default class CommandManager implements ICommandManager {
     {
       handler: CommandHandler;
       argsSchema: CommandArgsSchema;
-      description?: string;
     }
   >;
   private api: {
@@ -74,13 +73,11 @@ export default class CommandManager implements ICommandManager {
    * @param command Command name
    * @param argsSchema Command arguments schema
    * @param handler Command handler
-   * @param description Command description (optional)
    */
   registerCommand(
     command: string,
     argsSchema: CommandArgsSchema,
-    handler: CommandHandler,
-    description?: string
+    handler: CommandHandler
   ): void {
     if (!command || typeof command !== 'string' || !command.trim()) {
       throw new Error('Command name is required');
@@ -88,7 +85,7 @@ export default class CommandManager implements ICommandManager {
     if (this.commands.has(command)) {
       throw new Error(`Command "${command}" is already registered.`);
     }
-    this.commands.set(command, { handler, argsSchema, description });
+    this.commands.set(command, { handler, argsSchema });
     logging.info(`Registered command: ${command}`);
   }
 
@@ -380,7 +377,6 @@ export default class CommandManager implements ICommandManager {
 
     return {
       argsSchema: commandInfo.argsSchema,
-      description: commandInfo.description,
     };
   }
 

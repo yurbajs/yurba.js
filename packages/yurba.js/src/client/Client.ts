@@ -15,6 +15,7 @@ import {
   UserModel,
   PhotoModel,
   SendMessagePayload,
+  Dialog,
 } from '@yurbajs/types';
 
 import WSM from './WebsocketManager';
@@ -164,6 +165,7 @@ class Client extends EventEmitter {
   private commandManager: CommandManager;
   private middlewareManager: MiddlewareManager;
   private _user?: UserModel;
+  private _dialogs?: Dialog[];
   private isReady: boolean = false;
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
@@ -298,6 +300,9 @@ class Client extends EventEmitter {
       const user = await this.api.users.me();
       this._user = user; 
 
+      const dialogs = await this.api.dialogs.getAll();
+      this._dialogs = dialogs; 
+
       log('User data:', user);
 
       this.wsm.once('ready', () => {
@@ -309,7 +314,7 @@ class Client extends EventEmitter {
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
         this.wsm.on('message', (message: Message) =>
-{        console.log('YURBA.JS ::', JSON.stringify(message))
+{        log('YURBA.JS ::', JSON.stringify(message, null, 2))
         this.handleMessage(message)}
         );
         this.wsmMessageSubscribed = true;
@@ -398,8 +403,6 @@ class Client extends EventEmitter {
    */
   private async handleMessage(message: Message): Promise<void> {
     try {
-      console.log('YURBA.JS ::' + message)
-
       // Execute all middleware
       await this.middlewareManager.execute(message).catch((err) => {
         erlog('Middleware error:', err);
