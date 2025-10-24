@@ -84,7 +84,8 @@ export const ErrorHandler = {
       upload_error: 'Failed to save to database',
       rate_limit_exceeded: 'Too many requests, please try again later',
       validation_error: 'Invalid request parameters',
-      server_error: 'Internal server error occurred'
+      server_error: 'Internal server error occurred',
+      invalid_photos: 'Invalid photos parameter or message contains unsupported media'
     };
 
     return errorMap[detail] || `API Error: ${detail}`;

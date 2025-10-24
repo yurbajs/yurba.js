@@ -136,7 +136,7 @@ export class BaseClient extends EventEmitter {
     if (cached) return;
 
     try {
-      const userData: unknown = await this.get('/me');
+      const userData: unknown = await this.get('/get_me');
       if (userData && typeof userData === 'object' && userData !== null) {
         const data = userData as {
           ID?: unknown;
@@ -154,7 +154,7 @@ export class BaseClient extends EventEmitter {
         });
       }
     } catch {
-      throw new ApiError('Token validation failed', 401, undefined, '/me', 'GET');
+      throw new ApiError('Token validation failed', 401, undefined, '/get_me', 'GET');
     }
   }
 
@@ -286,6 +286,7 @@ export class BaseClient extends EventEmitter {
 
     try {
       if (this.options.debug) {
+        console.log('🔄 REQUEST:', { method, url, data, headers });
         this.emit('request', { method, url, data, headers });
       }
       
@@ -294,6 +295,7 @@ export class BaseClient extends EventEmitter {
       if (this.rateLimiter) this.rateLimiter.recordRequest();
 
       if (this.options.debug) {
+        console.log('✅ RESPONSE:', { method, url, status: response.status, statusText: response.statusText });
         this.emit('response', { method, url, status: response.status, statusText: response.statusText });
       }
 
