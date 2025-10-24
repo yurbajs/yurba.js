@@ -725,6 +725,17 @@ class Client extends EventEmitter {
   getMiddlewares(): MiddlewareConfig[] {
     return this.middlewareManager.list();
   }
+
+  /**
+   * Shows typing indicator in dialog
+   * @param dialogId Dialog ID
+   */
+  typing(dialogId: number): void {
+    this.wsm.send(JSON.stringify({
+      command: 'typing',
+      thing_id: dialogId
+    }));
+  }
 }
 
 const Version = pkg.version;

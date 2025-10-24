@@ -245,4 +245,15 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   isConnected(): boolean {
     return this.ws?.isOpen() || false;
   }
+
+  /**
+   * Sends raw data through WebSocket
+   * @param data Data to send
+   */
+  send(data: string): void {
+    if (!this.isConnected()) {
+      throw new Error('WebSocket not connected');
+    }
+    this.ws?.send(data);
+  }
 }

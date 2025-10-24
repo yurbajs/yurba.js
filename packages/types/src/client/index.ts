@@ -42,4 +42,5 @@ export interface IWebSocketManager {
   connect(user: UserModel): Promise<void>;
   on(event: string, listener: (...args: any[]) => void): this;
   off(event: string, listener: (...args: any[]) => void): this;
+  send(data: string): void;
 }

@@ -4,18 +4,16 @@ description: Історія та розвиток української соц�
 sidebar: false
 ---
 
-# Про Українську соціальну мережу Yurba.one
+# Yurba.one: Українська соціальна мережа
 
-::: info
-Можете вважати цю сторінку як статтю про Yurba.one
-:::
+---
 
-## Yurba.one: Українська соціальна мережа
+<div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+  <img src="/icons/yurba-banner-blue.svg" alt="Yurba.one banner" width="350">
+</div>
+
 
 **[Yurba.one](https://yurba.one)** — це **українська соціальна мережа**, раніше відома під доменами **Yurba.me** та **yurba.ml**, яка позиціонується як сучасна соціальна мережа з сучасним інтерфейсом. Її історія починається задовго до створення власне соцмережі — у 2021 році, коли проєкт розпочинався як **торент-трекер** (спочатку під назвою **TickTracker**), який мав стати альтернативою [toloka.to](https://toloka.to/). Наразі соціальна мережа перебуває в активній розробці.
-
-<img src="/icons/yurba-blue.svg" alt="Yurba.one logo" width="100">
-<img src="/icons/yurba-banner-blue.svg" alt="Yurba.one banner" width="500">
 
 ## Історія та ключові етапи
 
