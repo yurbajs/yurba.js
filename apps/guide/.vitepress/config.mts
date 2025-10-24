@@ -11,6 +11,7 @@ export default defineConfig({
   description: "The powerful library for creating bots and integrating with the Yurba API",
   base: '/',
   cleanUrls: false,
+  lastUpdated: true,
   ignoreDeadLinks: [
     './LICENSE',
     './README.md',
