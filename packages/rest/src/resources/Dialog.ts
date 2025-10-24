@@ -381,7 +381,6 @@ export class DialogResource {
    * ```
    */
   async deleteMessage(messageId: number): Promise<response> {
-    await this.client.patch<undefined>(`/dialogs/messages/${messageId}`);
     return this.client.delete<response>(`/dialogs/messages/${messageId}`);
   }
 }
