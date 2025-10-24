@@ -1,0 +1,76 @@
+{
+  "name": "@yurbajs/events",
+  "version": "1.0.0-next.4",
+  "description": "Event emitter for YurbaJS bot framework",
+  "module": "dist/events.mjs",
+  "main": "dist/events.js",
+  "jsnext:main": "dist/events.mjs",
+  "umd:main": "dist/events.umd.js",
+  "source": "src/index.ts",
+  "typings": "index.d.ts",
+  "exports": {
+    "types": "./index.d.ts",
+    "module": "./dist/events.mjs",
+    "import": "./dist/events.mjs",
+    "require": "./dist/events.js",
+    "default": "./dist/events.mjs"
+  },
+  "scripts": {
+    "test": "jest --passWithNoTests --coverage",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit",
+    "bundle": "microbundle -f es,cjs,umd --name YurbaEvents",
+    "build": "npm run clean && npm run bundle",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rastgame/yurba.js.git",
+    "directory": "packages/events"
+  },
+  "keywords": [
+    "events",
+    "eventemitter",
+    "emitter",
+    "yurbajs"
+  ],
+  "homepage": "https://github.com/rastgame/yurba.js/tree/main/packages/events",
+  "author": "YurbaJS Team",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "index.d.ts",
+    "src"
+  ],
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.test.ts",
+      "**/tests/**/*.test.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.d.ts"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "documentation": "^14.0.2",
+    "jest": "^29.7.0",
+    "microbundle": "^0.15.0",
+    "rimraf": "^6.0.1",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  },
+  "gitHead": "abaf48381960a647367a508db91bdea27141ebe4"
+}
