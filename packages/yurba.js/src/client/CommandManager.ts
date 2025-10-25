@@ -103,46 +103,6 @@ export default class CommandManager implements ICommandManager {
   }
 
   /**
-   * Sets cooldown for command
-   * @param command Command name
-   * @param userId User ID
-   * @param cooldownMs Cooldown time in milliseconds
-   */
-  setCooldown(command: string, userId: number, cooldownMs: number): void {
-    if (!this.cooldowns.has(command)) {
-      this.cooldowns.set(command, new Map());
-    }
-    this.cooldowns.get(command)?.set(userId, Date.now() + cooldownMs);
-  }
-
-  /**
-   * Checks if command is on cooldown for user
-   * @param command Command name
-   * @param userId User ID
-   * @returns Time until cooldown ends in milliseconds or 0 if cooldown has ended
-   */
-  checkCooldown(command: string, userId: number): number {
-    if (!this.cooldowns.has(command)) {
-      return 0;
-    }
-
-    const userCooldowns = this.cooldowns.get(command);
-    if (!userCooldowns || !userCooldowns.has(userId)) {
-      return 0;
-    }
-
-    const expirationTime = userCooldowns.get(userId) || 0;
-    const now = Date.now();
-
-    if (now < expirationTime) {
-      return expirationTime - now;
-    }
-
-    userCooldowns.delete(userId);
-    return 0;
-  }
-
-  /**
    * Main method for handling commands
    * @param message Message object
    * @param enhanceMessage Function to enhance message
@@ -168,15 +128,6 @@ export default class CommandManager implements ICommandManager {
 
     if (!this.commands.has(actualCommand)) {
       throw new Error(`Command "${commandName}" not found.`);
-    }
-
-    // Check cooldown
-    const cooldownTime = this.checkCooldown(actualCommand, Author.ID);
-    if (cooldownTime > 0) {
-      const secondsLeft = Math.ceil(cooldownTime / 1000);
-      throw new Error(
-        `Command "${commandName}" is on cooldown. Please wait ${secondsLeft} seconds.`
-      );
     }
 
     const { handler, argsSchema } = this.commands.get(actualCommand)!;

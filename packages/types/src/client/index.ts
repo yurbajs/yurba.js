@@ -44,3 +44,15 @@ export interface IWebSocketManager {
   off(event: string, listener: (...args: any[]) => void): this;
   send(data: string): void;
 }
+
+interface WSConnected {
+  ok: number;
+  version: string;
+}
+
+interface WSMessage {
+  Type: string;
+  Message: Message ;
+}
+
+export type WSEvent = WSConnected | WSMessage ;

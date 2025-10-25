@@ -17,7 +17,7 @@ interface WebSocketUnsubscribeData {
 
 const logging = new Logger('WSM', {
   enabled: true,
-  level: process.env.Level as unknown as LogLevel,
+  level: LogLevel.DEBUG,
 });
 /**
  * WebSocket connection manager
@@ -60,8 +60,8 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       this.restoreSubscriptions();
 
       // Subscribe to bot dialog
-      const subscribe_dialog = this.subscribeToEvents('dialog', botData.ID);
-      logging.info('Subscribed to dialog:', subscribe_dialog);
+      const subscribe_dialog = this.subscribeToEvents('dialog', 489);
+      logging.info('Subscribed to dialog:', subscribe_dialog, ' : ', 489);
 
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
       logging.info('Ready emit:',ready_emit)
@@ -71,14 +71,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       logging.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString());
-        logging.debug(raw)
-        let message;
-        if (raw.Message) {
-          message = { ...raw.Message, Type: raw.Type || raw.Message.Type };
-        } else {
-          message = raw;
-        }
-        this.emit('message', message);
+        this.emit('message', raw);
       } catch (err) {
         logging.error('Failed to parse WebSocket message:', err);
         this.emit(

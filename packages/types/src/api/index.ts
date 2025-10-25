@@ -83,11 +83,7 @@ export type DeleteMessageResponse = BaseDelete;
 export type EditMessageResponse = Message;
 export type SendMessageResponse = Message;
 
-export enum MessageType {
-    Join = "join",
-    Leave = "leave",
-    Message = "message",
-}
+export type MessageType = 'join' | 'leave' | 'message' | 'post_on_wall' | 'post_like' | 'comment_post' | ''
 
 // -------- POST TYPES --------
 export interface Post {

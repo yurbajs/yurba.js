@@ -12,10 +12,11 @@ import {
   ClientOptions,
   MiddlewareFunction,
   MiddlewareConfig,
-  UserModel,
-  PhotoModel,
+  WSEvent,
   SendMessagePayload,
   Dialog,
+  User,
+  Photo
 } from '@yurbajs/types';
 
 import WSM from './WebsocketManager';
@@ -111,9 +112,7 @@ const logging = new Logger('Client', {
 });
 
 const log = (...args: unknown[]): void => {
-  if (Dev.debug) {
-    logging.debug(...args);
-  }
+  logging.debug(...args);
 };
 
 const erlog = (...args: unknown[]): void => {
@@ -164,7 +163,7 @@ class Client extends EventEmitter {
   private messageManager: MessageManager;
   private commandManager: CommandManager;
   private middlewareManager: MiddlewareManager;
-  private _user?: UserModel;
+  private _user?: User;
   private _dialogs?: Dialog[];
   private isReady: boolean = false;
   private reconnectAttempts: number = 0;
@@ -245,11 +244,22 @@ class Client extends EventEmitter {
 
   /**
    * Getter for bot user data
-   * @returns {UserModel | undefined} User data or undefined if not initialized
+   * @returns {UserModel} Bot user data
    */
-  get user(): UserModel | undefined {
+  get user(): User | undefined {
     return this._user;
   }
+
+  /**
+   * Getter for bot user dialogs
+   * @returns {Dialog[]} Dialogs 
+   */
+  get dialogs(): Dialog[] | undefined {
+    // зроби якщо dialogs немає то запить api.dialogs.getAll():
+    // + кешування на 2 хвилини
+    return this._dialogs;
+  }
+
 
   /**
    * Registers a new command
@@ -300,9 +310,6 @@ class Client extends EventEmitter {
       const user = await this.api.users.me();
       this._user = user; 
 
-      const dialogs = await this.api.dialogs.getAll();
-      this._dialogs = dialogs; 
-
       log('User data:', user);
 
       this.wsm.once('ready', () => {
@@ -313,14 +320,14 @@ class Client extends EventEmitter {
 
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: Message) =>
+        this.wsm.on('message', (message: any) =>
 {        log('YURBA.JS ::', JSON.stringify(message, null, 2))
         this.handleMessage(message)}
         );
         this.wsmMessageSubscribed = true;
       }
 
-      await this.wsm.connect(user as UserModel);
+      await this.wsm.connect(user as User);
     } catch (error) {
       erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
@@ -354,7 +361,7 @@ class Client extends EventEmitter {
     setTimeout(async () => {
       try {
         if (this._user) {
-          await this.wsm.connect(this._user as UserModel);
+          await this.wsm.connect(this._user as User);
         } else {
           throw new YJSError('Not initialized', {
             hint: 'Check if you called .init()',
@@ -401,29 +408,53 @@ class Client extends EventEmitter {
    * @param message Incoming message object
    * @private
    */
-  private async handleMessage(message: Message): Promise<void> {
+  private async handleMessage(message: WSEvent): Promise<void> {
     try {
-      // Execute all middleware
-      await this.middlewareManager.execute(message).catch((err) => {
-        erlog('Middleware error:', err);
-        this.emit('middlewareError', { error: err, message });
-      });
-
+      this.emit('raw', message);
       const msg = message;
-      if (!msg) return;
+      if ('Message' in msg) {
+      switch (msg.Type) {
+        case 'message':
+          this.messageManager.enhanceMessage(msg.Message);
+          switch (msg.Message.Type){
+            case '':
+              if (msg.Message.Text.startsWith(this.prefix)){
+                return await this.handleCommandMessage(msg.Message);
+              } else {
+                this.emit('message', msg.Message)
+              }
+              break
+            case 'join':
+                this.emit('join', msg.Message)
+              break
+            case 'leave':
+                this.emit('leave', msg.Message)
+              break
+          }
+          break;
+        case 'message_delete':
+          this.emit('message_delete', msg.Message)
+          break;
+        case 'read':
+          break;
+        case 'typing':
+          break;
 
-      this.messageManager.enhanceMessage(msg);
-
-      // Handle commands
-      if (
-        msg.Type === 'message' &&
-        msg.Text &&
-        msg.Text.startsWith(this.prefix)
-      ) {
-        await this.handleCommandMessage(msg);
+        case 'notification':
+          switch (msg.Message.Type){
+            case 'post_on_wall':
+              break;
+            case 'post_like':
+              break
+            case 'comment_post':
+              break
+          }
+          break
+        default:
+          break;
       }
-
-      this.emit('message', msg);
+      
+    }
     } catch (error) {
       erlog('Error handling message:', error);
       this.emit('error', error);
@@ -572,7 +603,7 @@ class Client extends EventEmitter {
    * @param userTag User tag
    * @returns Promise that resolves with user data
    */
-  async getUser(userTag: string): Promise<UserModel | null> {
+  async getUser(userTag: string): Promise<User | null> {
     try {
       const response = await this.api.users.get(userTag);
       log(`Fetched user ${userTag}`, response);
@@ -588,7 +619,7 @@ class Client extends EventEmitter {
    * @param photoId Photo ID to retrieve
    * @returns Promise that resolves with API response
    */
-  async getPhoto(photoId: string): Promise<PhotoModel | null> {
+  async getPhoto(photoId: string): Promise<Photo | null> {
     try {
       const response = await this.api.photos.get(photoId);
       log(`Fetched photo ${photoId}`, response);
@@ -736,6 +767,7 @@ class Client extends EventEmitter {
       thing_id: dialogId
     }));
   }
+
 }
 
 const Version = pkg.version;
