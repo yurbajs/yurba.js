@@ -310,6 +310,9 @@ class Client extends EventEmitter {
       const user = await this.api.users.me();
       this._user = user; 
 
+      const dialogs = await this.api.dialogs.getAll();
+      this._dialogs = dialogs; 
+
       log('User data:', user);
 
       this.wsm.once('ready', () => {
@@ -327,7 +330,7 @@ class Client extends EventEmitter {
         this.wsmMessageSubscribed = true;
       }
 
-      await this.wsm.connect(user as User);
+      await this.wsm.connect(dialogs);
     } catch (error) {
       erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
@@ -360,8 +363,8 @@ class Client extends EventEmitter {
 
     setTimeout(async () => {
       try {
-        if (this._user) {
-          await this.wsm.connect(this._user as User);
+        if (this._dialogs) {
+          await this.wsm.connect(this._dialogs);
         } else {
           throw new YJSError('Not initialized', {
             hint: 'Check if you called .init()',

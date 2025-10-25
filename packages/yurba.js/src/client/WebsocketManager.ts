@@ -1,7 +1,7 @@
 import { default as ReconnectingWebSocket } from '@yurbajs/ws';
 import { EventEmitter } from 'events';
 import Logger, { LogLevel } from '../utils/Logger';
-import { IWebSocketManager } from '@yurbajs/types';
+import { Dialog, IWebSocketManager } from '@yurbajs/types';
 
 // Локальні типи для WebSocket subscribe/unsubscribe
 interface WebSocketSubscribeData {
@@ -40,10 +40,10 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
 
   /**
    * Connects to WebSocket server
-   * @param botData Bot data
+   * @param dialogs Dialogs
    * @returns Promise that resolves after successful connection
    */
-  async connect(botData: any): Promise<void> {
+  async connect(dialogs: Dialog[]): Promise<void> {
     this.ws = new ReconnectingWebSocket(
       `wss://api.yurba.one/ws?token=${this.token}`,
       {
@@ -58,10 +58,10 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
 
       // Restore subscriptions
       this.restoreSubscriptions();
-
-      // Subscribe to bot dialog
-      const subscribe_dialog = this.subscribeToEvents('dialog', 489);
-      logging.info('Subscribed to dialog:', subscribe_dialog, ' : ', 489);
+      for (const dialog of dialogs) {
+        const subscribe_dialog  = this.subscribeToEvents('dialog', dialog.ID)
+        logging.info('Subscribed to dialog:', subscribe_dialog, ' : ',  dialog.ID);;
+      }
 
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
       logging.info('Ready emit:',ready_emit)

@@ -73,10 +73,10 @@ export interface Message {
 
 export interface SendMessagePayload {
     text?:        string | '';
-    photos_list?: Photo['ID'][] | [];
+    photos_list?: Photo['ID'][] | null;
     replyTo?:     Message['ID'] | null;
     edit?:        Message['ID'] | null;
-    attachments?: AttachmentPayload[] | [];
+    attachments?: AttachmentPayload[] | null;
 }
 
 export type DeleteMessageResponse = BaseDelete;

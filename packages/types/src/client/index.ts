@@ -1,4 +1,4 @@
-import { Message, User, Author, Photo } from '../api';
+import { Message, User, Author, Photo, Dialog } from '../api';
 import { CommandArgsSchema, CommandHandler } from '../core';
 
 // Типи для зворотної сумісності
@@ -39,7 +39,7 @@ export interface IMiddlewareManager {
 }
 
 export interface IWebSocketManager {
-  connect(user: UserModel): Promise<void>;
+  connect(dialogs: Dialog[]): Promise<void>;
   on(event: string, listener: (...args: any[]) => void): this;
   off(event: string, listener: (...args: any[]) => void): this;
   send(data: string): void;
