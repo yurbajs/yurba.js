@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="500mm"
+   height="500mm"
+   viewBox="0 0 500 500"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="logo-test.png"
+   inkscape:export-xdpi="25.4"
+   inkscape:export-ydpi="25.4"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:export-bgcolor="#ffffffff">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="500"
+       height="500"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       inkscape:label="Clip"
+       id="g3"
+       transform="matrix(3.2301187,0,0,3.2301187,-148.57648,-260.20869)">
+      <g
+         id="g1">
+        <text
+           xml:space="preserve"
+           style="font-size:65.5291px;font-family:'SauceCodePro NF';-inkscape-font-specification:'SauceCodePro NF';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3b6fff;stroke:#000000;stroke-width:3.165;stroke-linecap:round;stroke-dasharray:3.165, 3.165;stroke-dashoffset:1.5825;paint-order:stroke fill markers;fill-opacity:1"
+           x="94.38224"
+           y="175.09991"
+           id="text1"><tspan
+             sodipodi:role="line"
+             id="tspan1"
+             style="font-size:65.5291px;fill:#3b6fff;stroke-width:3.165;fill-opacity:1"
+             x="94.38224"
+             y="175.09991">Y</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:35.2777px;font-family:'SauceCodePro NF';-inkscape-font-specification:'SauceCodePro NF';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;white-space:pre;inline-size:0;fill:#f5ff71;stroke:#000000;stroke-width:3.165;stroke-linecap:round;stroke-dasharray:3.165, 3.165;stroke-dashoffset:1.5825;paint-order:stroke fill markers;fill-opacity:1"
+           x="111.08749"
+           y="185.77068"
+           id="text2"
+           transform="translate(7.74807,-10.44305)"
+           inkscape:transform-center-x="18.207283"
+           inkscape:transform-center-y="4.2016807"><tspan
+             id="tspan2"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;font-family:'NotoSans Nerd Font';-inkscape-font-specification:'NotoSans Nerd Font Semi-Condensed';stroke-width:3.165;fill:#f5ff71;fill-opacity:1"
+             x="111.08749"
+             y="185.77068">.js</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

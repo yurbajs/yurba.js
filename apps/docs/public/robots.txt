@@ -1,0 +1,10 @@
+# Algolia-Crawler-Verif: 8FD724D8C5888154
+
+User-agent: *
+Allow: /
+
+# Disallow specific paths
+Disallow: /README
+
+# Sitemap
+Sitemap: https://yurba.js.org/sitemap.xml

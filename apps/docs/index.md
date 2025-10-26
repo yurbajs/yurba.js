@@ -6,64 +6,102 @@ hero:
   text: "Bot Development Library"
   tagline: "The powerful library for creating bots and integrating with the Yurba API"
   image:
-    src: https://yurba.js.org/banner-white.svg
-    alt: Yurba.js
+    src: /banner.svg
+    alt: Banner Yurba.js 
+
   actions:
     - theme: brand
       text: Get Started
-      link: https://yurba.js.org/introduction
+      link: /docs/
     - theme: alt
-      text: API Reference
-      link: /api/
+      text: Guide
+      link: https://yurba.js.org/
     - theme: alt
-      text: View on GitHub
+      icon: github
+      text: GitHub
       link: https://github.com/yurbajs/yurba.js
 
+HeroActions:
+  - text: Посібник
+    link: /uk/introduction
+    theme: brand
+  - text: Документація
+    link: https://yurbajs.pages.dev/
+    theme: alt
+    external: true
+  - text: NPM
+    link: https://www.npmjs.com/package/yurba.js
+    icon: /icons/npm.svg
+  - text: GitHub
+    link: https://github.com/yurbajs/yurba.js
+    icon: /icons/github-mark.svg
+  - text: Yurba
+    link: https://me.yurba.one/yurbajs
+    icon: /icons/yurba-blue.svg
+    darkIcon: /icons/yurba.svg
+
 features:
-  - icon: 🚀
-    title: Easy to Use
-    details: Simple and intuitive API for creating powerful bots with minimal code
-  - icon: 🔌
-    title: WebSocket & REST
-    details: Full support for both real-time WebSocket connections and REST API calls
-  - icon: 📝
-    title: TypeScript Ready
-    details: Built with TypeScript for better development experience and type safety
-  - icon: 📦
-    title: Modular Design
-    details: Separate packages for different functionalities - use only what you need
-  - icon: 🔒
-    title: Secure
-    details: Built-in security features and best practices for bot development
-  - icon: 📚
-    title: Well Documented
-    details: Comprehensive documentation with examples and guides
+  - icon: 
+      src: /icons/yurba-developers.png
+    title: 100% Yurba API coverage
+    details: Provides access to all Yurba.one methods and endpoints.
+  - icon: 
+      src: /icons/light-bulb.png
+    title: Intuitive
+    details: Simple, easy to start, minimal setup — straightforward, fast, logical.
+  - icon: 
+      src: /icons/col-resize.png
+    title: Full typing
+    details: Complete and accurate typing for all API structures and requests.
+  - icon: 
+      src: /icons/blocks.png
+    title: Modular architecture
+    details: Independent packages combined into a single logical library.
+  - icon:
+      src: /icons/sparkle.png
+    title: Continuous development
+    details: We take it and make it happen.
+  - icon:
+      src: /icons/star.png
+    title: The first and only one
+    details: The very first and only full-featured library for integration with Yurba.one.
+
 ---
 
 ## Quick Start
 
-```bash
+::: code-group
+
+```bash [npm]
 npm install yurba.js
-# or
-pnpm add yurba.js
-# or
+```
+
+```bash [yarn]
 yarn add yurba.js
 ```
+
+```bash [pnpm]
+pnpm add yurba.js
+```
+
+```bash [bun]
+bun add yurba.js
+```
+
+:::
 
 ```typescript
 import { Client } from 'yurba.js';
 
-const client = new Client({
-  token: 'your-bot-token'
-});
+const client = new Client('token');
 
-client.on('messageCreate', (message) => {
-  if (message.Text === 'ping') {
+client.on('message', (message) => {
+  if (message.Text === '!ping') {
     message.reply('pong!');
   }
 });
 
-client.login();
+client.init();
 ```
 
 ## Packages
@@ -74,11 +112,3 @@ client.login();
 | [`@yurbajs/rest`](https://www.npmjs.com/package/@yurbajs/rest) | REST client for Yurba API | [![npm](https://img.shields.io/npm/v/@yurbajs/rest)](https://www.npmjs.com/package/@yurbajs/rest) |
 | [`@yurbajs/ws`](https://www.npmjs.com/package/@yurbajs/ws) | WebSocket client for real-time events | [![npm](https://img.shields.io/npm/v/@yurbajs/ws)](https://www.npmjs.com/package/@yurbajs/ws) |
 | [`@yurbajs/types`](https://www.npmjs.com/package/@yurbajs/types) | TypeScript definitions | [![npm](https://img.shields.io/npm/v/@yurbajs/types)](https://www.npmjs.com/package/@yurbajs/types) |
-
-## Resources
-
-- **[Guide](https://yurba.js.org)** - Complete guide with tutorials and examples
-- **[API Reference](/api/)** - Detailed API documentation
-- **[Examples](https://github.com/yurbajs/yurba.js/tree/main/examples)** - Example bots and use cases
-- **[GitHub](https://github.com/yurbajs/yurba.js)** - Source code and issues
-- **[npm](https://www.npmjs.com/package/yurba.js)** - Package on npm registry

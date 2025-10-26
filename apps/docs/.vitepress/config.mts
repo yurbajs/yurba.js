@@ -2,25 +2,24 @@ import { defineConfig } from 'vitepress';
 
 let typedocSidebar = [];
 try {
-  typedocSidebar = require('../api/typedoc-sidebar.json');
+  typedocSidebar = require('../docs/typedoc-sidebar.json');
 } catch (e) {
   console.warn('typedoc-sidebar.json not found. Run "pnpm run predocs" first.');
 }
 
 export default defineConfig({
-  title: 'Yurba.js Documentation',
+  title: 'Yurba.js',
   description: 'The powerful library for creating bots and integrating with the Yurba API',
   base: '/',
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'API Reference', link: '/api/' },
+      { text: 'Documentation', link: '/docs/' },
       { text: 'Guide', link: 'https://yurba.js.org' }
     ],
     sidebar: {
-      '/api/': [
+      '/docs/': [
         {
-          text: 'API Reference',
+          text: 'Documentation',
           items: typedocSidebar,
         },
       ],

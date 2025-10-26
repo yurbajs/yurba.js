@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1000mm"
+   height="500mm"
+   viewBox="0 0 1000 500"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <g
+       id="g3"
+       transform="matrix(3.2301187,0,0,3.2301187,-118.36591,-246.1668)">
+      <text
+         xml:space="preserve"
+         style="font-size:65.5291px;font-family:'SauceCodePro NF';-inkscape-font-specification:'SauceCodePro NF';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;stroke:#000000;stroke-width:3.165;stroke-linecap:round;stroke-dasharray:3.165, 3.165;stroke-dashoffset:1.5825;paint-order:stroke fill markers"
+         x="85.925079"
+         y="176.54158"
+         id="text1"><tspan
+           id="tspan1"
+           style="font-size:65.5291px;fill:#ffffff;stroke-width:3.165"
+           x="85.925079"
+           y="176.54158">Yurba</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:35.2777px;font-family:'SauceCodePro NF';-inkscape-font-specification:'SauceCodePro NF';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;white-space:pre;inline-size:0;fill:#ffffff;stroke:#000000;stroke-width:3.165;stroke-linecap:round;stroke-dasharray:3.165, 3.165;stroke-dashoffset:1.5825;paint-order:stroke fill markers"
+         x="111.08749"
+         y="185.77068"
+         id="text2"
+         transform="translate(169.78378,-7.7480693)"><tspan
+           id="tspan2"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;font-family:'NotoSans Nerd Font';-inkscape-font-specification:'NotoSans Nerd Font Semi-Condensed';stroke-width:3.165"
+           x="111.08749"
+           y="185.77068">.<tspan
+   style="fill:#d4ff2a"
+   id="tspan3">js</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

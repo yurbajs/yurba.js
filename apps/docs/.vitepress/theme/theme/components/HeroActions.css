@@ -1,0 +1,141 @@
+.VPHero {
+  padding: 24px;
+}
+
+.container {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+.Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.Button:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(65, 209, 255, 0.15);
+}
+
+.Button.brand {
+  background: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-white);
+}
+
+.Button.brand:hover {
+  background: var(--vp-c-brand-2);
+  border-color: var(--vp-c-brand-2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(65, 209, 255, 0.3);
+}
+
+.Button.alt {
+  background: var(--vp-c-bg-soft);
+  border-color: var(--vp-c-divider);
+}
+
+.Button.alt:hover {
+  background: var(--vp-c-bg-elv);
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(65, 209, 255, 0.1);
+}
+
+img[src*="yurba.svg"] {
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 768px) {
+  .VPHero {
+    padding: 16px;
+  }
+  
+  .actions {
+    gap: 12px;
+  }
+  
+  .Button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  
+  .action:nth-child(1),
+  .action:nth-child(2) {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
+  }
+  
+  .action:nth-child(3),
+  .action:nth-child(4),
+  .action:nth-child(5) {
+    flex: 1 1 calc(33.333% - 6px);
+    min-width: 80px;
+  }
+  
+  .Button {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+.external-link-icon {
+  margin-left: 4px;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+
+.Button:hover .external-link-icon {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .VPHero {
+    padding: 12px;
+  }
+  
+  .Button {
+    max-width: 240px;
+    font-size: 14px;
+  }
+}

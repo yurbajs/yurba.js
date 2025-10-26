@@ -1,10 +1,10 @@
 {
-  "name": "Yurba.js Documentation",
+  "name": "Yurba.js",
   "entryPointStrategy": "packages",
   "entryPoints": [
     "../../packages/*"
   ],
-  "out": "./api",
+  "out": "./docs",
   "theme": "default",
   "includeVersion": true,
   "excludePrivate": true,

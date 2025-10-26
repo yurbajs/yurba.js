@@ -420,6 +420,8 @@ class Client extends EventEmitter {
         case 'message':
           this.messageManager.enhanceMessage(msg.Message);
           switch (msg.Message.Type){
+            case undefined:
+            case null:
             case '':
               if (msg.Message.Text.startsWith(this.prefix)){
                 return await this.handleCommandMessage(msg.Message);
