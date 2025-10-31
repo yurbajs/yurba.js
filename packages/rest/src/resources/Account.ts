@@ -1,6 +1,11 @@
 import { REST } from '../index';
+import {
+  Login,
+  BaseOkay,
+  Token
+} from '@yurbajs/types';
 
-export class AccountResorce {
+export class AccountResource {
   /**
    * @ignore
    */
@@ -16,16 +21,16 @@ export class AccountResorce {
    * @param email - User email
    * @param password - User password
    * @since 1.0.0
-   * @returns {Promise<any>} Login response
+   * @returns {Promise<Login>} Login response
    * @throws {Error} If credentials are invalid
    * @example
    * ```javascript
    * const response = await rest.auth.login('user@example.com', 'password123');
    * ```
    */
-  async login(email: string, password: string): Promise<any> {
+  async login(email: string, password: string): Promise<Login> {
     if (!email || !password) throw new Error('Invalid credentials');
-    return this.client.post<any>('/login', { email, password });
+    return this.client.post<Login>('/login', { email, password });
   }
 
   /**
@@ -36,16 +41,16 @@ export class AccountResorce {
    * @param password - User password
    * @param surname - User surname
    * @since 1.0.0
-   * @returns {Promise<any>} Registration response
+   * @returns {Promise<BaseOkay>} Registration response
    * @throws {Error} If registration data is invalid
    * @example
    * ```javascript
    * const response = await rest.auth.register('John', 'john@example.com', 'password123', 'Doe');
    * ```
    */
-  async register(name: string, email: string, password: string, surname: string = ''): Promise<any> {
+  async register(name: string, email: string, password: string, surname: string = ''): Promise<BaseOkay> {
     if (!name || !email || !password) throw new Error('Invalid registration data');
-    return this.client.post<any>('/register', { name, surname, email, password });
+    return this.client.post<BaseOkay>('/register', { name, surname, email, password });
   }
 
   /**
@@ -54,16 +59,16 @@ export class AccountResorce {
    * @param code - Confirmation code
    * @param hCaptchaResponse - hCaptcha response
    * @since 1.0.0
-   * @returns {Promise<any>} Confirmation response
+   * @returns {Promise<BaseOkay>} Confirmation response
    * @throws {Error} If confirmation data is invalid
    * @example
    * ```javascript
    * const response = await rest.auth.confirm('123456', 'captcha_response');
    * ```
    */
-  async confirm(code: string, hCaptchaResponse: string): Promise<any> {
+  async confirm(code: string, hCaptchaResponse: string): Promise<BaseOkay> {
     if (!code || !hCaptchaResponse) throw new Error('Invalid confirmation data');
-    return this.client.post<any>('/confirm', { code, h_captcha_response: hCaptchaResponse });
+    return this.client.post<BaseOkay>('/confirm', { code, h_captcha_response: hCaptchaResponse });
   }
 
   /**
@@ -71,16 +76,16 @@ export class AccountResorce {
    * @group Auth Core
    * @param email - User email
    * @since 1.0.0
-   * @returns {Promise<any>} Reset response
+   * @returns {Promise<BaseOkay>} Reset response
    * @throws {Error} If email is invalid
    * @example
    * ```javascript
    * await rest.auth.resetPassword('user@example.com');
    * ```
    */
-  async resetPassword(email: string): Promise<any> {
+  async resetPassword(email: string): Promise<BaseOkay> {
     if (!email) throw new Error('Invalid email');
-    return this.client.post<any>('/reset', { email });
+    return this.client.post<BaseOkay>('/reset', { email });
   }
 
   /**
@@ -95,9 +100,9 @@ export class AccountResorce {
    * const result = await rest.auth.activatePromo('PROMO2024');
    * ```
    */
-  async activatePromo(promo: string): Promise<any> {
+  async activatePromo(promo: string): Promise<BaseOkay> {
     if (!promo) throw new Error('Invalid promo code');
-    return this.client.get<any>(`/promo/${promo}`);
+    return this.client.get<BaseOkay>(`/promo/${promo}`);
   }
 
   /**
@@ -110,8 +115,8 @@ export class AccountResorce {
    * const tokens = await rest.auth.getTokens();
    * ```
    */
-  async getTokens(): Promise<any> {
-    return this.client.get<any>('/tokens');
+  async getTokens(): Promise<Token[]> {
+    return this.client.get<Token[]>('/tokens');
   }
 
   /**
@@ -124,7 +129,7 @@ export class AccountResorce {
    * await rest.auth.logout();
    * ```
    */
-  async logout(): Promise<any> {
-    return this.client.delete<any>('/logout');
+  async logout(): Promise<BaseOkay> {
+    return this.client.delete<BaseOkay>('/logout');
   }
 }

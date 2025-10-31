@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { CreatePostPayload, GetPostPayload, Post, DeletePostResponse } from '@yurbajs/types';
+import { CreatePostPayload, GetPostPayload, Post, DeletePostResponse, Comment, BaseDelete } from '@yurbajs/types';
 
 export class PostResource {
   /**
@@ -142,7 +142,7 @@ export class PostResource {
    * const olderComments = await rest.posts.getComments(123, 456);
    * ```
    */
-  async getComments(postId: number, lastId: number = 0): Promise<any[]> {
+  async getComments(postId: number, lastId: number = 0): Promise<Comment[]> {
     if (postId < 1) throw new Error('Invalid post ID');
     return this.client.get(`/posts/${postId}/comments`, { last_id: lastId });
   }
@@ -162,7 +162,7 @@ export class PostResource {
    * await rest.posts.addComment(123, "With photo", [456]);
    * ```
    */
-  async addComment(postId: number, content: string, photos: number[] = []): Promise<any> {
+  async addComment(postId: number, content: string, photos: number[] = []): Promise<Comment> {
     if (postId < 1) throw new Error('Invalid post ID');
     if (!content || content.length > 1000) throw new Error('Invalid content');
     return this.client.post(`/posts/${postId}/comment`, { content, photos_list: photos });
@@ -180,7 +180,7 @@ export class PostResource {
    * await rest.posts.deleteComment(789);
    * ```
    */
-  async deleteComment(commentId: number): Promise<any> {
+  async deleteComment(commentId: number): Promise<BaseDelete> {
     if (commentId < 1) throw new Error('Invalid comment ID');
     return this.client.delete(`/comments/${commentId}`);
   }

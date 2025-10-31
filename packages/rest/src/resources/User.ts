@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, RelationshipsResult, FindUserPayload, Gift } from '@yurbajs/types';
+import { User, RelationshipsResult, FindUserPayload, Gift, BaseOkay } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -221,9 +221,9 @@ export class UserResource {
    * await rest.users.ignoreIncomingRequest(12345);
    * ```
    */
-  async ignoreIncomingRequest(userId: number): Promise<any> {
+  async ignoreIncomingRequest(userId: number): Promise<BaseOkay> {
     if (userId < 1) throw new Error('Invalid user ID');
-    return this.client.delete<any>(`/incoming_requests/${userId}`);
+    return this.client.delete<BaseOkay>(`/incoming_requests/${userId}`);
   }
 
   /**

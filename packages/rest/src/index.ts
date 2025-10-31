@@ -4,7 +4,7 @@ import { DialogResource } from './resources/Dialog';
 import { PostResource } from './resources/Post';
 import { PhotosResource } from './resources/Photos';
 import { MusebaseResource } from './resources/Musebase';
-import { AccountResorce } from './resources/Account';
+import { AccountResource } from './resources/Account';
 import { FilesResource } from './resources/Files';
 import { VideoResource } from './resources/Video';
 import { SearchResource } from './resources/Search';
@@ -20,7 +20,7 @@ export class REST extends BaseClient {
   private _posts?: PostResource;
   private _musebase?: MusebaseResource;
   private _photos?: PhotosResource;
-  private _auth?: AccountResorce;
+  private _auth?: AccountResource;
   private _files?: FilesResource;
   private _video?: VideoResource;
   private _search?: SearchResource;
@@ -30,8 +30,6 @@ export class REST extends BaseClient {
   constructor(token: string, options?: BaseClientOptions) {
     super(token, options);
   }
-
-
 
   get users(): UserResource {
     if (!this._users) this._users = new UserResource(this);
@@ -58,8 +56,8 @@ export class REST extends BaseClient {
     return this._photos;
   }
 
-  get account(): AccountResorce {
-    if (!this._auth) this._auth = new AccountResorce(this);
+  get account(): AccountResource {
+    if (!this._auth) this._auth = new AccountResource(this);
     return this._auth;
   }
 
@@ -97,21 +95,7 @@ export {
   RateLimitConfig
 };
 
-export { userCache } from './cache';
 export type { CachedUser } from './cache';
-export {
-  UserResource,
-  DialogResource,
-  PostResource,
-  PhotosResource,
-  MusebaseResource,
-  AccountResorce,
-  FilesResource,
-  VideoResource,
-  SearchResource,
-  ShopResource,
-  AppResource
-};
 
 // Default export for convenience
 export default REST;

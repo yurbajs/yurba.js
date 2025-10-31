@@ -105,6 +105,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.16.4)(babel-plugin-macros@3.1.0)

@@ -24,6 +24,7 @@
     "clean": "rimraf dist",
     "test": "jest --passWithNoTests --coverage",
     "lint": "eslint src/**/*.ts",
+    "type-check": "eslint src --ext .ts --rule '@typescript-eslint/no-explicit-any: error'",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [
@@ -41,6 +42,7 @@
   "gitHead": "5830062bfe31a6bc3f1b8a0cf8142a58749c57e9",
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "eslint": "^9.31.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.0"
   }

@@ -1,6 +1,9 @@
 import { EventEmitter } from 'events';
 import { ApiError, RateLimiter, ErrorHandler } from './errors';
 import { userCache, type CachedUser } from './cache';
+import * as pkg from '../package.json';
+
+const Version = pkg.version;
 
 export interface BaseClientOptions {
   baseURL?: string;
@@ -40,7 +43,7 @@ export class BaseClient extends EventEmitter {
       throw new ApiError('Token is required', 400);
     }
     
-    if (!token.startsWith('y') || token.length < 10) {
+    if (!token.startsWith('y.') || token.length !== 34 || !/^y\.[a-zA-Z0-9]{32}$/.test(token)) {
       throw new ApiError('Invalid token format', 401);
     }
 
@@ -61,7 +64,7 @@ export class BaseClient extends EventEmitter {
     this.defaultHeaders = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': `@yurbajs/rest@${process.env.npm_package_version || '0.1.9'}`,
+      'User-Agent': `@yurbajs/rest@${Version}`,
       'token': token,
       ...this.options.headers
     };
@@ -286,7 +289,7 @@ export class BaseClient extends EventEmitter {
 
     try {
       if (this.options.debug) {
-        console.log('🔄 REQUEST:', { method, url, data, headers });
+        console.log('REQUEST:', { method, url, data, headers });
         this.emit('request', { method, url, data, headers });
       }
       
@@ -295,7 +298,7 @@ export class BaseClient extends EventEmitter {
       if (this.rateLimiter) this.rateLimiter.recordRequest();
 
       if (this.options.debug) {
-        console.log('✅ RESPONSE:', { method, url, status: response.status, statusText: response.statusText });
+        console.log('RESPONSE:', { method, url, status: response.status, statusText: response.statusText });
         this.emit('response', { method, url, status: response.status, statusText: response.statusText });
       }
 

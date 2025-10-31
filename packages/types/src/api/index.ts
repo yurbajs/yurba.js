@@ -132,6 +132,17 @@ export type DeletePostResponse = BaseDelete;
 export type EditPostResponse = Post;
 export type CreatePostResponse = Post;
 
+// -------- COMMENTS TYPES -------
+export interface Comment {
+    ID:        number;
+    Author:    Author;
+    Content:   string;
+    Photos:    number[];
+    Timestamp: number;
+    Likes:     Likes;
+    Post:      Post;
+}
+
 // -------- PHOTO TYPES --------
 export interface Photo {
     ID:        number;
@@ -485,6 +496,27 @@ export interface File {
 }
 export type UploadFileResponse = File
 export type DeletFileResponse = BaseDelete
+
+
+// ------- Account Types ------
+
+export interface Login {
+    id:    number;
+    ok:    number;
+    token: string;
+}
+
+
+export interface Token {
+    Token:     string;
+    LastBeen:  number;
+    Timestamp: number;
+    Device:    string;
+    User:      number;
+    Online:    boolean;
+    IP:        null;
+}
+
 
 
 // -------- Music types --------
