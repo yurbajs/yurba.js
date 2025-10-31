@@ -10,6 +10,7 @@ import { VideoResource } from './resources/Video';
 import { SearchResource } from './resources/Search';
 import { ShopResource } from './resources/Shop';
 import { AppResource } from './resources/App';
+import { BatchRequest } from './BatchRequest';
 
 /**
  * Main REST client with lazy-loaded API resources
@@ -85,6 +86,24 @@ export class REST extends BaseClient {
     if (!this._apps) this._apps = new AppResource(this);
     return this._apps;
   }
+
+  /**
+   * Create a new batch request for parallel API calls
+   * @returns BatchRequest instance
+   * @example
+   * ```typescript
+   * const results = await rest.batch()
+   *   .add('user', rest.users.me())
+   *   .add('posts', rest.posts.get('@me', {}))
+   *   .execute();
+   * 
+   * console.log(results.user);  // User object
+   * console.log(results.posts); // Posts array
+   * ```
+   */
+  batch(): BatchRequest {
+    return new BatchRequest();
+  }
 }
 
 // Re-exports
@@ -95,6 +114,7 @@ export {
   RateLimitConfig
 };
 
+export { BatchRequest } from './BatchRequest';
 export type { CachedUser } from './cache';
 
 // Default export for convenience

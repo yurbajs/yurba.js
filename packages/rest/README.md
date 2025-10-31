@@ -36,27 +36,56 @@ const api = new REST('TOKEN');
 
 try {
   // Get user info
-  const user = await api.users.getMe();
+  const user = await api.users.me();
   console.log('Bot user:', user);
 
-  // Send message (dialogid)
-  try {
-    const message = await api.messages.send(1111, 'Hello, world!');
-    console.log('Message sent:', message);
-  } catch (error) {
-    console.error('Failed to send message:', error.message);
-  }
+  // Send message
+  const message = await api.dialogs.sendMessage(292, {text: "hello world"})
+  console.log('Message: ', message)
 
-  // Get user by tag (@)
-  try {
-    const targetUser = await api.users.getByTag('rastgame');
-    console.log('User:', targetUser);
-  } catch (error) {
-    console.error('Failed to get user:', error.message);
-  }
+  // Batch requests for better performance
+  const results = await api.batch()
+    .add('user', api.users.get(1111))
+    .add('posts', api.posts.get('@me'))
+    .add('friends', api.users.friends())
+    .execute();
+
+  console.log('User:', results.user);
+  console.log('Posts:', results.posts);
+  console.log('Friends:', results.friends);
+
 } catch (error) {
-  console.error('Failed to get bot info:', error.message);
+  console.error('Failed to get data:', error.message);
 }
+```
+
+### Batch Requests
+
+Execute multiple API calls in parallel for better performance:
+
+```js
+// Instead of sequential calls (slow)
+const user = await api.users.me();        // 300ms
+const posts = await api.posts.get('@me', {}); // 300ms  
+const friends = await api.users.friends();  // 300ms
+// Total: ~900ms
+
+// Use batch requests (fast)
+const results = await api.batch()
+  .add('user', api.users.me())
+  .add('posts', api.posts.get('@me', {}))
+  .add('friends', api.users.friends())
+  .execute();
+// Total: ~300ms (parallel)
+
+// Handle partial failures
+const results = await api.batch()
+  .add('user', api.users.me())
+  .add('invalid', api.users.get(-1)) // will fail
+  .executeSettled(); // won't throw on errors
+
+console.log(results.user);    // User object
+console.log(results.invalid); // { error: Error }
 ```
 
 ## Links
