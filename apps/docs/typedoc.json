@@ -9,7 +9,7 @@
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "excludeInternal": true,
+  "excludeInternal": false,
   "hideGenerator": true,
   "readme": "../../README.md",
   "categorizeByGroup": true,
@@ -31,8 +31,8 @@
   "sidebar": {
     "autoConfiguration": true,
     "format": "vitepress",
-    "pretty": true,
-    "collapsed": false
+    "pretty": false,
+    "collapsed": true
   },
   "skipErrorChecking": true,
   "navigationLinks": {
@@ -47,7 +47,7 @@
     "external": true
   },
   "searchInComments": true,
-  "disableSources": false,
+  "disableSources": true,
   "lightHighlightTheme": "github-light",
   "darkHighlightTheme": "github-dark"
 }

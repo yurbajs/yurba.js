@@ -42,7 +42,7 @@ export class REST extends BaseClient {
     return this._dialogs;
   }
 
-  get posts(): PostResource {
+  get posts(): PostResource { 
     if (!this._posts) this._posts = new PostResource(this);
     return this._posts;
   }
@@ -107,15 +107,12 @@ export class REST extends BaseClient {
 }
 
 // Re-exports
-export {
-  ApiError,
-  BaseClientOptions,
-  RequestConfig,
-  RateLimitConfig
-};
-
-export { BatchRequest } from './BatchRequest';
 export type { CachedUser } from './cache';
+
+export {
+  ApiError, BaseClientOptions,RequestConfig, RateLimitConfig,
+  UserResource, BatchRequest, DialogResource, AppResource, PostResource, MusebaseResource, PhotosResource, AccountResource, FilesResource, VideoResource, SearchResource
+};
 
 // Default export for convenience
 export default REST;
