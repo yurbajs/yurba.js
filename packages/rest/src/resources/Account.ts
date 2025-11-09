@@ -132,4 +132,19 @@ export class AccountResource {
   async logout(): Promise<BaseOkay> {
     return this.client.delete<BaseOkay>('/logout');
   }
+
+  /**
+   * Update profile settings
+   * @group Profile
+   * @param settings - Profile settings to update
+   * @since 1.0.0
+   * @returns {Promise<BaseOkay>} Update response
+   * @example
+   * ```javascript
+   * await rest.auth.updateProfile({ name: 'John', status: 'Online' });
+   * ```
+   */
+  async update(settings: Record<string, any>): Promise<BaseOkay> {
+    return this.client.patch<BaseOkay>('/settings/profile', settings);
+  }
 }
