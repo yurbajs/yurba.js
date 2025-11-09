@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.12](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.11...@yurbajs/rest@1.0.0-next.12) (2025-11-09)
+
+**Note:** Version bump only for package @yurbajs/rest
+
+
+
+
+
 # [1.0.0-next.11](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.10...@yurbajs/rest@1.0.0-next.11) (2025-11-03)
 
 
