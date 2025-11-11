@@ -28,8 +28,8 @@ export class REST extends BaseClient {
   private _shop?: ShopResource;
   private _apps?: AppResource;
 
-  constructor(token: string, options?: BaseClientOptions) {
-    super(token, options);
+  constructor(options?: BaseClientOptions) {
+    super(options);
   }
 
   get users(): UserResource {
