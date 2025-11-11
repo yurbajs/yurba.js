@@ -2,7 +2,8 @@ import { REST } from '../index';
 import {
   Login,
   BaseOkay,
-  Token
+  Token,
+  SettingsPayload
 } from '@yurbajs/types';
 
 export class AccountResource {
@@ -141,10 +142,10 @@ export class AccountResource {
    * @returns {Promise<BaseOkay>} Update response
    * @example
    * ```javascript
-   * await rest.auth.updateProfile({ name: 'John', status: 'Online' });
+   * await rest.account.update({ name: 'John', status: 'Online' });
    * ```
    */
-  async update(settings: Record<string, any>): Promise<BaseOkay> {
+  async update(settings: SettingsPayload): Promise<BaseOkay> {
     return this.client.patch<BaseOkay>('/settings/profile', settings);
   }
 }

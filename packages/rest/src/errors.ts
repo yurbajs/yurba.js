@@ -78,7 +78,7 @@ export const ErrorHandler = {
   mapApiError(detail: string): string {
     const errorMap: Record<string, string> = {
       // Authentication & Authorization
-      auth_failed: 'Token authorization failed',
+      auth_failed: 'Authorization failed',
       invalid_user: 'Your user is missing from the database or cannot be read',
       access_denied: 'You don\'t have access to this resource',
       token_not_found: 'Token does not exist',
