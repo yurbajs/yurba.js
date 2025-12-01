@@ -26,65 +26,6 @@ import MiddlewareManager from './MiddlewareManager';
 
 import { YJSError } from './Error';
 
-// interface AppErrorOptions {
-//   code?: number | null;
-// }
-
-// class AppError extends Error {
-//   public code: number | null;
-//   public timestamp: Date;
-
-//   constructor(message: string, options: AppErrorOptions = {}) {
-//     super(message);
-//     this.name = this.constructor.name;
-//     this.code = options.code ?? null;
-//     this.timestamp = new Date();
-//     Error.captureStackTrace?.(this, this.constructor);
-//   }
-// }
-
-// class WebsocketError extends AppError {
-//   constructor(message: string, options?: { code?: number }) {
-//     super(message, { code: options?.code });
-//     this.logError();
-//   }
-
-//   private logError(): void {
-//     console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
-//     // sendToSentry(this);
-//   }
-// }
-
-// interface AppErrorOptions {
-//   code?: number | null;
-// }
-
-// class AppError extends Error {
-//   public code: number | null;
-//   public timestamp: Date;
-
-//   constructor(message: string, options: AppErrorOptions = {}) {
-//     super(message);
-//     this.name = this.constructor.name;
-//     this.code = options.code ?? null;
-//     this.timestamp = new Date();
-//     Error.captureStackTrace?.(this, this.constructor);
-//   }
-// }
-
-// class WebsocketError extends AppError {
-//   constructor(message: string, options?: { code?: number }) {
-//     super(message, { code: options?.code });
-//     this.logError();
-//   }
-
-//   private logError(): void {
-//     console.error(`[WebSocket Error] ${this.message}`, { code: this.code });
-//     // sendToSentry(this);
-//   }
-// }
-
-
 interface DevConfig {
   debug: boolean;
   level?: LogLevel;
@@ -194,7 +135,7 @@ class Client extends EventEmitter {
     this.token = token;
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
-    this.api = new REST(token);
+    this.api = new REST();
     this.wsm = new WSM(token);
     this.messageManager = new MessageManager(this.api);
     this.commandManager = new CommandManager(
@@ -308,10 +249,10 @@ class Client extends EventEmitter {
 
     try {
       const user = await this.api.users.me();
-      this._user = user; 
+      this._user = user;
 
       const dialogs = await this.api.dialogs.getAll();
-      this._dialogs = dialogs; 
+      this._dialogs = dialogs;
 
       log('User data:', user);
 
@@ -323,9 +264,10 @@ class Client extends EventEmitter {
 
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: any) =>
-{        log('YURBA.JS ::', JSON.stringify(message, null, 2))
-        this.handleMessage(message)}
+        this.wsm.on('message', (message: any) => {
+          log('YURBA.JS ::', JSON.stringify(message, null, 2))
+          this.handleMessage(message)
+        }
         );
         this.wsmMessageSubscribed = true;
       }
@@ -334,8 +276,7 @@ class Client extends EventEmitter {
     } catch (error) {
       erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
-        `Failed to initialize client: ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)
         }`,
         undefined,
         '/get_me'
@@ -374,8 +315,7 @@ class Client extends EventEmitter {
         }
       } catch (error) {
         const wsError = new WebSocketError(
-          `Reconnect failed: ${
-            error instanceof Error ? error.message : String(error)
+          `Reconnect failed: ${error instanceof Error ? error.message : String(error)
           }`
         );
         erlog('Reconnect failed:', wsError);
@@ -416,50 +356,50 @@ class Client extends EventEmitter {
       this.emit('raw', message);
       const msg = message;
       if ('Message' in msg) {
-      switch (msg.Type) {
-        case 'message':
-          this.messageManager.enhanceMessage(msg.Message);
-          switch (msg.Message.Type){
-            case undefined:
-            case null:
-            case '':
-              if (msg.Message.Text.startsWith(this.prefix)){
-                return await this.handleCommandMessage(msg.Message);
-              } else {
-                this.emit('message', msg.Message)
-              }
-              break
-            case 'join':
+        switch (msg.Type) {
+          case 'message':
+            this.messageManager.enhanceMessage(msg.Message);
+            switch (msg.Message.Type) {
+              case undefined:
+              case null:
+              case '':
+                if (msg.Message.Text.startsWith(this.prefix)) {
+                  return await this.handleCommandMessage(msg.Message);
+                } else {
+                  this.emit('message', msg.Message)
+                }
+                break
+              case 'join':
                 this.emit('join', msg.Message)
-              break
-            case 'leave':
+                break
+              case 'leave':
                 this.emit('leave', msg.Message)
-              break
-          }
-          break;
-        case 'message_delete':
-          this.emit('message_delete', msg.Message)
-          break;
-        case 'read':
-          break;
-        case 'typing':
-          break;
+                break
+            }
+            break;
+          case 'message_delete':
+            this.emit('message_delete', msg.Message)
+            break;
+          case 'read':
+            break;
+          case 'typing':
+            break;
 
-        case 'notification':
-          switch (msg.Message.Type){
-            case 'post_on_wall':
-              break;
-            case 'post_like':
-              break
-            case 'comment_post':
-              break
-          }
-          break
-        default:
-          break;
+          case 'notification':
+            switch (msg.Message.Type) {
+              case 'post_on_wall':
+                break;
+              case 'post_like':
+                break
+              case 'comment_post':
+                break
+            }
+            break
+          default:
+            break;
+        }
+
       }
-      
-    }
     } catch (error) {
       erlog('Error handling message:', error);
       this.emit('error', error);
