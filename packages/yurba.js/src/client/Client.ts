@@ -135,7 +135,7 @@ class Client extends EventEmitter {
     this.token = token;
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
-    this.api = new REST();
+    this.api = new REST().setToken(token);
     this.wsm = new WSM(token);
     this.messageManager = new MessageManager(this.api);
     this.commandManager = new CommandManager(
