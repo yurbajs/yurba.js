@@ -18,10 +18,10 @@ import {
   Photo
 } from '@yurbajs/types';
 
-import WSM from './WebsocketManager';
-import MessageManager from './MessageManager';
-import CommandManager from './CommandManager';
-import MiddlewareManager from './MiddlewareManager';
+import WSM from '../managers/websocket';
+import MessageManager from '../managers/Message';
+import CommandManager from '../managers/Command';
+import MiddlewareManager from '../managers/Middleware';
 
 import { YJSError } from './Error'
 

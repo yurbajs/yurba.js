@@ -23,6 +23,7 @@ export default class MessageManager implements IMessageManager {
    * @param message Message object
    */
   enhanceMessage(message: Message): void {
+    log.debug('Enhancing message:', message.ID);
     const msg = message as any;
     /**
      * Replies to the message
@@ -32,6 +33,7 @@ export default class MessageManager implements IMessageManager {
       photos_list: any[] | null = null,
       attachments: any[] | null = null
     ) => {
+      log.debug(`Replying to message ${message.ID}:`, text);
       return await this.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
         {
@@ -85,6 +87,7 @@ export default class MessageManager implements IMessageManager {
      * Deletes the message
      */
     msg.delete = async () => {
+      log.debug('Deleting message:', message.ID);
       await this.api.dialogs.deleteMessage(message.ID);
     };
 
@@ -97,6 +100,7 @@ export default class MessageManager implements IMessageManager {
       photos_list?: any[] | null,
       attachments?: any[] | null
     ) => {
+      log.debug(`Editing message ${message.ID}:`, text);
       return await this.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
         {

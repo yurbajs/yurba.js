@@ -65,8 +65,8 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       // Set uptime timeout (wait 5 seconds before considering connection stable)
       this.uptimeTimeoutId = setTimeout(() => {
         this.isConnectionStable = true;
-        log.info('✅ WebSocket connection is now stable');
-      }, 5000);
+        log.info('WebSocket connection is now stable');
+      }, 3000);
       
       // Send queued messages
       while (this.messageQueue.length > 0) {
@@ -83,12 +83,6 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         this.subscribeToEvents('dialog', dialog.ID)
         log.info('Subscribed to dialog:', dialog.ID);;
       }
-      
-      // TEST: Subscribe to dialog 78 to check if Yurba.one validates dialog access
-      log.info('🧪 TEST: Subscribing to dialog 78 (unauthorized test)');
-      this.subscribeToEvents('dialog', 78);
-      log.info('🧪 TEST: Subscription to dialog 78 sent, waiting for server response...');
-
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
       log.info('Ready emit:',ready_emit)
     });
@@ -98,7 +92,6 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       try {
         const raw = JSON.parse(data.toString());
         
-
         this.emit('message', raw);
       } catch (err) {
         log.error('Failed to parse WebSocket message:', err);
