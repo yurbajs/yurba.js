@@ -274,7 +274,7 @@ class Client extends EventEmitter {
 
       await this.wsm.connect(dialogs);
     } catch (error) {
-      erlog('Failed to initialize client:', error);
+      erlog('Failed to initialize clientі:', error);
       throw new ApiRequestError(
         `Failed to initialize client: ${error instanceof Error ? error.message : String(error)
         }`,
@@ -381,17 +381,22 @@ class Client extends EventEmitter {
             this.emit('message_delete', msg.Message)
             break;
           case 'read':
+            this.emit('read', msg.Message)
             break;
           case 'typing':
+            this.emit('typing', msg.Message)
             break;
 
           case 'notification':
             switch (msg.Message.Type) {
               case 'post_on_wall':
+                this.emit('post_on_wall', msg.Message)
                 break;
               case 'post_like':
+                this.emit('post_like', msg.Message)
                 break
               case 'comment_post':
+                this.emit('comment_post', msg.Message)
                 break
             }
             break
