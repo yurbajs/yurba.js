@@ -28,6 +28,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private uptimeTimeoutId: NodeJS.Timeout | null = null;
   private messageQueue: string[] = [];
   private isConnectionStable = false;
+  private connectionStartTime: number = 0;
 
   /**
    * Creates a new WebSocket manager
@@ -54,6 +55,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     );
 
     this.ws.on('open', () => {
+      this.connectionStartTime = Date.now();
       log.info('WebSocket connection opened.');
       
       // Clear connection timeout
@@ -77,20 +79,29 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         }
       }
 
-      // Restore subscriptions
+      // Restore subscriptions (async - don't wait for server confirmation)
       this.restoreSubscriptions();
       for (const dialog of dialogs) {
         this.subscribeToEvents('dialog', dialog.ID)
         log.info('Subscribed to dialog:', dialog.ID);;
       }
+      
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
       log.info('Ready emit:',ready_emit)
     });
 
     this.ws.on('message', (data: string) => {
-      log.debug('WebSocket received a message:', data);
+      const messageTime = Date.now();
+      const timeSinceOpen = messageTime - this.connectionStartTime;
+      log.debug(`WebSocket received a message (+${timeSinceOpen}ms):`, data);
       try {
         const raw = JSON.parse(data.toString());
+        
+        // Handle connection confirmation message
+        if (raw.ok === 1 && raw.version) {
+          log.info(`✅ WebSocket server confirmed (+${timeSinceOpen}ms), version: ${raw.version}`);
+          return; // Don't emit this as a regular message
+        }
         
         this.emit('message', raw);
       } catch (err) {

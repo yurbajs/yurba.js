@@ -18,5 +18,5 @@ export function CDLog(serviceName: string): Logger {
     } catch { /* no-op */ }
   }
 
-  return new Logger(serviceName, { enabled: Dev.debug });
+  return new Logger(serviceName, { enabled: Dev.debug, level: Dev.level });
 }
