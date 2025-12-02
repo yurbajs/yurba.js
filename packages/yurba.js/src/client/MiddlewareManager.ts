@@ -4,9 +4,9 @@ import {
   MiddlewareFunction,
   MiddlewareConfig,
 } from '@yurbajs/types';
-import Logger from '../utils/Logger';
+import { CDLog } from '../utils/devlog';
 
-const logging = new Logger('MiddlewareManager');
+const log = CDLog('MiddlewareManager');
 
 export default class MiddlewareManager implements IMiddlewareManager {
   private middlewares: Map<
@@ -33,13 +33,13 @@ export default class MiddlewareManager implements IMiddlewareManager {
       config: { priority: 0, enabled: true, ...config, name: fullConfig.name },
     });
 
-    logging.info(`Registered middleware: ${config.name}`);
+    log.info(`Registered middleware: ${config.name}`);
   }
 
   remove(name: string): boolean {
     const result = this.middlewares.delete(name);
     if (result) {
-      logging.info(`Removed middleware: ${name}`);
+      log.info(`Removed middleware: ${name}`);
     }
     return result;
   }
@@ -53,7 +53,7 @@ export default class MiddlewareManager implements IMiddlewareManager {
       try {
         await fn(message);
       } catch (error) {
-        logging.error(`Middleware "${config.name}" error:`, error);
+        log.error(`Middleware "${config.name}" error:`, error);
       }
     }
   }

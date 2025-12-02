@@ -8,7 +8,7 @@ import { CommandError } from '@yurbajs/types';
 
 import { CDLog } from '../utils/devlog';
 
-const logging = CDLog('CommandManager');
+const log = CDLog('CommandManager');
 /**
  * Command manager for client
  */
@@ -63,7 +63,7 @@ export default class CommandManager implements ICommandManager {
       throw new Error(`Command "${command}" is already registered.`);
     }
     this.commands.set(command, { handler, argsSchema });
-    logging.info(`Registered command: ${command}`);
+    log.info(`Registered command: ${command}`);
   }
 
   /**
@@ -76,7 +76,7 @@ export default class CommandManager implements ICommandManager {
       throw new Error(`Cannot add alias for non-existent command "${command}"`);
     }
     this.aliases.set(alias, command);
-    logging.info(`Added alias "${alias}" for command "${command}"`);
+    log.info(`Added alias "${alias}" for command "${command}"`);
   }
 
   /**
@@ -115,13 +115,13 @@ export default class CommandManager implements ICommandManager {
         throw new Error('Invalid arguments for the command.');
       }
 
-      logging.debug(
+      log.debug(
         `Executing command "${actualCommand}" with args:`,
         parsedArgs
       );
       await handler(message, parsedArgs as any);
     } catch (error) {
-      logging.error(`Error executing command "${actualCommand}":`, error);
+      log.error(`Error executing command "${actualCommand}":`, error);
       throw error;
     }
   }
@@ -191,7 +191,7 @@ export default class CommandManager implements ICommandManager {
               const user = await this.getUser(defaultValue);
               parsedArgs[argName] = user;
             } catch (error) {
-              logging.error(`Default user "${defaultValue}" not found:`, error);
+              log.error(`Default user "${defaultValue}" not found:`, error);
               throw new CommandError(
                 `Default user "${defaultValue}" not found.`,
                 'parseArgs'
@@ -263,7 +263,7 @@ export default class CommandManager implements ICommandManager {
             }
             parsedArgs[argName] = user;
           } catch (error) {
-            logging.error(`Error getting user "${argValue}":`, error);
+            log.error(`Error getting user "${argValue}":`, error);
             throw new CommandError(
               `User "${argValue}" not found.`,
               'parseArgs'

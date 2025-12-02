@@ -1,8 +1,8 @@
-import { Client, Dev, Logger, Version, Author } from './client/Client';
+import { Client, Version, Author } from './client/Client';
+import Logger from './utils/Logger';
 
 export {
   Client,
-  Dev,
   Logger,
   Version, 
   Author

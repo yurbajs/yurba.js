@@ -1,7 +1,7 @@
 import { default as ReconnectingWebSocket } from '@yurbajs/ws';
 import { EventEmitter } from 'events';
-import Logger, { LogLevel } from '../utils/Logger';
 import { Dialog, IWebSocketManager } from '@yurbajs/types';
+import { CDLog } from '../utils/devlog';
 
 // Локальні типи для WebSocket subscribe/unsubscribe
 interface WebSocketSubscribeData {
@@ -15,10 +15,7 @@ interface WebSocketUnsubscribeData {
   thing_id: number;
 }
 
-const logging = new Logger('WSM', {
-  enabled: true,
-  level: LogLevel.DEBUG,
-});
+const log = CDLog('WSM');
 /**
  * WebSocket connection manager
  * @extends EventEmitter
@@ -28,6 +25,9 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private token: string;
   private subscriptions: Map<string, number[]> = new Map();
   private connectionTimeoutId: NodeJS.Timeout | null = null;
+  private uptimeTimeoutId: NodeJS.Timeout | null = null;
+  private messageQueue: string[] = [];
+  private isConnectionStable = false;
 
   /**
    * Creates a new WebSocket manager
@@ -54,26 +54,54 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     );
 
     this.ws.on('open', () => {
-      logging.info('WebSocket connection opened.');
+      log.info('WebSocket connection opened.');
+      
+      // Clear connection timeout
+      if (this.connectionTimeoutId) {
+        clearTimeout(this.connectionTimeoutId);
+        this.connectionTimeoutId = null;
+      }
+      
+      // Set uptime timeout (wait 5 seconds before considering connection stable)
+      this.uptimeTimeoutId = setTimeout(() => {
+        this.isConnectionStable = true;
+        log.info('✅ WebSocket connection is now stable');
+      }, 5000);
+      
+      // Send queued messages
+      while (this.messageQueue.length > 0) {
+        const message = this.messageQueue.shift();
+        if (message) {
+          this.ws?.send(message);
+          log.debug('Sent queued message:', message);
+        }
+      }
 
       // Restore subscriptions
       this.restoreSubscriptions();
       for (const dialog of dialogs) {
-        const subscribe_dialog  = this.subscribeToEvents('dialog', dialog.ID)
-        logging.info('Subscribed to dialog:', subscribe_dialog, ' : ',  dialog.ID);;
+        this.subscribeToEvents('dialog', dialog.ID)
+        log.info('Subscribed to dialog:', dialog.ID);;
       }
+      
+      // TEST: Subscribe to dialog 78 to check if Yurba.one validates dialog access
+      log.info('🧪 TEST: Subscribing to dialog 78 (unauthorized test)');
+      this.subscribeToEvents('dialog', 78);
+      log.info('🧪 TEST: Subscription to dialog 78 sent, waiting for server response...');
 
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
-      logging.info('Ready emit:',ready_emit)
+      log.info('Ready emit:',ready_emit)
     });
 
     this.ws.on('message', (data: string) => {
-      logging.debug('WebSocket received a message:', data);
+      log.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString());
+        
+
         this.emit('message', raw);
       } catch (err) {
-        logging.error('Failed to parse WebSocket message:', err);
+        log.error('Failed to parse WebSocket message:', err);
         this.emit(
           'error',
           new Error(`Failed to parse WebSocket message: ${err}`)
@@ -82,12 +110,12 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     });
 
     this.ws.on('close', (code) => {
-      logging.warn(`WebSocket connection closed with code ${code}.`);
+      log.warn(`WebSocket connection closed with code ${code}.`);
       this.emit('close', code); // Emit "close" event for Client
     });
 
     this.ws.on('error', (err: Error) => {
-      logging.error('WebSocket error:', err);
+      log.error('WebSocket error:', err);
       this.emit('error', err); // Emit "error" event for Client
     });
 
@@ -106,7 +134,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       thing_id,
     };
 
-    logging.info(
+    log.info(
       `Subscribing to events for category: ${category}, thing_id: ${thing_id}`
     );
 
@@ -133,7 +161,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       thing_id,
     };
 
-    logging.info(
+    log.info(
       `Unsubscribing from events for category: ${category}, thing_id: ${thing_id}`
     );
 
@@ -159,7 +187,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @private
    */
   private restoreSubscriptions(): void {
-    logging.info('Restoring subscriptions...');
+    log.info('Restoring subscriptions...');
     this.subscriptions.forEach((ids, category) => {
       ids.forEach((id) => {
         const subscribeData: WebSocketSubscribeData = {
@@ -168,7 +196,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
           thing_id: id,
         };
         this.ws?.send(JSON.stringify(subscribeData));
-        logging.info(`Restored subscription: ${category}, thing_id: ${id}`);
+        log.info(`Restored subscription: ${category}, thing_id: ${id}`);
       });
     });
   }
@@ -181,12 +209,12 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private waitForWebSocketOpen(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.ws && this.ws.isOpen()) {
-        logging.info('WebSocket already open.');
+        log.info('WebSocket already open.');
         resolve();
         return;
       }
 
-      logging.info('Waiting for WebSocket to open...');
+      log.info('Waiting for WebSocket to open...');
 
       const onOpen = () => {
         if (this.connectionTimeoutId) {
@@ -222,11 +250,16 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * Closes WebSocket connection
    */
   close(): void {
-    logging.info('Closing WebSocket connection...');
+    log.info('Closing WebSocket connection...');
     if (this.connectionTimeoutId) {
       clearTimeout(this.connectionTimeoutId);
       this.connectionTimeoutId = null;
     }
+    if (this.uptimeTimeoutId) {
+      clearTimeout(this.uptimeTimeoutId);
+      this.uptimeTimeoutId = null;
+    }
+    this.isConnectionStable = false;
     this.ws?.close();
     this.ws = null;
   }
@@ -244,9 +277,13 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @param data Data to send
    */
   send(data: string): void {
-    if (!this.isConnected()) {
-      throw new Error('WebSocket not connected');
+    if (this.isConnected()) {
+      this.ws?.send(data);
+      log.debug('Sent message:', data);
+    } else {
+      // Queue message if not connected
+      this.messageQueue.push(data);
+      log.debug('Queued message (not connected):', data);
     }
-    this.ws?.send(data);
   }
 }

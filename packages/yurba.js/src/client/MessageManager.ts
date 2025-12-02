@@ -1,5 +1,8 @@
 import { Message, IMessageManager } from '@yurbajs/types';
 import { REST } from '@yurbajs/rest';
+import { CDLog } from '../utils/devlog';
+
+const log = CDLog('MessageManager');
 
 /**
  * Message manager for client

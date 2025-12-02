@@ -1,7 +1,6 @@
 import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
-import Logger, { LogLevel } from '../utils/Logger';
 import {
   CommandArgsSchema,
   CommandHandler,
@@ -24,41 +23,12 @@ import MessageManager from './MessageManager';
 import CommandManager from './CommandManager';
 import MiddlewareManager from './MiddlewareManager';
 
-import { YJSError } from './Error';
+import { YJSError } from './Error'
 
-interface DevConfig {
-  debug: boolean;
-  level?: LogLevel;
-}
-
-let Dev: DevConfig = {
-  debug: true,
-  level: LogLevel.DEBUG,
-};
-
-
-try {
-  require('dotenv').config();
-
-  Dev = {
-    debug: Boolean(process.env.DEBUG),
-    level: process.env.LEVEL as unknown as LogLevel,
-  };
-} catch {
-  // no-op
-}
-
-const logging = new Logger('Client', {
-  level: Dev.level as unknown as LogLevel,
-});
-
-const log = (...args: unknown[]): void => {
-  logging.debug(...args);
-};
-
-const erlog = (...args: unknown[]): void => {
-  logging.error(...args);
-};
+import { CDLog } from '../utils/devlog';
+const logging = CDLog('Client');
+const log = (...args: unknown[]): void => { logging.debug(...args); };
+const erlog = (...args: unknown[]): void => { logging.error(...args); };
 
 /**
  * Main class for working with Yurba API
@@ -723,4 +693,4 @@ class Client extends EventEmitter {
 const Version = pkg.version;
 const Author = pkg.author;
 
-export { Client, Dev, Logger, Version, Author };
+export { Client, Version, Author };
