@@ -22,6 +22,7 @@ import WSM from '../managers/websocket';
 import MessageManager from '../managers/Message';
 import CommandManager from '../managers/Command';
 import MiddlewareManager from '../managers/Middleware';
+import UserManager from '../managers/User';
 
 import { YJSError } from './Error'
 
@@ -74,6 +75,7 @@ class Client extends EventEmitter {
   private messageManager: MessageManager;
   private commandManager: CommandManager;
   private middlewareManager: MiddlewareManager;
+  public users: UserManager;
   private _user?: User;
   private _dialogs?: Dialog[];
   private isReady: boolean = false;
@@ -113,9 +115,10 @@ class Client extends EventEmitter {
         sendMessage: this.sendMessage.bind(this),
         deleteMessage: this.deleteMessage.bind(this),
       },
-      this.getUser.bind(this)
+      (userTag: string) => this.users.fetch(userTag)
     );
     this.middlewareManager = new MiddlewareManager();
+    this.users = new UserManager(this, this.api);
 
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {
@@ -524,14 +527,7 @@ class Client extends EventEmitter {
    * @returns Promise that resolves with user data
    */
   async getUser(userTag: string): Promise<User | null> {
-    try {
-      const response = await this.api.users.get(userTag);
-      log(`Fetched user ${userTag}`, response);
-      return response;
-    } catch (err) {
-      erlog('Error getting user:', err instanceof Error ? err.message : err);
-      return null;
-    }
+    return this.users.fetch(userTag);
   }
 
   /**
