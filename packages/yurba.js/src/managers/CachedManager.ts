@@ -4,58 +4,65 @@ import { Client } from '../client/Client';
 /**
  * Manages the API methods of a data model with a mutable cache of instances.
  */
-interface CacheEntry<V> {
-  value: V;
-  timestamp: number;
-}
-
-class LRUCache<K, V> extends Map<K, CacheEntry<V>> {
+class LRUCache<K, V> {
+  private cache = new Map<K, { value: V; timestamp: number }>();
   private maxSize: number;
   private ttl: number;
 
-  constructor(maxSize = 500, ttl = 600000) { // 10 minutes default
-    super();
+  constructor(maxSize = 500, ttl = 600000) {
     this.maxSize = maxSize;
     this.ttl = ttl;
   }
 
   set(key: K, value: V): this {
-    const entry: CacheEntry<V> = {
-      value,
-      timestamp: Date.now()
-    };
+    const entry = { value, timestamp: Date.now() };
 
-    if (this.has(key)) {
-      this.delete(key);
-    } else if (this.size >= this.maxSize) {
-      const firstKey = this.keys().next().value;
-      this.delete(firstKey);
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) this.cache.delete(firstKey);
     }
-    return super.set(key, entry);
+    this.cache.set(key, entry);
+    return this;
   }
 
   get(key: K): V | undefined {
-    const entry = super.get(key);
+    const entry = this.cache.get(key);
     if (!entry) return undefined;
 
-    // Check if expired
     if (Date.now() - entry.timestamp > this.ttl) {
-      this.delete(key);
+      this.cache.delete(key);
       return undefined;
     }
 
     // Move to end (LRU)
-    this.delete(key);
-    super.set(key, entry);
+    this.cache.delete(key);
+    this.cache.set(key, entry);
     return entry.value;
   }
 
-  // Clean expired entries
+  has(key: K): boolean {
+    return this.get(key) !== undefined;
+  }
+
+  delete(key: K): boolean {
+    return this.cache.delete(key);
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+
+  get size(): number {
+    return this.cache.size;
+  }
+
   cleanup(): void {
     const now = Date.now();
-    for (const [key, entry] of this.entries()) {
+    for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > this.ttl) {
-        this.delete(key);
+        this.cache.delete(key);
       }
     }
   }
@@ -80,28 +87,10 @@ export default class CachedManager<K, V> extends DataManager<K, V> {
    * The cache of items for this manager.
    */
   get cache(): Map<K, V> {
-    // Cleanup expired entries periodically
-    if (Math.random() < 0.1) { // 10% chance on each access
+    if (Math.random() < 0.1) {
       this._cache.cleanup();
     }
-    
-    return new Proxy(this._cache, {
-      get: (target, prop) => {
-        if (prop === 'get') {
-          return (key: K) => target.get(key);
-        }
-        if (prop === 'set') {
-          return (key: K, value: V) => target.set(key, value);
-        }
-        if (prop === 'has') {
-          return (key: K) => target.get(key) !== undefined;
-        }
-        if (prop === 'delete') {
-          return (key: K) => target.delete(key);
-        }
-        return (target as any)[prop];
-      }
-    }) as any;
+    return this._cache as any;
   }
 
   _add(data: any, cache = true, { id, extras = [] }: { id?: K; extras?: any[] } = {}): V {
