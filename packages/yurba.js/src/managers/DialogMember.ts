@@ -31,25 +31,25 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
     return `${this.dialogId}-${userId}`;
   }
 
-  /**
-   * Obtains a dialog member from Yurba, or the member cache if it's already available.
-   */
-  async fetch(userId: number, { cache = true, force = false } = {}): Promise<DialogMember | null> {
-    const cacheKey = this.getCacheKey(userId);
+  // /**
+  //  * Obtains a dialog member from Yurba, or the member cache if it's already available.
+  //  */
+  // async fetch(userId: number, { cache = true, force = false } = {}): Promise<DialogMember | null> {
+  //   const cacheKey = this.getCacheKey(userId);
     
-    if (!force) {
-      const existing = this.cache.get(cacheKey);
-      if (existing) return existing;
-    }
+  //   if (!force) {
+  //     const existing = this.cache.get(cacheKey);
+  //     if (existing) return existing;
+  //   }
 
-    try {
-      const data = await this.api.dialogs.getMember(this.dialogId, userId);
-      return this._add(data, cache, { id: cacheKey });
-    } catch (error) {
-      log.error(`Error fetching member ${userId} from dialog ${this.dialogId}:`, error);
-      return null;
-    }
-  }
+  //   try {
+  //     const data = await this.api.dialogs.getMember(this.dialogId, userId);
+  //     return this._add(data, cache, { id: cacheKey });
+  //   } catch (error) {
+  //     log.error(`Error fetching member ${userId} from dialog ${this.dialogId}:`, error);
+  //     return null;
+  //   }
+  // }
 
   /**
    * Add member to dialog
@@ -80,13 +80,13 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
     }
   }
 
-  /**
-   * Check if user is member of dialog
-   */
-  async isMember(userId: number): Promise<boolean> {
-    const member = await this.fetch(userId);
-    return member !== null;
-  }
+  // /**
+  //  * Check if user is member of dialog
+  //  */
+  // async isMember(userId: number): Promise<boolean> {
+  //   const member = await this.fetch(userId);
+  //   return member !== null;
+  // }
 
   /**
    * Resolves a member resolvable to a DialogMember object.

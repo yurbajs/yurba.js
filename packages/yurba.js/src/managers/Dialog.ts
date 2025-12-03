@@ -55,31 +55,5 @@ export default class DialogManager extends CachedManager<number, Dialog> {
     return super.resolveId(dialog);
   }
 
-  /**
-   * Get dialog name (from cache or fetch)
-   */
-  async getName(dialogId: number): Promise<string | null> {
-    const dialog = await this.fetch(dialogId);
-    return dialog?.Name || null;
-  }
 
-  /**
-   * Check if user is member of dialog
-   */
-  async isMember(dialogId: number, userId: number): Promise<boolean> {
-    try {
-      const member = await this.api.dialogs.getMember(dialogId, userId);
-      return member !== null;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  /**
-   * Get dialog name from cache only
-   */
-  getCachedName(dialogId: number): string | null {
-    const dialog = this.cache.get(dialogId);
-    return dialog?.Name || null;
-  }
 }

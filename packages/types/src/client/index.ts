@@ -9,6 +9,7 @@ export type ShortUserModel = Author;
 export interface ClientOptions {
   prefix?: string;
   maxReconnectAttempts?: number;
+  intents?: string[];
 }
 
 export interface MiddlewareConfig {

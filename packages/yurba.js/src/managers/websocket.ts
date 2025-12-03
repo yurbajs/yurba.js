@@ -81,9 +81,13 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
 
       // Restore subscriptions (async - don't wait for server confirmation)
       this.restoreSubscriptions();
-      for (const dialog of dialogs) {
-        this.subscribeToEvents('dialog', dialog.ID)
-        log.info('Subscribed to dialog:', dialog.ID);;
+      if (dialogs && dialogs.length > 0) {
+        for (const dialog of dialogs) {
+          this.subscribeToEvents('dialog', dialog.ID)
+          log.info('Subscribed to dialog:', dialog.ID);;
+        }
+      } else {
+        log.info('No dialogs to subscribe to');
       }
       
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client

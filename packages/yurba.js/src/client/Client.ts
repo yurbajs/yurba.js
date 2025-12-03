@@ -82,6 +82,7 @@ class Client extends EventEmitter {
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
   private wsmMessageSubscribed: boolean = false;
+  private intents: string[] = [];
 
   /**
    * Creates a new Yurba client
@@ -90,6 +91,7 @@ class Client extends EventEmitter {
    * @param options - Client configuration options
    * @param options.prefix - Command prefix (default: '/')
    * @param options.maxReconnectAttempts - Maximum reconnection attempts (default: 5)
+   * @param options.intents - Array of intents (e.g., ['dialogs'])
    *
    * @throws {YurbaError} When token format is invalid
    *
@@ -97,7 +99,8 @@ class Client extends EventEmitter {
    * ```typescript
    * const client = new Client('y.your-token-here', {
    *   prefix: '!',
-   *   maxReconnectAttempts: 10
+   *   maxReconnectAttempts: 10,
+   *   intents: ['dialogs']
    * });
    * ```
    */
@@ -107,6 +110,7 @@ class Client extends EventEmitter {
     this.token = token;
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
+    this.intents = options.intents || [];
     this.api = new REST().setToken(token);
     this.wsm = new WSM(token);
     this.messageManager = new MessageManager(this.api);
@@ -139,11 +143,13 @@ class Client extends EventEmitter {
   private checkToken(): void {
     if (!this.token) throw new Error('Token is not set');
   }
+  // TODO: Переместити це в якийсь список помилок 
 
   /**
    * Validates Yurba token format
    * @private
-   */
+   */ 
+  // TODO: Переїбашити цю хуйню в утилити
   private validateToken(token: string): void {
     if (!token || typeof token !== 'string') {
       throw new YurbaError('Token must be a non-empty string');
@@ -192,6 +198,7 @@ class Client extends EventEmitter {
    *   message.reply(`The sum is ${sum}`);
    * });
    */
+  // TODO: треба буде переробити, типу додати ще інші хуйні типу cooldown і тд, та і переробити цю хуйню
   registerCommand(
     command: string,
     argsSchema: CommandArgsSchema,
@@ -224,8 +231,10 @@ class Client extends EventEmitter {
       const user = await this.api.users.me();
       this._user = user;
 
-      const dialogs = await this.api.dialogs.getAll();
-      this._dialogs = dialogs;
+      if (this.intents.includes('dialogs')) {
+        const dialogs = await this.api.dialogs.getAll();
+        this._dialogs = dialogs;
+      }
 
       log('User data:', user);
 
@@ -245,7 +254,7 @@ class Client extends EventEmitter {
         this.wsmMessageSubscribed = true;
       }
 
-      await this.wsm.connect(dialogs);
+      await this.wsm.connect(this._dialogs || []);
     } catch (error) {
       erlog('Failed to initialize clientі:', error);
       throw new ApiRequestError(
@@ -277,15 +286,7 @@ class Client extends EventEmitter {
 
     setTimeout(async () => {
       try {
-        if (this._dialogs) {
-          await this.wsm.connect(this._dialogs);
-        } else {
-          throw new YJSError('Not initialized', {
-            hint: 'Check if you called .init()',
-            code: 2,
-          });
-          // Якщо немає користувача, тоді викликаємо init()
-        }
+        await this.wsm.connect(this._dialogs || []);
       } catch (error) {
         const wsError = new WebSocketError(
           `Reconnect failed: ${error instanceof Error ? error.message : String(error)
