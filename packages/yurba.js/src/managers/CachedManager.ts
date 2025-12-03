@@ -4,31 +4,60 @@ import { Client } from '../client/Client';
 /**
  * Manages the API methods of a data model with a mutable cache of instances.
  */
-class LRUCache<K, V> extends Map<K, V> {
-  private maxSize: number;
+interface CacheEntry<V> {
+  value: V;
+  timestamp: number;
+}
 
-  constructor(maxSize = 1000) {
+class LRUCache<K, V> extends Map<K, CacheEntry<V>> {
+  private maxSize: number;
+  private ttl: number;
+
+  constructor(maxSize = 500, ttl = 600000) { // 10 minutes default
     super();
     this.maxSize = maxSize;
+    this.ttl = ttl;
   }
 
   set(key: K, value: V): this {
+    const entry: CacheEntry<V> = {
+      value,
+      timestamp: Date.now()
+    };
+
     if (this.has(key)) {
       this.delete(key);
     } else if (this.size >= this.maxSize) {
       const firstKey = this.keys().next().value;
       this.delete(firstKey);
     }
-    return super.set(key, value);
+    return super.set(key, entry);
   }
 
   get(key: K): V | undefined {
-    const value = super.get(key);
-    if (value !== undefined) {
+    const entry = super.get(key);
+    if (!entry) return undefined;
+
+    // Check if expired
+    if (Date.now() - entry.timestamp > this.ttl) {
       this.delete(key);
-      super.set(key, value);
+      return undefined;
     }
-    return value;
+
+    // Move to end (LRU)
+    this.delete(key);
+    super.set(key, entry);
+    return entry.value;
+  }
+
+  // Clean expired entries
+  cleanup(): void {
+    const now = Date.now();
+    for (const [key, entry] of this.entries()) {
+      if (now - entry.timestamp > this.ttl) {
+        this.delete(key);
+      }
+    }
   }
 }
 
@@ -51,7 +80,28 @@ export default class CachedManager<K, V> extends DataManager<K, V> {
    * The cache of items for this manager.
    */
   get cache(): Map<K, V> {
-    return this._cache;
+    // Cleanup expired entries periodically
+    if (Math.random() < 0.1) { // 10% chance on each access
+      this._cache.cleanup();
+    }
+    
+    return new Proxy(this._cache, {
+      get: (target, prop) => {
+        if (prop === 'get') {
+          return (key: K) => target.get(key);
+        }
+        if (prop === 'set') {
+          return (key: K, value: V) => target.set(key, value);
+        }
+        if (prop === 'has') {
+          return (key: K) => target.get(key) !== undefined;
+        }
+        if (prop === 'delete') {
+          return (key: K) => target.delete(key);
+        }
+        return (target as any)[prop];
+      }
+    }) as any;
   }
 
   _add(data: any, cache = true, { id, extras = [] }: { id?: K; extras?: any[] } = {}): V {
