@@ -32,30 +32,40 @@ bun add @yurbajs/rest
 ```js
 import { REST } from '@yurbajs/rest';
 
-const api = new REST('TOKEN');
+const rest = new REST('y.your_token_here');
 
 try {
-  // Get user info
-  const user = await api.users.me();
-  console.log('Bot user:', user);
+  // Get current user info
+  const me = await rest.users.me();
+  console.log('Current user:', me);
 
-  // Send message
-  const message = await api.dialogs.sendMessage(292, {text: "hello world"})
-  console.log('Message: ', message)
+  // Send message to dialog
+  const message = await rest.dialogs.sendMessage(123, {
+    text: 'Hello from yurba.js! 👋'
+  });
+  console.log('Sent message:', message);
 
-  // Batch requests for better performance
-  const results = await api.batch()
-    .add('user', api.users.get(1111))
-    .add('posts', api.posts.get('@me'))
-    .add('friends', api.users.friends())
-    .execute();
+  // Get user by username or ID
+  const user = await rest.users.get('username');
+  const userById = await rest.users.get(12345);
+  
+  // Get all dialogs
+  const dialogs = await rest.dialogs.getAll();
+  console.log('My dialogs:', dialogs);
 
-  console.log('User:', results.user);
-  console.log('Posts:', results.posts);
-  console.log('Friends:', results.friends);
+  // Create new dialog
+  const newDialog = await rest.dialogs.create({
+    name: 'My Channel',
+    description: 'Discussion place',
+    type: 'channel'
+  });
+
+  // Get friends
+  const friends = await rest.users.friends();
+  console.log('Friends:', friends);
 
 } catch (error) {
-  console.error('Failed to get data:', error.message);
+  console.error('API Error:', error.message);
 }
 ```
 
@@ -65,26 +75,30 @@ Execute multiple API calls in parallel for better performance:
 
 ```js
 // Instead of sequential calls (slow)
-const user = await api.users.me();        // 300ms
-const posts = await api.posts.get('@me', {}); // 300ms  
-const friends = await api.users.friends();  // 300ms
+const me = await rest.users.me();        // 300ms
+const dialogs = await rest.dialogs.getAll(); // 300ms  
+const friends = await rest.users.friends();  // 300ms
 // Total: ~900ms
 
 // Use batch requests (fast)
-const results = await api.batch()
-  .add('user', api.users.me())
-  .add('posts', api.posts.get('@me', {}))
-  .add('friends', api.users.friends())
+const results = await rest.batch()
+  .add('me', rest.users.me())
+  .add('dialogs', rest.dialogs.getAll())
+  .add('friends', rest.users.friends())
   .execute();
 // Total: ~300ms (parallel)
 
+console.log('User:', results.me);
+console.log('Dialogs:', results.dialogs);
+console.log('Friends:', results.friends);
+
 // Handle partial failures
-const results = await api.batch()
-  .add('user', api.users.me())
-  .add('invalid', api.users.get(-1)) // will fail
+const results = await rest.batch()
+  .add('me', rest.users.me())
+  .add('invalid', rest.users.get('nonexistent')) // will fail
   .executeSettled(); // won't throw on errors
 
-console.log(results.user);    // User object
+console.log(results.me);      // User object
 console.log(results.invalid); // { error: Error }
 ```
 

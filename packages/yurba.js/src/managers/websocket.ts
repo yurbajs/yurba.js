@@ -95,15 +95,13 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     });
 
     this.ws.on('message', (data: string) => {
-      const messageTime = Date.now();
-      const timeSinceOpen = messageTime - this.connectionStartTime;
-      log.debug(`WebSocket received a message (+${timeSinceOpen}ms):`, data);
+      log.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString());
         
         // Handle connection confirmation message
         if (raw.ok === 1 && raw.version) {
-          log.info(`✅ WebSocket server confirmed (+${timeSinceOpen}ms), version: ${raw.version}`);
+          log.info(`✅ WebSocket server confirmed, version: ${raw.version}`);
           return; // Don't emit this as a regular message
         }
         
