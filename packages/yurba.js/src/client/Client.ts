@@ -23,8 +23,9 @@ import MessageManager from '../managers/Message';
 import CommandManager from '../managers/Command';
 import MiddlewareManager from '../managers/Middleware';
 import UserManager from '../managers/User';
+import UserClientManager from '../managers/UserClient';
 
-import { YJSError } from './Error'
+// import { YJSError } from './Error'
 
 import { CDLog } from '../utils/devlog';
 const logging = CDLog('Client');
@@ -76,7 +77,7 @@ class Client extends EventEmitter {
   private commandManager: CommandManager;
   private middlewareManager: MiddlewareManager;
   public users: UserManager;
-  private _user?: User;
+  public userClient: UserClientManager;
   private _dialogs?: Dialog[];
   private isReady: boolean = false;
   private reconnectAttempts: number = 0;
@@ -123,6 +124,7 @@ class Client extends EventEmitter {
     );
     this.middlewareManager = new MiddlewareManager();
     this.users = new UserManager(this, this.api);
+    this.userClient = new UserClientManager(this.api);
 
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {
@@ -163,11 +165,11 @@ class Client extends EventEmitter {
   }
 
   /**
-   * Getter for bot user data
-   * @returns {UserModel} Bot user data
+   * Gets bot user data (synchronous)
+   * @returns User | null Bot user data or null if loading
    */
-  get user(): User | undefined {
-    return this._user;
+  get user(): User | null {
+    return this.userClient.get();
   }
 
   /**
@@ -228,15 +230,10 @@ class Client extends EventEmitter {
     this.checkToken();
 
     try {
-      const user = await this.api.users.me();
-      this._user = user;
-
       if (this.intents.includes('dialogs')) {
         const dialogs = await this.api.dialogs.getAll();
         this._dialogs = dialogs;
       }
-
-      log('User data:', user);
 
       this.wsm.once('ready', () => {
         this.isReady = true;
@@ -683,6 +680,24 @@ class Client extends EventEmitter {
       command: 'typing',
       thing_id: dialogId
     }));
+  }
+
+  /**
+   * Fetches bot user data
+   * @param force Force refresh even if cached
+   * @returns Promise<User> User data
+   */
+  async fetchUser(force = false): Promise<User> {
+    return this.userClient.fetch(force);
+  }
+
+  /**
+   * Refreshes bot user data
+   * @param force Force refresh even if cached
+   * @returns Promise<User> Updated user data
+   */
+  async refreshUser(force = true): Promise<User> {
+    return this.userClient.fetch(force);
   }
 
 }
