@@ -22,8 +22,8 @@ import WSM from '../managers/websocket';
 import MessageManager from '../managers/Message';
 import CommandManager from '../managers/Command';
 import MiddlewareManager from '../managers/Middleware';
-import UserManager from '../managers/User';
-import UserClientManager from '../managers/UserClient';
+import UserManager from '../managers/UserManager';
+import UserClientManager from '../managers/UserClientManager';
 
 // import { YJSError } from './Error'
 
@@ -112,8 +112,10 @@ class Client extends EventEmitter {
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
     this.intents = options.intents || [];
+
     this.api = new REST().setToken(token);
     this.wsm = new WSM(token);
+
     this.messageManager = new MessageManager(this.api);
     this.commandManager = new CommandManager(
       {
@@ -123,6 +125,7 @@ class Client extends EventEmitter {
       (userTag: string) => this.users.fetch(userTag)
     );
     this.middlewareManager = new MiddlewareManager();
+    
     this.users = new UserManager(this, this.api);
     this.userClient = new UserClientManager(this.api);
 
@@ -179,6 +182,10 @@ class Client extends EventEmitter {
   get dialogs(): Dialog[] | undefined {
     // зроби якщо dialogs немає то запить api.dialogs.getAll():
     // + кешування на 2 хвилини
+    if (this._dialogs == null) this.api.dialogs.getAll()
+      .then((dialogs: Dialog[]) => {
+        this._dialogs = dialogs;
+      });
     return this._dialogs;
   }
 
@@ -228,6 +235,7 @@ class Client extends EventEmitter {
    */
   async init(): Promise<void> {
     this.checkToken();
+    await this.userClient.fetch();
 
     try {
       if (this.intents.includes('dialogs')) {
