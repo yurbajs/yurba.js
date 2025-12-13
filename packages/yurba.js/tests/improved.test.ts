@@ -8,16 +8,19 @@ describe('Client Improvements', () => {
       expect(() => new Client(VALID_TOKEN)).not.toThrow();
     });
 
-    it('should reject invalid token format', () => {
-      expect(() => new Client('invalid_token')).toThrow();
+    it('should reject invalid token format', async () => {
+      const client = new Client('invalid_token');
+      await expect(client.init()).rejects.toThrow();
     });
 
-    it('should reject short token', () => {
-      expect(() => new Client('y.short')).toThrow();
+    it('should reject short token', async () => {
+      const client = new Client('y.short');
+      await expect(client.init()).rejects.toThrow();
     });
 
-    it('should reject empty token', () => {
-      expect(() => new Client('')).toThrow();
+    it('should reject empty token', async () => {
+      const client = new Client('');
+      await expect(client.init()).rejects.toThrow();
     });
   });
 
