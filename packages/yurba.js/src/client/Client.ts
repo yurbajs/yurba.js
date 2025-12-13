@@ -72,7 +72,7 @@ class Client extends EventEmitter {
   private token: string;
   private prefix: string = '/';
   private wsm: WSM;
-  public api: REST;
+  private api: REST;
   private messageManager: MessageManager;
   private commandManager: CommandManager;
   private middlewareManager: MiddlewareManager;
@@ -182,9 +182,10 @@ class Client extends EventEmitter {
   get dialogs(): Dialog[] | undefined {
     // зроби якщо dialogs немає то запить api.dialogs.getAll():
     // + кешування на 2 хвилини
-    if (this._dialogs == null) this.api.dialogs.getAll()
+    if (!this._dialogs) this.api.dialogs.getAll()
       .then((dialogs: Dialog[]) => {
         this._dialogs = dialogs;
+        return this._dialogs;
       });
     return this._dialogs;
   }
