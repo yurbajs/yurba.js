@@ -5,7 +5,6 @@ import {
   CommandArgsSchema,
   CommandHandler,
   Message,
-  YurbaError,
   WebSocketError,
   ApiRequestError,
   ClientOptions,
@@ -25,7 +24,7 @@ import MiddlewareManager from '../managers/Middleware';
 import UserManager from '../managers/UserManager';
 import UserClientManager from '../managers/UserClientManager';
 
-import { YJSError, ErrorCodes } from '../errors'
+import { YurbajsError, ErrorCodes } from '../errors'
 
 import { CDLog } from '../utils/devlog';
 const logging = CDLog('Client');
@@ -107,7 +106,6 @@ class Client extends EventEmitter {
    */
   constructor(token: string, options: ClientOptions = {}) {
     super();
-    this.validateToken(token);
     this.token = token;
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
@@ -139,32 +137,6 @@ class Client extends EventEmitter {
       this.isReady = false;
       this.handleReconnect();
     });
-  }
-
-  /**
-   * Checks token validity
-   * @private
-   */
-  private checkToken(): void {
-    if (!this.token) throw new Error('Token is not set');
-  }
-  // TODO: Переместити це в якийсь список помилок 
-
-  /**
-   * Validates Yurba token format
-   * @private
-   */ 
-  // TODO: Переїбашити цю хуйню в утилити
-  private validateToken(token: string): void {
-    if (!token || typeof token !== 'string') {
-      throw new YurbaError('Token must be a non-empty string');
-    }
-
-    if (!token.startsWith('y.') || token.length < 34) {
-      throw new YurbaError(
-        'Invalid Yurba token format. Token should start with "y." and be at least 34 characters long'
-      );
-    }
   }
 
   /**
@@ -235,10 +207,17 @@ class Client extends EventEmitter {
    * @returns Promise that resolves after successful initialization
    */
   async init(): Promise<void> {
-    this.checkToken();
-    await this.userClient.fetch();
+
+    if (!this.token) {
+       throw new YurbajsError(ErrorCodes.TokenMissing);
+    }
+    if (typeof this.token !== 'string' || !this.token.startsWith('y.') || this.token.length < 34) {
+      throw new YurbajsError(ErrorCodes.TokenInvalid);
+    }
 
     try {
+      await this.userClient.fetch();
+
       if (this.intents.includes('dialogs')) {
         const dialogs = await this.api.dialogs.getAll();
         this._dialogs = dialogs;
