@@ -15,6 +15,7 @@ export default class UserClientManager {
   async fetch(force = false): Promise<User> {
     const now = Date.now();
     
+
     if (!force && this._user && (now - this._lastFetch) < this._cacheTTL) {
       return this._user;
     }
@@ -35,7 +36,6 @@ export default class UserClientManager {
 
   get(): User | null {
     if (!this._user) {
-      // Запускаємо асинхронний запит але не чекаємо
       this.fetch().catch(() => {});
       return null;
     }

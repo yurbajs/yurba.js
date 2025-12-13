@@ -25,7 +25,7 @@ import MiddlewareManager from '../managers/Middleware';
 import UserManager from '../managers/UserManager';
 import UserClientManager from '../managers/UserClientManager';
 
-// import { YJSError } from './Error'
+import { YJSError, ErrorCodes } from '../errors'
 
 import { CDLog } from '../utils/devlog';
 const logging = CDLog('Client');
@@ -689,24 +689,6 @@ class Client extends EventEmitter {
       command: 'typing',
       thing_id: dialogId
     }));
-  }
-
-  /**
-   * Fetches bot user data
-   * @param force Force refresh even if cached
-   * @returns Promise<User> User data
-   */
-  async fetchUser(force = false): Promise<User> {
-    return this.userClient.fetch(force);
-  }
-
-  /**
-   * Refreshes bot user data
-   * @param force Force refresh even if cached
-   * @returns Promise<User> Updated user data
-   */
-  async refreshUser(force = true): Promise<User> {
-    return this.userClient.fetch(force);
   }
 
 }
