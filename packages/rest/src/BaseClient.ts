@@ -289,14 +289,27 @@ export class BaseClient extends EventEmitter {
         this.emit('response', { method, url, status: response.status, statusText: response.statusText });
       }
 
-      const responseText = await response.text();
+      let responseText: string;
+      try {
+        responseText = await response.text();
+      } catch (error) {
+        throw new ApiError(`Failed to read response: ${error instanceof Error ? error.message : String(error)}`, response.status, undefined, endpoint, method);
+      }
       
       if (!response.ok) {
         await ErrorHandler.handleResponseText(responseText, response.status, endpoint, method);
       }
 
-      const responseData: T = responseText ? JSON.parse(responseText) : null;
-      return responseData;
+      if (!responseText) {
+        return null as T;
+      }
+
+      try {
+        const responseData: T = JSON.parse(responseText);
+        return responseData;
+      } catch (error) {
+        throw new ApiError(`Invalid JSON response: ${error instanceof Error ? error.message : String(error)}`, response.status, responseText, endpoint, method);
+      }
 
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {

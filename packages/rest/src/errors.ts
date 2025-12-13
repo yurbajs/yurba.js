@@ -118,7 +118,9 @@ export const ErrorHandler = {
       not_found: 'Resource not found',
       rate_limit_exceeded: 'Too many requests, please try again later',
       validation_error: 'Invalid request parameters',
-      server_error: 'Internal server error occurred'
+      server_error: 'Internal server error occurred',
+      unprocessable_entity: 'Request data validation failed',
+      invalid_request: 'Invalid request format or parameters'
     };
 
     return errorMap[detail] || `API Error: ${detail}`;

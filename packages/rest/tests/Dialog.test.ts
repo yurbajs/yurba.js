@@ -19,7 +19,7 @@ describe('DialogResource', () => {
       const mockDialog = { id: 123, name: 'Test Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockDialog,
+        text: async () => JSON.stringify(mockDialog),
       });
 
       const result = await dialogs.get(123);
@@ -40,7 +40,7 @@ describe('DialogResource', () => {
       const mockDialog = { id: 456, name: 'Private Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockDialog,
+        text: async () => JSON.stringify(mockDialog),
       });
 
       await dialogs.get(456, 'invite123');
@@ -57,7 +57,7 @@ describe('DialogResource', () => {
       const mockMessage = { id: 1, text: 'Hello' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockMessage,
+        text: async () => JSON.stringify(mockMessage),
       });
 
       const result = await dialogs.sendMessage(123, { text: 'Hello' });
@@ -82,7 +82,7 @@ describe('DialogResource', () => {
       const mockMessage = { id: 2, text: 'Media' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockMessage,
+        text: async () => JSON.stringify(mockMessage),
       });
 
       await dialogs.sendMessage(123, {
@@ -117,7 +117,7 @@ describe('DialogResource', () => {
       const mockResponse = { id: 789, name: 'New Dialog' };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResponse,
+        text: async () => JSON.stringify(mockResponse),
       });
 
       const result = await dialogs.create({
