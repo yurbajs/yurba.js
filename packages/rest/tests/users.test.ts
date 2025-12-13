@@ -6,7 +6,7 @@ describe('UserResource', () => {
 
   beforeAll(() => {
     if (!skipIfNoToken()) {
-      rest = new REST(TEST_CONFIG.token);
+      rest = new REST().setToken(TEST_CONFIG.token);
     }
   });
 
@@ -61,7 +61,7 @@ describe('UserResource', () => {
       try {
         await rest.users.getFriends(TEST_CONFIG.userId, 0);
       } catch (error: any) {
-        expect(error.message).toMatch(/Access denied|resource does not exist/);
+        expect(error.message).toMatch(/Access denied|resource does not exist|You don't have access to this resource/);
       }
     });
   });

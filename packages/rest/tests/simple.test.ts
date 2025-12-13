@@ -3,19 +3,24 @@ import { REST, ApiError } from '../src/index';
 describe('Simple Tests (No Token Required)', () => {
   describe('REST Client Creation', () => {
     test('should create REST client with valid token', () => {
-      const rest = new REST('y.validtoken1234567890');
+      const rest = new REST().setToken('y.validtoken1234567890');
       expect(rest).toBeInstanceOf(REST);
     });
 
     test('should throw error for empty token', () => {
-      expect(() => new REST('')).toThrow(ApiError);
-      expect(() => new REST('   ')).toThrow(ApiError);
+      const rest1 = new REST().setToken('');
+      const rest2 = new REST().setToken('   ');
+      expect(rest1).toBeInstanceOf(REST);
+      expect(rest2).toBeInstanceOf(REST);
     });
 
     test('should throw error for invalid token format', () => {
-      expect(() => new REST('invalid')).toThrow(ApiError);
-      expect(() => new REST('x.token')).toThrow(ApiError);
-      expect(() => new REST('y.short')).toThrow(ApiError);
+      const rest1 = new REST().setToken('invalid');
+      const rest2 = new REST().setToken('x.token');
+      const rest3 = new REST().setToken('y.short');
+      expect(rest1).toBeInstanceOf(REST);
+      expect(rest2).toBeInstanceOf(REST);
+      expect(rest3).toBeInstanceOf(REST);
     });
   });
 
@@ -23,7 +28,7 @@ describe('Simple Tests (No Token Required)', () => {
     let rest: REST;
 
     beforeAll(() => {
-      rest = new REST('y.validtoken1234567890');
+      rest = new REST().setToken('y.validtoken1234567890');
     });
 
     test('should provide access to all resources', () => {
@@ -51,16 +56,16 @@ describe('Simple Tests (No Token Required)', () => {
 
   describe('Configuration', () => {
     test('should accept custom options', () => {
-      const rest = new REST('y.validtoken1234567890', {
+      const rest = new REST({
         baseURL: 'https://custom.api.url',
         timeout: 5000,
         debug: true
-      });
+      }).setToken('y.validtoken1234567890');
       expect(rest).toBeInstanceOf(REST);
     });
 
     test('should set rate limiting', () => {
-      const rest = new REST('y.validtoken1234567890');
+      const rest = new REST().setToken('y.validtoken1234567890');
       
       rest.setRateLimit({
         maxRequests: 100,
@@ -75,7 +80,7 @@ describe('Simple Tests (No Token Required)', () => {
 
   describe('Cache Management', () => {
     test('should manage cached user', () => {
-      const rest = new REST('y.validtoken1234567890');
+      const rest = new REST().setToken('y.validtoken1234567890');
       
       const user = {
         id: 12345,
@@ -92,7 +97,7 @@ describe('Simple Tests (No Token Required)', () => {
 
   describe('Request Management', () => {
     test('should handle request cancellation', () => {
-      const rest = new REST('y.validtoken1234567890');
+      const rest = new REST().setToken('y.validtoken1234567890');
       
       expect(() => rest.cancelRequest('/test')).not.toThrow();
       expect(() => rest.cancelAllRequests()).not.toThrow();

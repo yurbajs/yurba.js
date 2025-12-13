@@ -6,7 +6,7 @@ describe('PhotosResource', () => {
 
   beforeAll(() => {
     if (!skipIfNoToken()) {
-      rest = new REST(TEST_CONFIG.token);
+      rest = new REST().setToken(TEST_CONFIG.token);
     }
   });
 

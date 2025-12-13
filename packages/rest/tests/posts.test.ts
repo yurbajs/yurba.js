@@ -7,7 +7,7 @@ describe('PostResource', () => {
 
   beforeAll(() => {
     if (!skipIfNoToken()) {
-      rest = new REST(TEST_CONFIG.token);
+      rest = new REST().setToken(TEST_CONFIG.token);
     }
   });
 
@@ -21,10 +21,11 @@ describe('PostResource', () => {
       const post = await rest.posts.create('@me', {
         content: `Jest test post - ${new Date().toISOString()}`,
         photos_list: [],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: []
       });
       
@@ -44,7 +45,7 @@ describe('PostResource', () => {
       if (posts.length > 0) {
         expect(posts[0]).toHaveYurbaId();
         expect(posts[0]).toHaveProperty('Content');
-        expect(posts[0]).toHaveProperty('User');
+        expect(posts[0]).toHaveProperty('Author');
       }
     });
 
@@ -54,16 +55,17 @@ describe('PostResource', () => {
       const post = await rest.posts.create('@me', {
         content: 'Jest test with photos',
         photos_list: [parseInt(TEST_CONFIG.photoId)],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: []
       });
       
       expect(post).toBeValidYurbaResponse();
       expect(post).toHaveYurbaId();
-      expect(post.photos_list).toBeDefined();
+      expect(post.Photos).toBeDefined();
     });
 
     test('should create post with attachments', async () => {
@@ -72,10 +74,11 @@ describe('PostResource', () => {
       const post = await rest.posts.create('@me', {
         content: 'Jest test with attachments',
         photos_list: [],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: [
           { Type: 'video', Item: parseInt(TEST_CONFIG.videoId) },
           { Type: 'track', Item: parseInt(TEST_CONFIG.trackId) }
@@ -92,10 +95,11 @@ describe('PostResource', () => {
       const editedPost = await rest.posts.edit(createdPostId, {
         content: 'Jest test - edited content',
         photos_list: [],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: []
       });
       
@@ -147,10 +151,11 @@ describe('PostResource', () => {
       await expect(rest.posts.create('', { 
         content: 'test',
         photos_list: [],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: []
       })).rejects.toThrow('Invalid user');
     });
@@ -161,10 +166,11 @@ describe('PostResource', () => {
       await expect(rest.posts.create('@me', { 
         content: '',
         photos_list: [],
-        language: 'en',
+        language: 1,
         nsfw: false,
         edit: null,
         repost: null,
+        timestamp: 0,
         attachments: []
       })).rejects.toThrow('Invalid post data');
     });

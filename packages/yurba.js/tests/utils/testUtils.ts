@@ -107,7 +107,7 @@ export const createMockMessage = (text: string = 'Test message', isCommand: bool
   Text: isCommand ? `/test ${text}` : text,
   Author: mockAuthor,
   Dialog: mockDialog,
-  Type: MessageType.Message,
+  Type: 'message',
   Photos: [],
   ReplyTo: null,
   Attachments: [],

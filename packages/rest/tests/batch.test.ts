@@ -84,7 +84,7 @@ describe('Batch Requests', () => {
 
     beforeAll(() => {
       if (skipIfNoToken()) return;
-      rest = new REST(TEST_CONFIG.token);
+      rest = new REST().setToken(TEST_CONFIG.token);
     });
 
     test('should create batch from REST client', () => {

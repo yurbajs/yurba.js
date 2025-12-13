@@ -9,7 +9,7 @@ describe('DialogResource', () => {
   let dialogs: DialogResource;
 
   beforeEach(() => {
-    rest = new REST('y.test-token-1234567890');
+    rest = new REST().setToken('y.test-token-1234567890');
     dialogs = rest.dialogs;
     jest.clearAllMocks();
   });
