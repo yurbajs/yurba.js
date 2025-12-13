@@ -275,7 +275,6 @@ vitepress
 GitLab
 ReconnectingWebSocket
 wss
-<<<<<<< HEAD
 aea
 conventionalcommits
 eabe
@@ -299,7 +298,6 @@ targetUser
 ade
 cca
 eda
-=======
 yurbajs
 yurba
 ws
@@ -431,7 +429,6 @@ dryRun
 RastGame
 github
 https
->>>>>>> 82a9b22 (update docs)
 uk
 TypeDoc
 UI
