@@ -9,7 +9,7 @@
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "excludeInternal": false,
+  "excludeInternal": true,
   "hideGenerator": true,
   "readme": "../../README.md",
   "categorizeByGroup": true,
@@ -44,7 +44,7 @@
     "protected": false,
     "private": false,
     "inherited": true,
-    "external": true
+    "external": false
   },
   "searchInComments": true,
   "disableSources": true,
