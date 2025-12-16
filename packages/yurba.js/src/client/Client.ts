@@ -68,15 +68,15 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  * @category Client
  */
 class Client extends EventEmitter {
-  private token: string;
+  private token?: string;
   private prefix: string = '/';
-  private wsm: WSM;
-  private api: REST;
-  private messageManager: MessageManager;
-  private commandManager: CommandManager;
-  private middlewareManager: MiddlewareManager;
-  public users: UserManager;
-  public userClient: UserClientManager;
+  private wsm!: WSM;
+  private api!: REST;
+  private messageManager!: MessageManager;
+  private commandManager!: CommandManager;
+  private middlewareManager!: MiddlewareManager;
+  public users!: UserManager;
+  public userClient!: UserClientManager;
   private _dialogs?: Dialog[];
   private isReady: boolean = false;
   private reconnectAttempts: number = 0;
@@ -85,9 +85,8 @@ class Client extends EventEmitter {
   private intents: string[] = [];
 
   /**
-   * Creates a new Yurba client
+   * Create a Client
    *
-   * @param token - Authorization token from Yurba.one (must start with 'y.' and be at least 34 characters)
    * @param options - Client configuration options
    * @param options.prefix - Command prefix (default: '/')
    * @param options.maxReconnectAttempts - Maximum reconnection attempts (default: 5)
@@ -104,39 +103,13 @@ class Client extends EventEmitter {
    * });
    * ```
    */
-  constructor(token: string, options: ClientOptions = {}) {
+  constructor(options: ClientOptions = {}) {
     super();
-    this.token = token;
+
     this.prefix = options.prefix || '/';
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
     this.intents = options.intents || [];
 
-    this.api = new REST().setToken(token);
-    this.wsm = new WSM(token);
-
-    this.messageManager = new MessageManager(this.api);
-    this.commandManager = new CommandManager(
-      {
-        sendMessage: this.sendMessage.bind(this),
-        deleteMessage: this.deleteMessage.bind(this),
-      },
-      (userTag: string) => this.users.fetch(userTag)
-    );
-    this.middlewareManager = new MiddlewareManager();
-    
-    this.users = new UserManager(this, this.api);
-    this.userClient = new UserClientManager(this.api);
-
-    // Set up event handlers for reconnection
-    this.wsm.on('close', () => {
-      this.isReady = false;
-      this.handleReconnect();
-    });
-
-    this.wsm.on('error', () => {
-      this.isReady = false;
-      this.handleReconnect();
-    });
   }
 
   /**
@@ -206,7 +179,8 @@ class Client extends EventEmitter {
    * Initializes the client
    * @returns Promise that resolves after successful initialization
    */
-  async init(): Promise<void> {
+  async init(token: string): Promise<void> {
+    this.token = token
 
     if (!this.token) {
        throw new YurbajsError(ErrorCodes.TokenMissing);
@@ -214,6 +188,34 @@ class Client extends EventEmitter {
     if (typeof this.token !== 'string' || !this.token.startsWith('y.') || this.token.length < 34) {
       throw new YurbajsError(ErrorCodes.TokenInvalid);
     }
+
+    this.api = new REST().setToken(token);
+    this.wsm = new WSM(token);
+
+    this.messageManager = new MessageManager(this.api);
+    this.commandManager = new CommandManager(
+      {
+        sendMessage: this.sendMessage.bind(this),
+        deleteMessage: this.deleteMessage.bind(this),
+      },
+      (userTag: string) => this.users.fetch(userTag)
+    );
+    this.middlewareManager = new MiddlewareManager();
+    
+    this.users = new UserManager(this, this.api);
+    this.userClient = new UserClientManager(this.api);
+
+    // Set up event handlers for reconnection
+    this.wsm.on('close', () => {
+      this.isReady = false;
+      this.handleReconnect();
+    });
+
+    this.wsm.on('error', () => {
+      this.isReady = false;
+      this.handleReconnect();
+    });
+
 
     try {
       await this.userClient.fetch();
