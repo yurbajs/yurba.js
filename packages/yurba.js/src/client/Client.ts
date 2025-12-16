@@ -42,7 +42,7 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  * ```typescript
  * import { Client } from 'yurba.js';
  *
- * const client = new Client('your-token-here');
+ * const client = new Client();
  *
  * client.registerCommand('hello', { name: 'string' }, (message, args) => {
  *   message.reply(`Hello, ${args.name}!`);
@@ -52,12 +52,12 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  *   console.log('Bot is ready!');
  * });
  *
- * client.init();
+ * client.init('your-token-here');
  * ```
  *
  * @example With options
  * ```typescript
- * const client = new Client('token', {
+ * const client = new Client({
  *   prefix: '!',
  *   maxReconnectAttempts: 10
  * });
@@ -73,7 +73,7 @@ class Client extends EventEmitter {
   private wsm!: WSM;
   private api!: REST;
   private messageManager!: MessageManager;
-  private commandManager!: CommandManager;
+  private commandManager: CommandManager;
   private middlewareManager!: MiddlewareManager;
   public users!: UserManager;
   public userClient!: UserClientManager;
@@ -96,7 +96,7 @@ class Client extends EventEmitter {
    *
    * @example
    * ```typescript
-   * const client = new Client('y.your-token-here', {
+   * const client = new Client({
    *   prefix: '!',
    *   maxReconnectAttempts: 10,
    *   intents: ['dialogs']
@@ -110,6 +110,14 @@ class Client extends EventEmitter {
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
     this.intents = options.intents || [];
 
+    // Ініціалізуємо commandManager відразу щоб registerCommand був доступний
+    this.commandManager = new CommandManager(
+      {
+        sendMessage: this.sendMessage.bind(this),
+        deleteMessage: this.deleteMessage.bind(this),
+      },
+      (userTag: string) => this.users?.fetch(userTag)
+    );
   }
 
   /**
@@ -193,13 +201,6 @@ class Client extends EventEmitter {
     this.wsm = new WSM(token);
 
     this.messageManager = new MessageManager(this.api);
-    this.commandManager = new CommandManager(
-      {
-        sendMessage: this.sendMessage.bind(this),
-        deleteMessage: this.deleteMessage.bind(this),
-      },
-      (userTag: string) => this.users.fetch(userTag)
-    );
     this.middlewareManager = new MiddlewareManager();
     
     this.users = new UserManager(this, this.api);
