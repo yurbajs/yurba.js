@@ -24,6 +24,8 @@
     "clean": "rimraf lib",
     "test": "jest --coverage",
     "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [

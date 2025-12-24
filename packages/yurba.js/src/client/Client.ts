@@ -24,7 +24,7 @@ import MiddlewareManager from '../managers/Middleware';
 import UserManager from '../managers/UserManager';
 import UserClientManager from '../managers/UserClientManager';
 
-import { YurbajsError, ErrorCodes } from '../errors'
+import { YurbajsError, ErrorCodes } from '../errors';
 
 import { CDLog } from '../utils/devlog';
 const logging = CDLog('Client');
@@ -142,7 +142,7 @@ class Client extends EventEmitter {
       configurable: true 
     }); // ? Why use Object.defineProperty instead of private field? This adds complexity
 
-    const envToken = process.env.YURBA_TOKEN || process.env.YTOKEN;
+    const envToken = process.env.YURBA_TOKEN ?? process.env.YTOKEN;
 
     if (!this.token && envToken) {
       /**
@@ -151,7 +151,7 @@ class Client extends EventEmitter {
        */
       this.token = envToken;
     } else {
-      this.token = undefined; // * Redundant assignment - token is already undefined
+      this.token = undefined;
     }
   }
 
@@ -227,7 +227,7 @@ class Client extends EventEmitter {
    * @returns Promise that resolves after successful initialization
    */
   async init(token = this.token): Promise<void> {
-    this.token = token; // * Missing semicolon
+    this.token = token;
 
     if (!this.token) {
        throw new YurbajsError(ErrorCodes.TokenMissing);
@@ -269,8 +269,8 @@ class Client extends EventEmitter {
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
         this.wsm.on('message', (message: any) => { // !WARN: Using 'any' type loses type safety
-          log('YURBA.JS ::', JSON.stringify(message, null, 2)) // * Missing semicolon
-          this.handleMessage(message) // * Missing semicolon and no error handling
+          log('YURBA.JS ::', JSON.stringify(message, null, 2)); // * Missing semicolon
+          this.handleMessage(message); // * Missing semicolon and no error handling
         }
         );
         this.wsmMessageSubscribed = true; // * Boolean flag is fragile - consider using WeakSet or other tracking
@@ -364,38 +364,38 @@ class Client extends EventEmitter {
                 if (msg.Message.Text.startsWith(this.prefix)) {
                   return await this.handleCommandMessage(msg.Message);
                 } else {
-                  this.emit('message', msg.Message) // * Missing semicolon
+                  this.emit('message', msg.Message); 
                 }
-                break // * Missing semicolon
+                break;
               case 'join':
-                this.emit('join', msg.Message) // * Missing semicolon
-                break // * Missing semicolon
+                this.emit('join', msg.Message);
+                break;
               case 'leave':
-                this.emit('leave', msg.Message) // * Missing semicolon
-                break // * Missing semicolon
+                this.emit('leave', msg.Message);
+                break; 
             }
             break;
           case 'message_delete':
-            this.emit('message_delete', msg.Message) // * Missing semicolon
+            this.emit('message_delete', msg.Message); 
             break;
           case 'read':
-            this.emit('read', msg.Message); // * Missing semicolon
+            this.emit('read', msg.Message); 
             break;
           case 'typing':
-            this.emit('typing', msg.Message); // * Missing semicolon
+            this.emit('typing', msg.Message);
             break;
 
           case 'notification':
             switch (msg.Message.Type) {
               case 'post_on_wall':
-                this.emit('post_on_wall', msg.Message); // * Missing semicolon
+                this.emit('post_on_wall', msg.Message);
                 break;
               case 'post_like':
-                this.emit('post_like', msg.Message); // * Missing semicolon
-                break; // * Missing semicolon
+                this.emit('post_like', msg.Message);
+                break; 
               case 'comment_post':
-                this.emit('comment_post', msg.Message); // * Missing semicolon
-                break; // * Missing semicolon
+                this.emit('comment_post', msg.Message); 
+                break; 
             }
             break;
           default:

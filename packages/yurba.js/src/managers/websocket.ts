@@ -83,7 +83,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       this.restoreSubscriptions();
       if (dialogs && dialogs.length > 0) {
         for (const dialog of dialogs) {
-          this.subscribeToEvents('dialog', dialog.ID)
+          this.subscribeToEvents('dialog', dialog.ID);
           log.info('Subscribed to dialog:', dialog.ID);; // !WARN: Double semicolon
         }
       } else {
@@ -91,7 +91,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       }
       
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
-      log.info('Ready emit:',ready_emit) // * Missing semicolon and logging emit result is not useful
+      log.info('Ready emit:',ready_emit); // * Missing semicolon and logging emit result is not useful
     });
 
     this.ws.on('message', (data: string) => {
