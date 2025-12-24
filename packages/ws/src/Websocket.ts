@@ -22,7 +22,7 @@ class ReconnectingWebSocket extends EventEmitter {
   private ws: WebSocket | null = null;
   private reconnectAttempts: number = 0;
   private isConnected: boolean = false;
-  private messageQueue: string[] = [];
+  private messageQueue: string[] = []; // * No size limit - could cause memory leaks
   private pingIntervalId?: NodeJS.Timeout;
   private pongTimeoutId?: NodeJS.Timeout;
   private forceClosed: boolean = false;
@@ -34,7 +34,7 @@ class ReconnectingWebSocket extends EventEmitter {
    */
   constructor(url: string, options: _ReconnectingWebSocketOptions = {}) {
     super();
-    this.url = url;
+    this.url = url; // * No URL validation
     this.options = {
       maxReconnectAttempts: 5,
       retryDelay: 5000,
@@ -43,7 +43,7 @@ class ReconnectingWebSocket extends EventEmitter {
       pongTimeout: 5000,
       ...options,
     };
-    this.connect();
+    this.connect(); // !WARN: Calling async operation in constructor - no error handling
   }
 
   /**
@@ -66,7 +66,7 @@ class ReconnectingWebSocket extends EventEmitter {
     
     try {
       this.ws = new WebSocket(this.url);
-      this.reconnectAttempts++;
+      this.reconnectAttempts++; // * Increment happens before connection success - could be misleading
 
       this.ws.on('open', () => this.handleOpen());
       this.ws.on('close', (code: number) => this.handleClose(code));
@@ -93,7 +93,7 @@ class ReconnectingWebSocket extends EventEmitter {
     // Send queued messages
     while (this.messageQueue.length > 0) {
       const msg = this.messageQueue.shift();
-      if (msg && this.ws?.readyState === WebSocket.OPEN) {
+      if (msg && this.ws?.readyState === WebSocket.OPEN) { // * Redundant readyState check after isConnected
         this.ws.send(msg);
       }
     }
@@ -136,12 +136,12 @@ class ReconnectingWebSocket extends EventEmitter {
    * @private
    */
   private handleError(err: Error): void {
-    this.emit('error', new Error(`WebSocket error: ${err.message}`));
+    this.emit('error', new Error(`WebSocket error: ${err.message}`)); // * Creating new error loses original stack trace
     if (this.ws) {
       try {
         this.ws.close();
       } catch (closeErr) {
-          console.log(`Dev: ${closeErr}`)
+          console.log(`Dev: ${closeErr}`) // * Direct console.log instead of proper logging
       }
     }
   }
@@ -182,9 +182,9 @@ class ReconnectingWebSocket extends EventEmitter {
               }
               if (this.ws) {
                 try {
-                  this.ws.terminate();
+                  this.ws.terminate(); // !WARN: Forceful termination without graceful close
                 } catch (err) {
-                  console.log(`Dev: ${err}`)
+                  console.log(`Dev: ${err}`) // * Direct console.log instead of proper logging
                 }
               }
             }, this.options.pongTimeout);
@@ -244,7 +244,7 @@ class ReconnectingWebSocket extends EventEmitter {
       if (this.options.debug) {
         this.emit('debug', `WebSocket not connected. Queuing message: ${data}`);
       }
-      this.messageQueue.push(data);
+      this.messageQueue.push(data); // !WARN: No queue size limit - potential memory leak
     }
   }
 
@@ -264,7 +264,7 @@ class ReconnectingWebSocket extends EventEmitter {
       try {
         this.ws.close(code, reason);
       } catch (err) {
-        console.log(`Dev: ${err}`)
+        console.log(`Dev: ${err}`) // * Direct console.log instead of proper logging
         // Ignore errors when closing
       }
     }

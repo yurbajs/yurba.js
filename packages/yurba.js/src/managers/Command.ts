@@ -21,12 +21,12 @@ export default class CommandManager implements ICommandManager {
     }
   >;
   private api: {
-    sendMessage: (...args: any[]) => Promise<any>;
-    deleteMessage: (id: number) => Promise<any>;
+    sendMessage: (...args: any[]) => Promise<any>; // !WARN: Using 'any' types loses type safety
+    deleteMessage: (id: number) => Promise<any>; // !WARN: Using 'any' types loses type safety
   };
-  private getUser: (userTag: string) => Promise<any>;
+  private getUser: (userTag: string) => Promise<any>; // !WARN: Using 'any' type loses type safety
   private aliases: Map<string, string> = new Map();
-  private cooldowns: Map<string, Map<number, number>> = new Map();
+  private cooldowns: Map<string, Map<number, number>> = new Map(); // * Cooldowns declared but never used
 
   /**
    * Creates a new command manager
@@ -35,10 +35,10 @@ export default class CommandManager implements ICommandManager {
    */
   constructor(
     api: {
-      sendMessage: (...args: any[]) => Promise<any>;
-      deleteMessage: (id: number) => Promise<any>;
+      sendMessage: (...args: any[]) => Promise<any>; // !WARN: Using 'any' types loses type safety
+      deleteMessage: (id: number) => Promise<any>; // !WARN: Using 'any' types loses type safety
     },
-    getUser: (userTag: string) => Promise<any>
+    getUser: (userTag: string) => Promise<any> // !WARN: Using 'any' type loses type safety
   ) {
     this.commands = new Map();
     this.api = api;
@@ -57,10 +57,10 @@ export default class CommandManager implements ICommandManager {
     handler: CommandHandler
   ): void {
     if (!command || typeof command !== 'string' || !command.trim()) {
-      throw new Error('Command name is required');
+      throw new Error('Command name is required'); // * Should use custom error class for consistency
     }
     if (this.commands.has(command)) {
-      throw new Error(`Command "${command}" is already registered.`);
+      throw new Error(`Command "${command}" is already registered.`); // * Should use custom error class
     }
     this.commands.set(command, { handler, argsSchema });
     log.info(`Registered command: ${command}`);
@@ -73,7 +73,7 @@ export default class CommandManager implements ICommandManager {
    */
   addAlias(alias: string, command: string): void {
     if (!this.commands.has(command)) {
-      throw new Error(`Cannot add alias for non-existent command "${command}"`);
+      throw new Error(`Cannot add alias for non-existent command "${command}"`); // * Should use custom error class
     }
     this.aliases.set(alias, command);
     log.info(`Added alias "${alias}" for command "${command}"`);
@@ -92,37 +92,37 @@ export default class CommandManager implements ICommandManager {
 
     const { Text, Author } = message;
     if (!Text || !Author) {
-      throw new Error('Invalid message: missing Text or Author');
+      throw new Error('Invalid message: missing Text or Author'); // * Should use custom error class
     }
 
-    const [commandName, ...args] = Text.slice(1).split(' ');
+    const [commandName, ...args] = Text.slice(1).split(' '); // !WARN: Assumes prefix is single character - could break with multi-char prefixes
 
     // Check original command or alias
     let actualCommand = commandName;
     if (this.aliases.has(commandName)) {
-      actualCommand = this.aliases.get(commandName) || commandName;
+      actualCommand = this.aliases.get(commandName) || commandName; // * Redundant fallback - get() already returns string | undefined
     }
 
     if (!this.commands.has(actualCommand)) {
-      throw new Error(`Command "${commandName}" not found.`);
+      throw new Error(`Command "${commandName}" not found.`); // * Should use custom error class
     }
 
-    const { handler, argsSchema } = this.commands.get(actualCommand)!;
+    const { handler, argsSchema } = this.commands.get(actualCommand)!; // !WARN: Non-null assertion without proper null check
 
     try {
-      const parsedArgs = await this.parseArgs([...args], argsSchema);
+      const parsedArgs = await this.parseArgs([...args], argsSchema); // * Unnecessary array spread - args is already an array
       if (!parsedArgs) {
-        throw new Error('Invalid arguments for the command.');
+        throw new Error('Invalid arguments for the command.'); // * Should use custom error class
       }
 
       log.debug(
         `Executing command "${actualCommand}" with args:`,
         parsedArgs
       );
-      await handler(message, parsedArgs as any);
+      await handler(message, parsedArgs as any); // !WARN: Using 'any' loses type safety
     } catch (error) {
       log.error(`Error executing command "${actualCommand}":`, error);
-      throw error;
+      throw error; // * Re-throwing without additional context
     }
   }
 
@@ -275,7 +275,7 @@ export default class CommandManager implements ICommandManager {
           throw new CommandError(
             'Repost is not supported in the current Message type.',
             'parseArgs'
-          );
+          ); // * Hardcoded unsupported feature - should be configurable or removed
         default:
           throw new CommandError(`Unknown argument type: ${type}`, 'parseArgs');
       }

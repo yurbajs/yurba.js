@@ -40,7 +40,7 @@ export class BaseClient extends EventEmitter {
     super();
     
     this.options = {
-      baseURL: 'https://api.yurba.one',
+      baseURL: 'https://api.yurba.one', // * Hardcoded API URL - should be configurable
       timeout: 30000,
       maxRetries: 3,
       retryDelay: 1000,
@@ -64,7 +64,7 @@ export class BaseClient extends EventEmitter {
       this.clearCache();
       return this;
     }
-    this.defaultHeaders['token'] = token;
+    this.defaultHeaders['token'] = token; // !WARN: Token stored in plain object - potential security risk if logged
     this.clearCache();
     return this;
   }
@@ -74,7 +74,7 @@ export class BaseClient extends EventEmitter {
   }
 
   public async get<T = unknown>(endpoint: string, queryParams: Record<string, unknown> = {}, config?: RequestConfig): Promise<T> {
-    const resolvedEndpoint = await this.resolveEndpoint(endpoint);
+    const resolvedEndpoint = await this.resolveEndpoint(endpoint); // * Async resolution for every request - could be cached
     return this.request<T>('GET', this.buildUrl(resolvedEndpoint, queryParams), undefined, config);
   }
 
@@ -106,7 +106,7 @@ export class BaseClient extends EventEmitter {
       ...config,
       headers: {
         'Accept': 'application/json',
-        'token': headers['token']
+        'token': headers['token'] // !WARN: Token could be undefined - no validation
       }
     };
     
@@ -139,7 +139,7 @@ export class BaseClient extends EventEmitter {
 
   public async getCachedUser(): Promise<CachedUser | null> {
     const token = this.defaultHeaders['token'];
-    let cached = userCache.get(token);
+    let cached = userCache.get(token); // !WARN: Token could be undefined - cache.get(undefined) behavior unclear
     if (!cached) {
       try {
         const userData: unknown = await this.get('/get_me');
@@ -150,9 +150,9 @@ export class BaseClient extends EventEmitter {
             Surname?: unknown;
             Link?: unknown;
             Avatar?: unknown;
-          };
+          }; // * Complex type assertion - should use proper type guards
           cached = {
-            id: typeof data.ID === 'number' ? data.ID : 0,
+            id: typeof data.ID === 'number' ? data.ID : 0, // * Default to 0 for invalid ID - could cause issues
             name: typeof data.Name === 'string' ? data.Name : '',
             surname: typeof data.Surname === 'string' ? data.Surname : '',
             link: typeof data.Link === 'string' ? data.Link : '',
@@ -165,10 +165,10 @@ export class BaseClient extends EventEmitter {
             surname: cached.surname,
             link: cached.link,
             avatar: cached.avatar
-          });
+          }); // * Redundant object creation - could use cached directly
         }
       } catch {
-        return null;
+        return null; // * Silent error handling - important errors might be hidden
       }
     }
     return cached;
@@ -221,12 +221,12 @@ export class BaseClient extends EventEmitter {
       } catch (error: unknown) {
         lastError = error instanceof Error ? error : new Error(String(error));
 
-        if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) {
+        if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) { // * Missing parentheses - operator precedence issue
           throw error;
         }
 
         if (attempt < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt)));
+          await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt))); // * Exponential backoff without jitter
         }
       }
     }
@@ -236,7 +236,7 @@ export class BaseClient extends EventEmitter {
     }
     
     // This should never happen, but TypeScript needs it for safety
-    throw new Error('Unknown error occurred');
+    throw new Error('Unknown error occurred'); // * Unreachable code due to loop logic
   }
 
   private async executeRequest<T>(method: string, url: string, data?: unknown, config?: RequestConfig, endpoint?: string): Promise<T> {

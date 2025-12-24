@@ -27,8 +27,8 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private connectionTimeoutId: NodeJS.Timeout | null = null;
   private uptimeTimeoutId: NodeJS.Timeout | null = null;
   private messageQueue: string[] = [];
-  private isConnectionStable = false;
-  private connectionStartTime: number = 0;
+  private isConnectionStable = false; // * Property declared but only used internally
+  private connectionStartTime: number = 0; // * Property declared but never used
 
   /**
    * Creates a new WebSocket manager
@@ -36,7 +36,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   constructor(token: string) {
     super();
-    this.token = token;
+    this.token = token; // * No validation of token format or length
   }
 
   /**
@@ -46,11 +46,11 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   async connect(dialogs: Dialog[]): Promise<void> {
     this.ws = new ReconnectingWebSocket(
-      `wss://api.yurba.one/ws?token=${this.token}`,
+      `wss://api.yurba.one/ws?token=${this.token}`, // !WARN: Token exposed in URL - potential security risk in logs
       {
         maxReconnectAttempts: 10,
         retryDelay: 5000,
-        debug: true,
+        debug: true, // * Hardcoded debug mode - should be configurable
       }
     );
 
@@ -68,7 +68,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       this.uptimeTimeoutId = setTimeout(() => {
         this.isConnectionStable = true;
         log.info('WebSocket connection is now stable');
-      }, 3000);
+      }, 3000); // !WARN: Comment says 5 seconds but timeout is 3000ms
       
       // Send queued messages
       while (this.messageQueue.length > 0) {
@@ -84,20 +84,20 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       if (dialogs && dialogs.length > 0) {
         for (const dialog of dialogs) {
           this.subscribeToEvents('dialog', dialog.ID)
-          log.info('Subscribed to dialog:', dialog.ID);;
+          log.info('Subscribed to dialog:', dialog.ID);; // !WARN: Double semicolon
         }
       } else {
         log.info('No dialogs to subscribe to');
       }
       
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
-      log.info('Ready emit:',ready_emit)
+      log.info('Ready emit:',ready_emit) // * Missing semicolon and logging emit result is not useful
     });
 
     this.ws.on('message', (data: string) => {
       log.debug('WebSocket received a message:', data);
       try {
-        const raw = JSON.parse(data.toString());
+        const raw = JSON.parse(data.toString()); // * Unnecessary toString() call - data is already string
         
         // Handle connection confirmation message
         if (raw.ok === 1 && raw.version) {
@@ -110,7 +110,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         log.error('Failed to parse WebSocket message:', err);
         this.emit(
           'error',
-          new Error(`Failed to parse WebSocket message: ${err}`)
+          new Error(`Failed to parse WebSocket message: ${err}`) // * String concatenation instead of proper error handling
         );
       } 
     });
@@ -148,11 +148,11 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     if (!this.subscriptions.has(category)) {
       this.subscriptions.set(category, []);
     }
-    if (!this.subscriptions.get(category)?.includes(thing_id)) {
-      this.subscriptions.get(category)?.push(thing_id);
+    if (!this.subscriptions.get(category)?.includes(thing_id)) { // * Optional chaining with array method - could be undefined
+      this.subscriptions.get(category)?.push(thing_id); // * Optional chaining with mutation - could fail silently
     }
 
-    this.ws?.send(JSON.stringify(subscribeData));
+    this.ws?.send(JSON.stringify(subscribeData)); // !WARN: No error handling if send fails
   }
 
   /**
@@ -284,7 +284,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   send(data: string): void {
     if (this.isConnected()) {
-      this.ws?.send(data);
+      this.ws?.send(data); // !WARN: Optional chaining after isConnected check is redundant
       log.debug('Sent message:', data);
     } else {
       // Queue message if not connected

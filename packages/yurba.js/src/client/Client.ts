@@ -69,13 +69,13 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  */
 class Client extends EventEmitter {
   // Options
-  private token: string | boolean | undefined;
+  private token: string | boolean | undefined; // !WARN: token type includes boolean which seems incorrect - should be string | undefined
   public prefix: string = '/';
 
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
-  private wsmMessageSubscribed: boolean = false;
-  private intents: string[] = [];
+  private wsmMessageSubscribed: boolean = false; // * Use Set or Map for better event subscription tracking
+  private intents: string[] = []; // * Consider using enum or constants for intent validation
 
   // REST
   public readonly api: REST;
@@ -85,10 +85,10 @@ class Client extends EventEmitter {
   public readonly userClient: UserClientManager;
 
   // System Managers
-  private wsm!: WSM;
-  private messageManager!: MessageManager;
+  private wsm!: WSM; // !WARN: Definite assignment assertion without null checks - potential runtime errors
+  private messageManager!: MessageManager; // !WARN: Same issue - should initialize or add null checks
   private commandManager: CommandManager;
-  private middlewareManager!: MiddlewareManager;
+  private middlewareManager!: MiddlewareManager; // !WARN: Same issue
 
 
   // Other
@@ -140,7 +140,7 @@ class Client extends EventEmitter {
       writable: true, 
       enumerable: false, 
       configurable: true 
-    });
+    }); // ? Why use Object.defineProperty instead of private field? This adds complexity
 
     const envToken = process.env.YURBA_TOKEN || process.env.YTOKEN;
 
@@ -151,7 +151,7 @@ class Client extends EventEmitter {
        */
       this.token = envToken;
     } else {
-      this.token = undefined;
+      this.token = undefined; // * Redundant assignment - token is already undefined
     }
   }
 
@@ -170,12 +170,12 @@ class Client extends EventEmitter {
   get dialogs(): Dialog[] | undefined {
     // зроби якщо dialogs немає то запить api.dialogs.getAll():
     // + кешування на 2 хвилини
-    if (!this._dialogs) this.api.dialogs.getAll()
+    if (!this._dialogs) this.api.dialogs.getAll() // !WARN: Async operation in getter without error handling - can cause unhandled promise rejections
       .then((dialogs: Dialog[]) => {
         this._dialogs = dialogs;
-        return this._dialogs;
-      });
-    return this._dialogs;
+        return this._dialogs; // * Unnecessary return in promise chain
+      }); // !WARN: Missing .catch() for error handling
+    return this._dialogs; // !WARN: Returns undefined while async operation is pending - confusing behavior
   }
 
 
@@ -197,6 +197,8 @@ class Client extends EventEmitter {
    * });
    */
   // TODO: треба буде переробити, типу додати ще інші хуйні типу cooldown і тд, та і переробити цю хуйню
+  // !WARN: Inappropriate language in comments - should be professional
+  // * Add validation for command name (empty string, duplicates, reserved words)
   registerCommand(
     command: string,
     argsSchema: CommandArgsSchema,
@@ -204,6 +206,7 @@ class Client extends EventEmitter {
   ): void {
     this.commandManager.registerCommand(command, argsSchema, handler);
   }
+
 
   /**
    * Returns list of registered commands
@@ -223,13 +226,13 @@ class Client extends EventEmitter {
    * @returns Promise that resolves after successful initialization
    */
   async init(token = this.token): Promise<void> {
-    this.token = token
+    this.token = token // * Missing semicolon
 
     if (!this.token) {
        throw new YurbajsError(ErrorCodes.TokenMissing);
     }
     if (typeof this.token !== 'string' || !this.token.startsWith('y.') || this.token.length < 34) {
-      throw new YurbajsError(ErrorCodes.TokenInvalid);
+      throw new YurbajsError(ErrorCodes.TokenInvalid); // * Magic number 34 should be a constant
     }
 
     // Встановлюємо токен для існуючого API клієнта
@@ -264,22 +267,22 @@ class Client extends EventEmitter {
 
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: any) => {
-          log('YURBA.JS ::', JSON.stringify(message, null, 2))
-          this.handleMessage(message)
+        this.wsm.on('message', (message: any) => { // !WARN: Using 'any' type loses type safety
+          log('YURBA.JS ::', JSON.stringify(message, null, 2)) // * Missing semicolon
+          this.handleMessage(message) // * Missing semicolon and no error handling
         }
         );
-        this.wsmMessageSubscribed = true;
+        this.wsmMessageSubscribed = true; // * Boolean flag is fragile - consider using WeakSet or other tracking
       }
 
       await this.wsm.connect(this._dialogs || []);
     } catch (error) {
-      erlog('Failed to initialize clientі:', error);
+      erlog('Failed to initialize clientі:', error); // !WARN: Typo in error message ('clientі' should be 'client')
       throw new ApiRequestError(
         `Failed to initialize client: ${error instanceof Error ? error.message : String(error)
         }`,
         undefined,
-        '/get_me'
+        '/get_me' // ? Why hardcoded '/get_me' endpoint when error might be from other operations?
       );
     }
   }
@@ -312,8 +315,10 @@ class Client extends EventEmitter {
         );
         erlog('Reconnect failed:', wsError);
         this.emit('reconnectError', wsError);
+        // !WARN: No recursive call to handleReconnect() - reconnection stops after first failure
       }
     }, 5000 * Math.pow(2, this.reconnectAttempts - 1)); // Exponential backoff
+    // * Consider adding jitter to prevent thundering herd problem
   }
 
   /**
@@ -331,7 +336,7 @@ class Client extends EventEmitter {
       this.emit('commandError', { error: err, message: msg });
       // Тільки викликати unknownCommand якщо це справді невідома команда
       if (err instanceof Error && err.message?.includes('Command "') && err.message?.includes('" not found.')) {
-        this.emit('unknownCommand', msg.Text, msg);
+        this.emit('unknownCommand', msg.Text, msg); // !WARN: Fragile string matching for error detection - use error codes instead
       }
     }
   }
@@ -354,42 +359,42 @@ class Client extends EventEmitter {
             switch (msg.Message.Type) {
               case undefined:
               case null:
-              case '':
+              case '': // * Consider using a default case instead of multiple falsy checks
                 if (msg.Message.Text.startsWith(this.prefix)) {
                   return await this.handleCommandMessage(msg.Message);
                 } else {
-                  this.emit('message', msg.Message)
+                  this.emit('message', msg.Message) // * Missing semicolon
                 }
-                break
+                break // * Missing semicolon
               case 'join':
-                this.emit('join', msg.Message)
-                break
+                this.emit('join', msg.Message) // * Missing semicolon
+                break // * Missing semicolon
               case 'leave':
-                this.emit('leave', msg.Message)
-                break
+                this.emit('leave', msg.Message) // * Missing semicolon
+                break // * Missing semicolon
             }
             break;
           case 'message_delete':
-            this.emit('message_delete', msg.Message)
+            this.emit('message_delete', msg.Message) // * Missing semicolon
             break;
           case 'read':
-            this.emit('read', msg.Message)
+            this.emit('read', msg.Message) // * Missing semicolon
             break;
           case 'typing':
-            this.emit('typing', msg.Message)
+            this.emit('typing', msg.Message) // * Missing semicolon
             break;
 
           case 'notification':
             switch (msg.Message.Type) {
               case 'post_on_wall':
-                this.emit('post_on_wall', msg.Message)
+                this.emit('post_on_wall', msg.Message) // * Missing semicolon
                 break;
               case 'post_like':
-                this.emit('post_like', msg.Message)
-                break
+                this.emit('post_like', msg.Message) // * Missing semicolon
+                break // * Missing semicolon
               case 'comment_post':
-                this.emit('comment_post', msg.Message)
-                break
+                this.emit('comment_post', msg.Message) // * Missing semicolon
+                break // * Missing semicolon
             }
             break
           default:
@@ -433,7 +438,7 @@ class Client extends EventEmitter {
       multiple?: boolean;
       signal?: AbortSignal;
     } = {}
-  ): Promise<any> {
+  ): Promise<any> { // !WARN: Return type 'any' loses type safety - should be more specific
     const { timeout = 60000, multiple = false, signal } = options;
 
     return new Promise<any>((resolve, reject) => {
@@ -449,9 +454,9 @@ class Client extends EventEmitter {
       const timeoutId = setTimeout(() => {
         if (!finished) {
           cleanup();
-          reject(new Error(`Timeout waiting for event: ${event}`));
+          reject(new Error(`Timeout waiting for event: ${event}`)); // * Consider using custom error class for timeouts
         }
-      }, timeout);
+      }, timeout); // !WARN: No validation that timeout is positive number
 
       const abortHandler = () => {
         if (!finished) {
@@ -524,7 +529,7 @@ class Client extends EventEmitter {
    * ```
    */
   async sendMessage(
-    dialogId: number,
+    dialogId: number, // * Add validation for positive integer
     payload: SendMessagePayload
   ): Promise<Message> {
     try {
@@ -536,7 +541,7 @@ class Client extends EventEmitter {
       if (err instanceof Error) {
         erlog('Error sending message:', err.message);
       }
-      throw err;
+      throw err; // * Consider wrapping in custom error with more context
     }
   }
 
@@ -546,7 +551,7 @@ class Client extends EventEmitter {
    * @returns Promise that resolves with user data
    */
   async getUser(userTag: string): Promise<User | null> {
-    return this.users.fetch(userTag);
+    return this.users.fetch(userTag); // * Add validation for userTag format and length
   }
 
   /**
@@ -556,12 +561,12 @@ class Client extends EventEmitter {
    */
   async getPhoto(photoId: string): Promise<Photo | null> {
     try {
-      const response = await this.api.photos.get(photoId);
+      const response = await this.api.photos.get(photoId); // * Add validation for photoId format
       log(`Fetched photo ${photoId}`, response);
       return response;
     } catch (err) {
       erlog('Error getting photo:', err instanceof Error ? err.message : err);
-      return null;
+      return null; // * Returning null on error might hide important failures
     }
   }
 
@@ -570,16 +575,16 @@ class Client extends EventEmitter {
    * @param ID Message ID to delete
    * @returns Promise that resolves with boolean indicating success
    */
-  async deleteMessage(ID: number): Promise<boolean> {
+  async deleteMessage(ID: number): Promise<boolean> { // * Parameter name 'ID' should be camelCase 'id'
     try {
-      await this.api.dialogs.deleteMessage(ID);
+      await this.api.dialogs.deleteMessage(ID); // * Add validation for positive integer ID
       return true;
     } catch (err) {
       erlog(
         'Error deleting message:',
         err instanceof Error ? err.message : err
       );
-      return false;
+      return false; // * Boolean return doesn't provide error details to caller
     }
   }
 
@@ -593,7 +598,7 @@ class Client extends EventEmitter {
    *   console.log('Received message:', msg);
    * });
    */
-  on(event: string | symbol, listener: (...args: any[]) => void): this {
+  on(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
     return super.on(event, listener);
   }
 
@@ -608,7 +613,7 @@ class Client extends EventEmitter {
    *   console.log('Bot is ready!');
    * });
    */
-  once(event: string | symbol, listener: (...args: any[]) => void): this {
+  once(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
     return super.once(event, listener);
   }
 
@@ -622,7 +627,7 @@ class Client extends EventEmitter {
    * client.on('message', handler);
    * client.off('message', handler);
    */
-  off(event: string | symbol, listener: (...args: any[]) => void): this {
+  off(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
     return super.off(event, listener);
   }
 
@@ -637,7 +642,7 @@ class Client extends EventEmitter {
     client.emit('customEvent', { foo: 'bar' });
    ```
    */
-  emit(event: string | symbol, ...args: any[]): boolean {
+  emit(event: string | symbol, ...args: any[]): boolean { // * Using 'any[]' loses type safety
     return super.emit(event, ...args);
   }
 
@@ -650,7 +655,7 @@ class Client extends EventEmitter {
    */
   removeListener(
     event: string | symbol,
-    listener: (...args: any[]) => void
+    listener: (...args: any[]) => void // * Using 'any[]' loses type safety
   ): this {
     return super.removeListener(event, listener);
   }
@@ -672,7 +677,7 @@ class Client extends EventEmitter {
    * @param config Middleware configuration
    */
   use(middleware: MiddlewareFunction, config?: MiddlewareConfig): void {
-    this.middlewareManager.use(middleware, config);
+    this.middlewareManager.use(middleware, config); // !WARN: No validation that middlewareManager is initialized
   }
 
   /**
@@ -681,7 +686,7 @@ class Client extends EventEmitter {
    * @returns Boolean indicating whether the middleware was removed
    */
   removeMiddleware(name: string): boolean {
-    return this.middlewareManager.remove(name);
+    return this.middlewareManager.remove(name); // !WARN: No validation that middlewareManager is initialized
   }
 
   /**
@@ -689,7 +694,7 @@ class Client extends EventEmitter {
    * @returns Array of middleware configurations
    */
   getMiddlewares(): MiddlewareConfig[] {
-    return this.middlewareManager.list();
+    return this.middlewareManager.list(); // !WARN: No validation that middlewareManager is initialized
   }
 
   /**
@@ -697,15 +702,15 @@ class Client extends EventEmitter {
    * @param dialogId Dialog ID
    */
   typing(dialogId: number): void {
-    this.wsm.send(JSON.stringify({
+    this.wsm.send(JSON.stringify({ // !WARN: No error handling if wsm is not initialized or connection is closed
       command: 'typing',
-      thing_id: dialogId
+      thing_id: dialogId // * Consider validating dialogId is positive integer
     }));
   }
 
 }
 
-const Version = pkg.version;
-const Author = pkg.author;
+const Version = pkg.version; // * Consider using named imports instead of namespace import
+const Author = pkg.author; // * Consider using named imports instead of namespace import
 
 export { Client, Version, Author };
