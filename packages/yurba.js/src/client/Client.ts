@@ -233,8 +233,8 @@ class Client extends EventEmitter {
     }
 
     // Встановлюємо токен для існуючого API клієнта
-    this.api.setToken(token);
-    this.wsm = new WSM(token);
+    this.api.setToken(this.token);
+    this.wsm = new WSM(this.token);
 
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {
