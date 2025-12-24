@@ -68,21 +68,33 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  * @category Client
  */
 class Client extends EventEmitter {
-  private token?: string;
-  private prefix: string = '/';
-  private wsm!: WSM;
-  private api!: REST;
-  private messageManager!: MessageManager;
-  private commandManager: CommandManager;
-  private middlewareManager!: MiddlewareManager;
-  public users!: UserManager;
-  public userClient!: UserClientManager;
-  private _dialogs?: Dialog[];
-  private isReady: boolean = false;
+  // Options
+  private token: string | boolean | undefined;
+  public prefix: string = '/';
+
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
   private wsmMessageSubscribed: boolean = false;
   private intents: string[] = [];
+
+  // REST
+  public readonly api: REST;
+
+  // Public Managers
+  public readonly users: UserManager;
+  public readonly userClient: UserClientManager;
+
+  // System Managers
+  private wsm!: WSM;
+  private messageManager!: MessageManager;
+  private commandManager: CommandManager;
+  private middlewareManager!: MiddlewareManager;
+
+
+  // Other
+  private _dialogs?: Dialog[];
+  private isReady: boolean = false;
+
 
   /**
    * Create a Client
@@ -91,8 +103,6 @@ class Client extends EventEmitter {
    * @param options.prefix - Command prefix (default: '/')
    * @param options.maxReconnectAttempts - Maximum reconnection attempts (default: 5)
    * @param options.intents - Array of intents (e.g., ['dialogs'])
-   *
-   * @throws {YurbaError} When token format is invalid
    *
    * @example
    * ```typescript
@@ -110,7 +120,13 @@ class Client extends EventEmitter {
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
     this.intents = options.intents || [];
 
-    // Ініціалізуємо commandManager відразу щоб registerCommand був доступний
+    this.api = new REST();
+
+    this.middlewareManager = new MiddlewareManager();
+    this.messageManager = new MessageManager(this);
+    this.users = new UserManager(this, this.api);
+    this.userClient = new UserClientManager(this.api);
+    
     this.commandManager = new CommandManager(
       {
         sendMessage: this.sendMessage.bind(this),
@@ -118,6 +134,25 @@ class Client extends EventEmitter {
       },
       (userTag: string) => this.users?.fetch(userTag)
     );
+
+    Object.defineProperty(this, 'token', { 
+      value: undefined, 
+      writable: true, 
+      enumerable: false, 
+      configurable: true 
+    });
+
+    const envToken = process.env.YURBA_TOKEN || process.env.YTOKEN;
+
+    if (!this.token && envToken) {
+      /**
+       * Authorization token for the logged in bot.
+       * @type {?string}
+       */
+      this.token = envToken;
+    } else {
+      this.token = undefined;
+    }
   }
 
   /**
@@ -187,7 +222,7 @@ class Client extends EventEmitter {
    * Initializes the client
    * @returns Promise that resolves after successful initialization
    */
-  async init(token: string): Promise<void> {
+  async init(token = this.token): Promise<void> {
     this.token = token
 
     if (!this.token) {
@@ -197,14 +232,9 @@ class Client extends EventEmitter {
       throw new YurbajsError(ErrorCodes.TokenInvalid);
     }
 
-    this.api = new REST().setToken(token);
+    // Встановлюємо токен для існуючого API клієнта
+    this.api.setToken(token);
     this.wsm = new WSM(token);
-
-    this.messageManager = new MessageManager(this.api);
-    this.middlewareManager = new MiddlewareManager();
-    
-    this.users = new UserManager(this, this.api);
-    this.userClient = new UserClientManager(this.api);
 
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {

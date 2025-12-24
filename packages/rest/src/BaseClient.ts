@@ -58,7 +58,12 @@ export class BaseClient extends EventEmitter {
     };
   }
 
-  public setToken(token: string): this {
+  public setToken(token: string | null): this {
+    if (!token) {
+      delete this.defaultHeaders['token'];
+      this.clearCache();
+      return this;
+    }
     this.defaultHeaders['token'] = token;
     this.clearCache();
     return this;

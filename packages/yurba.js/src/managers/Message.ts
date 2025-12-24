@@ -1,6 +1,6 @@
 import { Message, IMessageManager } from '@yurbajs/types';
-import { REST } from '@yurbajs/rest';
 import { CDLog } from '../utils/devlog';
+import { Client } from '../client/Client';
 
 const log = CDLog('MessageManager');
 
@@ -8,14 +8,14 @@ const log = CDLog('MessageManager');
  * Message manager for client
  */
 export default class MessageManager implements IMessageManager {
-  private api: REST;
+  private client: Client;
 
   /**
    * Creates a new message manager
-   * @param api REST client
+   * @param client Client instance
    */
-  constructor(api: REST) {
-    this.api = api;
+  constructor(client: Client) {
+    this.client = client;
   }
 
   /**
@@ -34,7 +34,7 @@ export default class MessageManager implements IMessageManager {
       attachments: any[] | null = null
     ) => {
       log.debug(`Replying to message ${message.ID}:`, text);
-      return await this.api.dialogs.sendMessage(
+      return await this.client.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
         {
           text,
@@ -54,7 +54,7 @@ export default class MessageManager implements IMessageManager {
       attachments: any[] | null = null,
       edit?: number | null
     ) => {
-      const response = await this.api.dialogs.sendMessage(
+      const response = await this.client.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
         {
           text,
@@ -69,7 +69,7 @@ export default class MessageManager implements IMessageManager {
         newPhotosList: any[] | null = photos_list,
         newAttachments: any[] | null = attachments
       ) => {
-        return await this.api.dialogs.sendMessage(
+        return await this.client.api.dialogs.sendMessage(
           message.Dialog?.ID as number,
           {
             text: newText,
@@ -88,7 +88,7 @@ export default class MessageManager implements IMessageManager {
      */
     msg.delete = async () => {
       log.debug('Deleting message:', message.ID);
-      await this.api.dialogs.deleteMessage(message.ID);
+      await this.client.api.dialogs.deleteMessage(message.ID);
     };
 
     /**
@@ -101,7 +101,7 @@ export default class MessageManager implements IMessageManager {
       attachments?: any[] | null
     ) => {
       log.debug(`Editing message ${message.ID}:`, text);
-      return await this.api.dialogs.sendMessage(
+      return await this.client.api.dialogs.sendMessage(
         message.Dialog?.ID as number,
         {
           text: text || message.Text,
@@ -114,7 +114,7 @@ export default class MessageManager implements IMessageManager {
     };
 
     // Add helper methods for working with commands
-    msg.isCommand = (prefix: string = '/') => {
+    msg.isCommand = (prefix: string = this.client.prefix) => {
       return message.Text && message.Text.startsWith(prefix);
     };
     msg.getCommandArgs = (prefix: string = '/') => {
