@@ -170,12 +170,13 @@ class Client extends EventEmitter {
   get dialogs(): Dialog[] | undefined {
     // зроби якщо dialogs немає то запить api.dialogs.getAll():
     // + кешування на 2 хвилини
-    if (!this._dialogs) this.api.dialogs.getAll() // !WARN: Async operation in getter without error handling - can cause unhandled promise rejections
-      .then((dialogs: Dialog[]) => {
-        this._dialogs = dialogs;
-        return this._dialogs; // * Unnecessary return in promise chain
-      }); // !WARN: Missing .catch() for error handling
-    return this._dialogs; // !WARN: Returns undefined while async operation is pending - confusing behavior
+      if (!this._dialogs) this.api.dialogs.getAll() // !WARN: Async operation in getter without error handling - can cause unhandled promise rejections
+        .then((dialogs: Dialog[]) => {
+          this._dialogs = dialogs;
+          return this._dialogs; // * Unnecessary return in promise chain
+        }); // !WARN: Missing .catch() for error handling
+      return this._dialogs; // !WARN: Returns undefined while async operation is pending - confusing behavior
+    
   }
 
 
@@ -226,7 +227,7 @@ class Client extends EventEmitter {
    * @returns Promise that resolves after successful initialization
    */
   async init(token = this.token): Promise<void> {
-    this.token = token // * Missing semicolon
+    this.token = token; // * Missing semicolon
 
     if (!this.token) {
        throw new YurbajsError(ErrorCodes.TokenMissing);
@@ -378,25 +379,25 @@ class Client extends EventEmitter {
             this.emit('message_delete', msg.Message) // * Missing semicolon
             break;
           case 'read':
-            this.emit('read', msg.Message) // * Missing semicolon
+            this.emit('read', msg.Message); // * Missing semicolon
             break;
           case 'typing':
-            this.emit('typing', msg.Message) // * Missing semicolon
+            this.emit('typing', msg.Message); // * Missing semicolon
             break;
 
           case 'notification':
             switch (msg.Message.Type) {
               case 'post_on_wall':
-                this.emit('post_on_wall', msg.Message) // * Missing semicolon
+                this.emit('post_on_wall', msg.Message); // * Missing semicolon
                 break;
               case 'post_like':
-                this.emit('post_like', msg.Message) // * Missing semicolon
-                break // * Missing semicolon
+                this.emit('post_like', msg.Message); // * Missing semicolon
+                break; // * Missing semicolon
               case 'comment_post':
-                this.emit('comment_post', msg.Message) // * Missing semicolon
-                break // * Missing semicolon
+                this.emit('comment_post', msg.Message); // * Missing semicolon
+                break; // * Missing semicolon
             }
-            break
+            break;
           default:
             break;
         }
