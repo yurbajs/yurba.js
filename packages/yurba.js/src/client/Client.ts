@@ -116,9 +116,9 @@ class Client extends EventEmitter {
   constructor(options: ClientOptions = {}) {
     super();
 
-    this.prefix = options.prefix || '/';
-    this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
-    this.intents = options.intents || [];
+    this.prefix = options.prefix ?? '/';
+    this.maxReconnectAttempts = options.maxReconnectAttempts ?? 5;
+    this.intents = options.intents ?? [];
 
     this.api = new REST();
 
@@ -268,22 +268,18 @@ class Client extends EventEmitter {
 
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: any) => { // !WARN: Using 'any' type loses type safety
-          log('YURBA.JS ::', JSON.stringify(message, null, 2)); // * Missing semicolon
-          this.handleMessage(message); // * Missing semicolon and no error handling
-        }
-        );
+        this.wsm.on('message', (message: any) => {
+          log('YURBA.JS ::', JSON.stringify(message, null, 2));
+          this.handleMessage(message);
+        });
         this.wsmMessageSubscribed = true; // * Boolean flag is fragile - consider using WeakSet or other tracking
       }
 
-      await this.wsm.connect(this._dialogs || []);
+      await this.wsm.connect(this._dialogs ?? []);
     } catch (error) {
-      erlog('Failed to initialize clientі:', error); // !WARN: Typo in error message ('clientі' should be 'client')
+      erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
-        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)
-        }`,
-        undefined,
-        '/get_me' // ? Why hardcoded '/get_me' endpoint when error might be from other operations?
+        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }
@@ -308,7 +304,7 @@ class Client extends EventEmitter {
 
     setTimeout(async () => {
       try {
-        await this.wsm.connect(this._dialogs || []);
+        await this.wsm.connect(this._dialogs ?? []);
       } catch (error) {
         const wsError = new WebSocketError(
           `Reconnect failed: ${error instanceof Error ? error.message : String(error)
@@ -316,10 +312,8 @@ class Client extends EventEmitter {
         );
         erlog('Reconnect failed:', wsError);
         this.emit('reconnectError', wsError);
-        // !WARN: No recursive call to handleReconnect() - reconnection stops after first failure
       }
-    }, 5000 * Math.pow(2, this.reconnectAttempts - 1)); // Exponential backoff
-    // * Consider adding jitter to prevent thundering herd problem
+    }, 5000 * Math.pow(2, this.reconnectAttempts - 1));
   }
 
   /**
@@ -335,9 +329,8 @@ class Client extends EventEmitter {
       );
     } catch (err) {
       this.emit('commandError', { error: err, message: msg });
-      // Тільки викликати unknownCommand якщо це справді невідома команда
       if (err instanceof Error && err.message?.includes('Command "') && err.message?.includes('" not found.')) {
-        this.emit('unknownCommand', msg.Text, msg); // !WARN: Fragile string matching for error detection - use error codes instead
+        this.emit('unknownCommand', msg.Text, msg);
       }
     }
   }
@@ -357,14 +350,17 @@ class Client extends EventEmitter {
         switch (msg.Type) {
           case 'message':
             this.messageManager.enhanceMessage(msg.Message);
+            
+            await this.middlewareManager.execute(msg.Message);
+            
             switch (msg.Message.Type) {
               case undefined:
               case null:
-              case '': // * Consider using a default case instead of multiple falsy checks
+              case '':
                 if (msg.Message.Text.startsWith(this.prefix)) {
                   return await this.handleCommandMessage(msg.Message);
                 } else {
-                  this.emit('message', msg.Message); 
+                  this.emit('message', msg.Message);
                 }
                 break;
               case 'join':
