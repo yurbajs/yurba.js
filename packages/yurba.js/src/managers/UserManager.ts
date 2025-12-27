@@ -1,8 +1,9 @@
 import { REST } from '@yurbajs/rest';
-import { User } from '@yurbajs/types';
+import { User as UserData } from '@yurbajs/types';
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
+import { User } from '../structures/User';
 
 const log = CDLog('UserManager');
 
@@ -13,7 +14,7 @@ export default class UserManager extends CachedManager<number, User> {
   private api: REST;
 
   constructor(client: Client, api: REST, iterable?: Iterable<User>) {
-    super(client, Object as any, iterable);
+    super(client, User, iterable);
     this.api = api;
   }
 
