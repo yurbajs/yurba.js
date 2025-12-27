@@ -1,6 +1,7 @@
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
+import { User as UserData } from '@yurbajs/types';
 import { User } from '../structures/User';
 
 const log = CDLog('UserManager');
@@ -21,18 +22,20 @@ export default class UserManager extends CachedManager<number, User> {
   /**
    * Obtains a user from Yurba, or the user cache if it's already available.
    */
-  async fetch(user: number | string, { cache = true, force = false } = {}): Promise<User | null> {
+  async fetch(user: number | string, { cache = true, force = false } = {}): Promise<UserData | null> {
     const id = this.resolveId(user);
     if (!id) return null;
     
     if (!force) {
       const existing = this.cache.get(id);
-      if (existing) return existing;
+      if (existing) return existing.toJSON();
     }
 
     try {
       const data = await this.client.api.users.get(id);
-      return this._add(data, cache, { id });
+      const userInstance = new User(this.client, data);
+      if (cache) this.cache.set(id, userInstance);
+      return data;
     } catch (error) {
       log.error(`Error fetching user ${id}:`, error);
       return null;
