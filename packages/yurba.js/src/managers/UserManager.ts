@@ -1,7 +1,6 @@
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
-import { User as UserData } from '@yurbajs/types';
 import { User } from '../structures/User';
 
 const log = CDLog('UserManager');
@@ -24,7 +23,7 @@ export default class UserManager extends CachedManager<number, User> {
   /**
    * Obtains a user from Yurba, or the user cache if it's already available.
    */
-  async fetch(user: number | string, { cache = true, force = false } = {}): Promise<UserData | null> {
+  async fetch(user: number | string, { cache = true, force = false } = {}): Promise<User | null> {
     const id = this.resolveId(user);
     
     // If it's a string and not a number, check link cache first
@@ -32,7 +31,7 @@ export default class UserManager extends CachedManager<number, User> {
       const cachedId = this.linkCache.get(user);
       if (cachedId && !force) {
         const existing = this.cache.get(cachedId);
-        if (existing) return existing.toJSON();
+        if (existing) return existing;
       }
       
       // Fetch by link/tag
@@ -44,7 +43,7 @@ export default class UserManager extends CachedManager<number, User> {
           this.linkCache.set(user, data.ID);
           if (data.Link) this.linkCache.set(data.Link, data.ID);
         }
-        return data;
+        return userInstance;
       } catch (error) {
         log.error(`Error fetching user by link ${user}:`, error);
         return null;
@@ -55,7 +54,7 @@ export default class UserManager extends CachedManager<number, User> {
     
     if (!force) {
       const existing = this.cache.get(id);
-      if (existing) return existing.toJSON();
+      if (existing) return existing;
     }
 
     try {
@@ -65,7 +64,7 @@ export default class UserManager extends CachedManager<number, User> {
         this.cache.set(id, userInstance);
         if (data.Link) this.linkCache.set(data.Link, data.ID);
       }
-      return data;
+      return userInstance;
     } catch (error) {
       log.error(`Error fetching user ${id}:`, error);
       return null;

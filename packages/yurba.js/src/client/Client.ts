@@ -536,15 +536,6 @@ class Client extends EventEmitter {
   }
 
   /**
-   * Gets user information by tag
-   * @param userTag User tag
-   * @returns Promise that resolves with user data
-   */
-  async getUser(userTag: string): Promise<User | null> {
-    return this.users.fetch(userTag); // * Add validation for userTag format and length
-  }
-
-  /**
    * Gets a photo from Yurba
    * @param photoId Photo ID to retrieve
    * @returns Promise that resolves with API response
