@@ -124,7 +124,7 @@ class Client extends EventEmitter {
 
     this.middlewareManager = new MiddlewareManager();
     this.messageManager = new MessageManager(this);
-    this.users = new UserManager(this, this.api);
+    this.users = new UserManager(this);
     this.userClient = new UserClientManager(this.api);
     
     this.commandManager = new CommandManager(

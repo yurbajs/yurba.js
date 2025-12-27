@@ -1,4 +1,3 @@
-import { REST } from '@yurbajs/rest';
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
@@ -10,11 +9,8 @@ const log = CDLog('UserManager');
  * Manages API methods for users and stores their cache.
  */
 export default class UserManager extends CachedManager<number, User> {
-  private api: REST;
-
-  constructor(client: Client, api: REST, iterable?: Iterable<User>) {
+  constructor(client: Client, iterable?: Iterable<User>) {
     super(client, User, iterable);
-    this.api = api;
   }
 
   /**
@@ -35,7 +31,7 @@ export default class UserManager extends CachedManager<number, User> {
     }
 
     try {
-      const data = await this.api.users.get(id);
+      const data = await this.client.api.users.get(id);
       return this._add(data, cache, { id });
     } catch (error) {
       log.error(`Error fetching user ${id}:`, error);
