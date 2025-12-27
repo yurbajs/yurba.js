@@ -2,8 +2,6 @@ import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
 import {
-  CommandArgsSchema,
-  CommandHandler,
   Message,
   WebSocketError,
   ApiRequestError,
@@ -17,6 +15,9 @@ import {
   Photo
 } from '@yurbajs/types';
 
+
+
+import { kHandleCommand } from '../utils/symbols';
 import WSM from '../managers/websocket';
 import MessageManager from '../managers/Message';
 import CommandManager from '../managers/Command';
@@ -83,11 +84,11 @@ class Client extends EventEmitter {
   // Public Managers
   public readonly users: UserManager;
   public readonly userClient: UserClientManager;
+  public readonly commands: CommandManager;
 
   // System Managers
   private wsm!: WSM; // !WARN: Definite assignment assertion without null checks - potential runtime errors
   private messageManager!: MessageManager; // !WARN: Same issue - should initialize or add null checks
-  private commandManager: CommandManager;
   private middlewareManager!: MiddlewareManager; // !WARN: Same issue
 
 
@@ -126,14 +127,14 @@ class Client extends EventEmitter {
     this.messageManager = new MessageManager(this);
     this.users = new UserManager(this);
     this.userClient = new UserClientManager(this);
-    this.commandManager = new CommandManager(this);
+    this.commands = new CommandManager(this);
 
     Object.defineProperty(this, 'token', { 
       value: undefined, 
       writable: true, 
       enumerable: false, 
       configurable: true 
-    }); // ? Why use Object.defineProperty instead of private field? This adds complexity
+    });
 
     const envToken = process.env.YURBA_TOKEN ?? process.env.YTOKEN;
 
@@ -173,47 +174,21 @@ class Client extends EventEmitter {
   }
 
 
-  /**
-   * Registers a new command
-   * @param command Command name
-   * @param argsSchema Command arguments schema
-   * @param handler Command handler
-   *
-   * @example
-   * client.registerCommand('hello', { name: 'string' }, (message, args) => {
-   *   console.log(`Hello, ${args.name}!`);
-   * });
-   *
-   * @example
-   * client.registerCommand('add', { a: 'int', b: 'int' }, (message, args) => {
-   *   const sum = args.a + args.b;
-   *   message.reply(`The sum is ${sum}`);
-   * });
-   */
-  // TODO: треба буде переробити, типу додати ще інші хуйні типу cooldown і тд, та і переробити цю хуйню
-  // !WARN: Inappropriate language in comments - should be professional
-  // * Add validation for command name (empty string, duplicates, reserved words)
-  registerCommand(
-    command: string,
-    argsSchema: CommandArgsSchema,
-    handler: CommandHandler
-  ): void {
-    this.commandManager.registerCommand(command, argsSchema, handler);
-  }
 
 
-  /**
-   * Returns list of registered commands
-   * @returns {string[]} Array of command names
-   *
-   * @example
-   * const commands = client.getCommands();
-   * console.log('Registered commands:', commands);
-   * // Result: Registered commands: [ 'info', 'help' ]
-   */
-  public getCommands(): string[] {
-    return this.commandManager.getCommands();
-  }
+
+  // /**
+  //  * Returns list of registered commands
+  //  * @returns {string[]} Array of command names
+  //  *
+  //  * @example
+  //  * const commands = client.getCommands();
+  //  * console.log('Registered commands:', commands);
+  //  * // Result: Registered commands: [ 'info', 'help' ]
+  //  */
+  // public getCommands(): string[] {
+  //   return this.commandManager.getCommands();
+  // }
 
   /**
    * Initializes the client
@@ -316,7 +291,7 @@ class Client extends EventEmitter {
    */
   private async handleCommandMessage(msg: Message): Promise<void> {
     try {
-      await this.commandManager.handleCommand(
+      await this.commands[kHandleCommand](
         msg,
         this.messageManager.enhanceMessage.bind(this.messageManager)
       );

@@ -2,17 +2,17 @@ import {
   CommandArgsSchema,
   CommandHandler,
   Message,
-  ICommandManager,
 } from '@yurbajs/types';
 import { CommandError } from '@yurbajs/types';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
+import { kHandleCommand } from '../utils/symbols';
 
 const log = CDLog('CommandManager');
 /**
  * Command manager for client
  */
-export default class CommandManager implements ICommandManager {
+export default class CommandManager {
   private commands: Map<
     string,
     {
@@ -41,8 +41,19 @@ export default class CommandManager implements ICommandManager {
    * @param command Command name
    * @param argsSchema Command arguments schema
    * @param handler Command handler
+   *
+   * @example
+   * client.commands.register('hello', { name: 'string' }, (message, args) => {
+   *   console.log(`Hello, ${args.name}!`);
+   * });
+   *
+   * @example
+   * client.commands.register('add', { a: 'int', b: 'int' }, (message, args) => {
+   *   const sum = args.a + args.b;
+   *   message.reply(`The sum is ${sum}`);
+   * });
    */
-  registerCommand(
+  register(
     command: string,
     argsSchema: CommandArgsSchema,
     handler: CommandHandler
@@ -75,7 +86,7 @@ export default class CommandManager implements ICommandManager {
    * @param message Message object
    * @param enhanceMessage Function to enhance message
    */
-  async handleCommand(
+   async [kHandleCommand](
     message: Message,
     enhanceMessage: (msg: Message) => void
   ): Promise<void> {
@@ -125,7 +136,7 @@ export default class CommandManager implements ICommandManager {
    * @param message Message object
    * @returns Object with parsed arguments
    */
-  async parseArgs<T extends Record<string, unknown>>(
+  private async parseArgs<T extends Record<string, unknown>>(
     args: string[],
     argsSchema: CommandArgsSchema
   ): Promise<T> {
@@ -279,7 +290,7 @@ export default class CommandManager implements ICommandManager {
    * Returns list of registered commands
    * @returns Array of command names
    */
-  public getCommands(): string[] {
+  public getAll(): string[] {
     return Array.from(this.commands.keys());
   }
 
@@ -288,7 +299,7 @@ export default class CommandManager implements ICommandManager {
    * @param command Command name
    * @returns Object with command information or undefined if command not found
    */
-  public getCommandInfo(
+  public get(
     command: string
   ): { argsSchema: CommandArgsSchema; description?: string } | undefined {
     const commandInfo = this.commands.get(command);
@@ -304,7 +315,7 @@ export default class CommandManager implements ICommandManager {
    * @param command Command name
    * @returns true if command was removed, false otherwise
    */
-  public removeCommand(command: string): boolean {
+  public remove(command: string): boolean {
     const result = this.commands.delete(command);
 
     // Remove all aliases for this command

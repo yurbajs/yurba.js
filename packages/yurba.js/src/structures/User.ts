@@ -22,4 +22,12 @@ export class User extends Base {
   toJSON(): UserData {
     return this._data;
   }
+
+  /**
+   * Checks if the user is a bot
+   * @returns {boolean} True if user is a bot (link ends with _bot)
+   */
+  get bot(): boolean {
+    return this._data.Link?.endsWith('_bot') ?? false;
+  }
 }

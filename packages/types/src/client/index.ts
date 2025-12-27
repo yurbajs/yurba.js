@@ -23,7 +23,7 @@ export interface MiddlewareFunction {
 }
 
 export interface ICommandManager {
-  registerCommand(command: string, argsSchema: CommandArgsSchema, handler: CommandHandler): void;
+  regusre(command: string, argsSchema: CommandArgsSchema, handler: CommandHandler): void;
   getCommands(): string[];
   handleCommand(message: Message, enhanceMessage: (msg: Message) => void): Promise<void>;
 }
