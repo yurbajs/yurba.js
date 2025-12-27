@@ -13,6 +13,7 @@ export const en = {
     introduction: "Introduction",
     installation: "Installation",
     quickStart: "Quick Start",
+
     creatingBot: "Creating a Bot",
     commands: "Commands",
     events: "Events",

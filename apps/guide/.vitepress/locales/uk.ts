@@ -14,6 +14,7 @@ export const uk = {
     installation: "Встановлення",
     quickStart: "Швидкий старт",
     creatingBot: "Створення бота",
+    "What's new": "Що нового?",
     commands: "Команди",
     events: "Події",
     overview: "Огляд",

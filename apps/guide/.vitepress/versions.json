@@ -1,9 +1,9 @@
 {
-  "current": "1.0.0",
+  "current": ".Next.15",
   "versions": [
     {
-      "version": "1.0.0",
-      "label": "v1.0.0 (current)",
+
+      "label": "Next.15 (current)",
       "path": "/",
       "archived": false
     }

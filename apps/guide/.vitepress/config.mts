@@ -335,7 +335,7 @@ function createSidebar(lang: 'en' | 'uk') {
           link: lang === 'uk' ? '/uk/introduction' : '/introduction' 
         },
         { 
-          text: "What's new", 
+          text: lang === 'uk' ? t('sidebar.What\'s new', 'uk') : t('sidebar.What\'s new', 'en'), 
           link: lang === 'uk' ? '/uk/welcome/whats-new' : '/welcome/whats-new' 
         }
       ]
