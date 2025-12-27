@@ -10,6 +10,8 @@ const log = CDLog('UserManager');
  * Manages API methods for users and stores their cache.
  */
 export default class UserManager extends CachedManager<number, User> {
+  private linkCache = new Map<string, number>(); // link -> ID mapping
+
   constructor(client: Client, iterable?: Iterable<User>) {
     super(client, User, iterable);
   }
@@ -24,6 +26,18 @@ export default class UserManager extends CachedManager<number, User> {
    */
   async fetch(user: number | string, { cache = true, force = false } = {}): Promise<UserData | null> {
     const id = this.resolveId(user);
+    if (!id && typeof user === 'string') {
+      // Try to fetch by link if not a number
+      try {
+        const data = await this.client.api.users.get(user);
+        const userInstance = new User(this.client, data);
+        if (cache) this.cache.set(data.ID, userInstance);
+        return data;
+      } catch (error) {
+        log.error(`Error fetching user by link ${user}:`, error);
+        return null;
+      }
+    }
     if (!id) return null;
     
     if (!force) {

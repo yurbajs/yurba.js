@@ -5,7 +5,7 @@ import {
   ICommandManager,
 } from '@yurbajs/types';
 import { CommandError } from '@yurbajs/types';
-
+import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
 
 const log = CDLog('CommandManager');
@@ -20,11 +20,7 @@ export default class CommandManager implements ICommandManager {
       argsSchema: CommandArgsSchema;
     }
   >;
-  private api: {
-    sendMessage: (...args: any[]) => Promise<any>; // !WARN: Using 'any' types loses type safety
-    deleteMessage: (id: number) => Promise<any>; // !WARN: Using 'any' types loses type safety
-  };
-  private getUser: (userTag: string) => Promise<any>; // !WARN: Using 'any' type loses type safety
+  protected client;
   private aliases: Map<string, string> = new Map();
   private cooldowns: Map<string, Map<number, number>> = new Map(); // * Cooldowns declared but never used
 
@@ -34,15 +30,10 @@ export default class CommandManager implements ICommandManager {
    * @param getUser Function to get user
    */
   constructor(
-    api: {
-      sendMessage: (...args: any[]) => Promise<any>; // !WARN: Using 'any' types loses type safety
-      deleteMessage: (id: number) => Promise<any>; // !WARN: Using 'any' types loses type safety
-    },
-    getUser: (userTag: string) => Promise<any> // !WARN: Using 'any' type loses type safety
+    client: Client
   ) {
     this.commands = new Map();
-    this.api = api;
-    this.getUser = getUser;
+    this.client = client;
   }
 
   /**
@@ -186,9 +177,9 @@ export default class CommandManager implements ICommandManager {
           );
         } else {
           // If argument is optional, use default value
-          if (type === 'user' && defaultValue && this.getUser) {
+          if (type === 'user' && defaultValue && this.client.users) {
             try {
-              const user = await this.getUser(defaultValue);
+              const user = await this.client.users.fetch(defaultValue);
               parsedArgs[argName] = user;
             } catch (error) {
               log.error(`Default user "${defaultValue}" not found:`, error);
@@ -245,7 +236,7 @@ export default class CommandManager implements ICommandManager {
           break;
         }
         case 'user': {
-          if (!this.getUser)
+          if (!this.client.users)
             throw new CommandError(
               'getUser function not provided',
               'parseArgs'
@@ -254,7 +245,7 @@ export default class CommandManager implements ICommandManager {
             ? argValue.slice(1)
             : argValue;
           try {
-            const user = await this.getUser(userTag);
+            const user = await this.client.users.fetch(userTag);
             if (!user) {
               throw new CommandError(
                 `User "${argValue}" not found.`,

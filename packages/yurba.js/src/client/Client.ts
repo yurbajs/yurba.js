@@ -126,14 +126,7 @@ class Client extends EventEmitter {
     this.messageManager = new MessageManager(this);
     this.users = new UserManager(this);
     this.userClient = new UserClientManager(this.api);
-    
-    this.commandManager = new CommandManager(
-      {
-        sendMessage: this.sendMessage.bind(this),
-        deleteMessage: this.deleteMessage.bind(this),
-      },
-      (userTag: string) => this.users?.fetch(userTag)
-    );
+    this.commandManager = new CommandManager(this);
 
     Object.defineProperty(this, 'token', { 
       value: undefined, 
