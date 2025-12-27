@@ -14,7 +14,7 @@ class LRUCache<K, V> {
     this.ttl = ttl;
   }
 
-  set(key: K, value: V): this {
+  protected set(key: K, value: V): this {
     const entry = { value, timestamp: Date.now() };
 
     if (this.cache.has(key)) {
@@ -93,7 +93,7 @@ export default class CachedManager<K, V> extends DataManager<K, V> {
     return this._cache as any;
   }
 
-  _add(data: any, cache = true, { id, extras = [] }: { id?: K; extras?: any[] } = {}): V {
+  protected _add(data: any, cache = true, { id, extras = [] }: { id?: K; extras?: any[] } = {}): V {
     const existing = this.cache.get(id ?? data.id);
     if (existing) {
       if (cache) {
