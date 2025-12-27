@@ -6,7 +6,13 @@ import { Client } from '../client/Client';
 export default abstract class BaseManager {
   protected client!: Client;
 
+
   constructor(client: Client) {
-    Object.defineProperty(this, 'client', { value: client });
+    Object.defineProperty(this, 'client', {
+        value: client,
+        enumerable: false, 
+        writable: true,
+        configurable: true
+      });
   }
 }
