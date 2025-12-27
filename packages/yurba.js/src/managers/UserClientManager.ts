@@ -1,15 +1,16 @@
-import { REST } from '@yurbajs/rest';
-import { User } from '@yurbajs/types';
+import { User as UserData } from '@yurbajs/types';
+import { User } from '../structures/User';
+import { Client } from '../client/Client';
 
 export default class UserClientManager {
-  private api: REST;
+  private client: Client;
   private _user?: User;
   private _lastFetch: number = 0;
   private _cacheTTL: number = 120000; // 2 minutes
   private _fetchPromise?: Promise<User>;
 
-  constructor(api: REST) {
-    this.api = api;
+  constructor(client: Client) {
+    this.client = client;
   }
 
   async fetch(force = false): Promise<User> {
@@ -24,7 +25,7 @@ export default class UserClientManager {
       return this._fetchPromise;
     }
 
-    this._fetchPromise = this.api.users.me().then(user => {
+    this._fetchPromise = this.client.api.users.me().then(user => {
       this._user = user;
       this._lastFetch = Date.now();
       this._fetchPromise = undefined;

@@ -125,7 +125,7 @@ class Client extends EventEmitter {
     this.middlewareManager = new MiddlewareManager();
     this.messageManager = new MessageManager(this);
     this.users = new UserManager(this);
-    this.userClient = new UserClientManager(this.api);
+    this.userClient = new UserClientManager(this);
     this.commandManager = new CommandManager(this);
 
     Object.defineProperty(this, 'token', { 
