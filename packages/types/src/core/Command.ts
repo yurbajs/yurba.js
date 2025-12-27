@@ -16,8 +16,8 @@ import { Message } from '../api';
  * { type: 'string', rest: true }
  */
 export type CommandArgsSchemaEntry = {
-    type: 'string' | 'int'; // The type of the argument.
-    required?: boolean;     // Whether the argument is required.
+    type: 'string' | 'int' | 'float' | 'boolean' | 'user' | 'repost';  // Type of the argument
+    required?: boolean;     // Whether the argument is required
     default?: any;          // Default value if not provided.
     rest?: boolean;         // If true, captures the rest of the arguments.
 };
