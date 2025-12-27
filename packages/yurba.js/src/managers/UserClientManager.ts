@@ -25,7 +25,8 @@ export default class UserClientManager {
       return this._fetchPromise;
     }
 
-    this._fetchPromise = this.client.api.users.me().then(user => {
+    this._fetchPromise = this.client.api.users.me().then(userData => {
+      const user = new User(this.client, userData);
       this._user = user;
       this._lastFetch = Date.now();
       this._fetchPromise = undefined;
@@ -35,12 +36,12 @@ export default class UserClientManager {
     return this._fetchPromise;
   }
 
-  get(): User | null {
+  get(): UserData | null {
     if (!this._user) {
       this.fetch().catch(() => {});
       return null;
     }
-    return this._user;
+    return this._user.toJSON();
   }
 
   invalidate(): void {
