@@ -72,6 +72,10 @@ export default class CommandManager {
    * Adds alias for command
    * @param alias Command alias
    * @param command Original command
+   *
+   * @example
+   * client.commands.addAlias('h', 'help');
+   * // Now both 'help' and 'h' will execute the same command
    */
   addAlias(alias: string, command: string): void {
     if (!this.commands.has(command)) {
@@ -288,7 +292,12 @@ export default class CommandManager {
 
   /**
    * Returns list of registered commands
-   * @returns Array of command names
+   * @returns {string[]} Array of command names
+   *
+   * @example
+   * const commands = client.commands.getAll();
+   * console.log('Registered commands:', commands);
+   * // Result: Registered commands: [ 'info', 'help' ]
    */
   public getAll(): string[] {
     return Array.from(this.commands.keys());
@@ -297,7 +306,13 @@ export default class CommandManager {
   /**
    * Returns command information
    * @param command Command name
-   * @returns Object with command information or undefined if command not found
+   * @returns {Object|undefined} Object with command information or undefined if command not found
+   *
+   * @example
+   * const cmdInfo = client.commands.get('help');
+   * if (cmdInfo) {
+   *   console.log('Command args schema:', cmdInfo.argsSchema);
+   * }
    */
   public get(
     command: string
@@ -313,7 +328,11 @@ export default class CommandManager {
   /**
    * Removes command
    * @param command Command name
-   * @returns true if command was removed, false otherwise
+   * @returns {boolean} true if command was removed, false otherwise
+   *
+   * @example
+   * const removed = client.commands.remove('help');
+   * console.log('Command removed:', removed); // true or false
    */
   public remove(command: string): boolean {
     const result = this.commands.delete(command);
