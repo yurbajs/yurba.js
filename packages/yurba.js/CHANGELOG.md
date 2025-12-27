@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.14](https://github.com/yurbajs/yurba.js/compare/yurba.js@1.0.0-next.13...yurba.js@1.0.0-next.14) (2025-12-27)
+
+**Note:** Version bump only for package yurba.js
+
+
+
+
+
 # [1.0.0-next.13](https://github.com/yurbajs/yurba.js/compare/yurba.js@1.0.0-next.12...yurba.js@1.0.0-next.13) (2025-12-27)
 
 
