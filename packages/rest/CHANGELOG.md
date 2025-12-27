@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.13](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.12...@yurbajs/rest@1.0.0-next.13) (2025-12-27)
+
+
+### Bug Fixes
+
+* **yurbajs & REST:** fix tests ([6487efe](https://github.com/rastgame/yurba.js/commit/6487efeb652fb9a45ac5bdecc265eab24cf16064))
+* **yurbajs:**  remove time-test,  tests with get user (lazy) [Failed], ([fb7396e](https://github.com/rastgame/yurba.js/commit/fb7396e8efdae922d144b54b8fca84e1e0a90458))
+* **yurbajs:** comments (warns and other) ([e86c12d](https://github.com/rastgame/yurba.js/commit/e86c12d5b609f09ae87483b060e60d66dd55f973))
+
+
+
+
+
 # [1.0.0-next.12](https://github.com/rastgame/yurba.js/compare/@yurbajs/rest@1.0.0-next.11...@yurbajs/rest@1.0.0-next.12) (2025-11-09)
 
 **Note:** Version bump only for package @yurbajs/rest

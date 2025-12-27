@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.11](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@1.0.0-next.10...@yurbajs/types@1.0.0-next.11) (2025-12-27)
+
+
+### Bug Fixes
+
+* **types:** correct argsshema ([af40a6f](https://github.com/rastgame/yurba.js/commit/af40a6fb67116944ade9cb84c58e3c0a55acf32f))
+
+
+### Features
+
+* **yurbajs:** managers ([01f5465](https://github.com/rastgame/yurba.js/commit/01f5465310cecbc74f0ffc8a3a3996af2f7d7625))
+
+
+
+
+
 # [1.0.0-next.10](https://github.com/rastgame/yurba.js/compare/@yurbajs/types@1.0.0-next.9...@yurbajs/types@1.0.0-next.10) (2025-11-09)
 
 **Note:** Version bump only for package @yurbajs/types
