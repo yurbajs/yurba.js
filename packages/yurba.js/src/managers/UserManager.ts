@@ -26,18 +26,31 @@ export default class UserManager extends CachedManager<number, User> {
    */
   async fetch(user: number | string, { cache = true, force = false } = {}): Promise<UserData | null> {
     const id = this.resolveId(user);
+    
+    // If it's a string and not a number, check link cache first
     if (!id && typeof user === 'string') {
-      // Try to fetch by link if not a number
+      const cachedId = this.linkCache.get(user);
+      if (cachedId && !force) {
+        const existing = this.cache.get(cachedId);
+        if (existing) return existing.toJSON();
+      }
+      
+      // Fetch by link/tag
       try {
         const data = await this.client.api.users.get(user);
         const userInstance = new User(this.client, data);
-        if (cache) this.cache.set(data.ID, userInstance);
+        if (cache) {
+          this.cache.set(data.ID, userInstance);
+          this.linkCache.set(user, data.ID);
+          if (data.Link) this.linkCache.set(data.Link, data.ID);
+        }
         return data;
       } catch (error) {
         log.error(`Error fetching user by link ${user}:`, error);
         return null;
       }
     }
+    
     if (!id) return null;
     
     if (!force) {
@@ -48,7 +61,10 @@ export default class UserManager extends CachedManager<number, User> {
     try {
       const data = await this.client.api.users.get(id);
       const userInstance = new User(this.client, data);
-      if (cache) this.cache.set(id, userInstance);
+      if (cache) {
+        this.cache.set(id, userInstance);
+        if (data.Link) this.linkCache.set(data.Link, data.ID);
+      }
       return data;
     } catch (error) {
       log.error(`Error fetching user ${id}:`, error);
