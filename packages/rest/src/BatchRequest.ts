@@ -70,6 +70,7 @@ export class BatchRequest {
 
   /**
    * Get the number of requests in the batch
+   * @returns Number of requests
    */
   size(): number {
     return this.requests.size;
@@ -84,6 +85,7 @@ export class BatchRequest {
 
   /**
    * Check if batch has any requests
+   * @returns True if batch is empty
    */
   isEmpty(): boolean {
     return this.requests.size === 0;
@@ -91,6 +93,7 @@ export class BatchRequest {
 
   /**
    * Get all request keys
+   * @returns Array of request keys
    */
   getKeys(): string[] {
     return Array.from(this.requests.keys());

@@ -1,4 +1,4 @@
-import { User as UserData } from '@yurbajs/types';
+import { UserModel } from '@yurbajs/types';
 import { User } from '../structures/User';
 import { Client } from '../client/Client';
 
@@ -36,7 +36,7 @@ export default class UserClientManager {
     return this._fetchPromise;
   }
 
-  get(): UserData | null {
+  get(): UserModel | null {
     if (!this._user) {
       this.fetch().catch(() => {});
       return null;

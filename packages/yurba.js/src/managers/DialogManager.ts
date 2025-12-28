@@ -1,5 +1,5 @@
 import { REST } from '@yurbajs/rest';
-import { Dialog } from '@yurbajs/types';
+import { DialogModel } from '@yurbajs/types';
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
@@ -9,10 +9,10 @@ const log = CDLog('DialogManager');
 /**
  * Manages API methods for dialogs and stores their cache.
  */
-export default class DialogManager extends CachedManager<number, Dialog> {
+export default class DialogManager extends CachedManager<number, DialogModel> {
   private api: REST;
 
-  constructor(client: Client, api: REST, iterable?: Iterable<Dialog>) {
+  constructor(client: Client, api: REST, iterable?: Iterable<DialogModel>) {
     super(client, Object as any, iterable);
     this.api = api;
   }
@@ -25,7 +25,7 @@ export default class DialogManager extends CachedManager<number, Dialog> {
   /**
    * Obtains a dialog from Yurba, or the dialog cache if it's already available.
    */
-  async fetch(dialogId: number, { cache = true, force = false } = {}): Promise<Dialog | null> {
+  async fetch(dialogId: number, { cache = true, force = false } = {}): Promise<DialogModel | null> {
     if (!force) {
       const existing = this.cache.get(dialogId);
       if (existing) return existing;
@@ -43,7 +43,7 @@ export default class DialogManager extends CachedManager<number, Dialog> {
   /**
    * Resolves a dialog resolvable to a Dialog object.
    */
-  resolve(dialog: any): Dialog | null {
+  resolve(dialog: any): DialogModel | null {
     return super.resolve(dialog);
   }
 

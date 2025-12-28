@@ -1,4 +1,4 @@
-import { Message, IMessageManager } from '@yurbajs/types';
+import { MessageModel, IMessageManager } from '@yurbajs/types';
 import { CDLog } from '../utils/devlog';
 import { Client } from '../client/Client';
 
@@ -22,7 +22,7 @@ export default class MessageManager implements IMessageManager {
    * Enhances message object with additional methods
    * @param message Message object
    */
-  enhanceMessage(message: Message): void {
+  enhanceMessage(message: MessageModel): void {
     log.debug('Enhancing message:', message.ID);
     const msg = message as any; // !WARN: Using 'any' loses all type safety for enhanced message
     /**

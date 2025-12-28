@@ -1,5 +1,5 @@
 import { REST } from '@yurbajs/rest';
-import { DialogMember } from '@yurbajs/types';
+import { DialogMemberModel } from '@yurbajs/types';
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
@@ -9,11 +9,11 @@ const log = CDLog('DialogMemberManager');
 /**
  * Manages API methods for dialog members and stores their cache.
  */
-export default class DialogMemberManager extends CachedManager<string, DialogMember> {
+export default class DialogMemberManager extends CachedManager<string, DialogMemberModel> {
   private api: REST;
   private dialogId: number;
 
-  constructor(client: Client, api: REST, dialogId: number, iterable?: Iterable<DialogMember>) {
+  constructor(client: Client, api: REST, dialogId: number, iterable?: Iterable<DialogMemberModel>) {
     super(client, Object as any, iterable);
     this.api = api;
     this.dialogId = dialogId;
@@ -54,7 +54,7 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
   /**
    * Add member to dialog
    */
-  async add(userId: number): Promise<DialogMember | null> {
+  async add(userId: number): Promise<DialogMemberModel | null> {
     try {
       const data = await this.api.dialogs.addMember(this.dialogId, userId);
       const cacheKey = this.getCacheKey(userId);
@@ -91,7 +91,7 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
   /**
    * Resolves a member resolvable to a DialogMember object.
    */
-  resolve(member: any): DialogMember | null {
+  resolve(member: any): DialogMemberModel | null {
     return super.resolve(member);
   }
 

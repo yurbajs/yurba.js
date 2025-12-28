@@ -1,5 +1,5 @@
 import {
-  Message,
+  MessageModel,
   IMiddlewareManager,
   MiddlewareFunction,
   MiddlewareConfig,
@@ -19,8 +19,8 @@ export default class MiddlewareManager implements IMiddlewareManager {
     config: Partial<MiddlewareConfig> = {}
   ): void {
     const fullConfig: MiddlewareConfig = {
-      name: config.name || `middleware_${Date.now()}`,
-      enabled: config.enabled !== undefined ? config.enabled : true,
+      name: config.name ?? `middleware_${Date.now()}`,
+      enabled: config.enabled ?? true,
     };
     if (this.middlewares.has(fullConfig.name)) {
       throw new Error(
@@ -44,10 +44,10 @@ export default class MiddlewareManager implements IMiddlewareManager {
     return result;
   }
 
-  async execute(message: Message): Promise<void> {
+  async execute(message: MessageModel): Promise<void> {
     const sortedMiddlewares = Array.from(this.middlewares.values())
       .filter(({ config }) => config.enabled)
-      .sort((a, b) => (b.config.priority || 0) - (a.config.priority || 0));
+      .sort((a, b) => (b.config.priority ?? 0) - (a.config.priority ?? 0));
 
     for (const { fn, config } of sortedMiddlewares) {
       try {
