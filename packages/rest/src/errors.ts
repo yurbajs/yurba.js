@@ -22,14 +22,26 @@ export class ApiError extends Error {
     this.method = method;
   }
 
+  /**
+   * Check if error is a client error (4xx)
+   * @returns True if status code is between 400-499
+   */
   isClientError(): boolean {
     return this.status >= 400 && this.status < 500;
   }
 
+  /**
+   * Check if error is a server error (5xx)
+   * @returns True if status code is 500 or higher
+   */
   isServerError(): boolean {
     return this.status >= 500;
   }
 
+  /**
+   * Check if error is a network error
+   * @returns True if status code is 0 (network failure)
+   */
   isNetworkError(): boolean {
     return this.status === 0;
   }
@@ -48,15 +60,26 @@ export class RateLimiter {
     this.windowMs = config.windowMs;
   }
 
+  /**
+   * Check if a request can be made within rate limits
+   * @returns True if request is allowed
+   */
   canMakeRequest(): boolean {
     this.cleanup();
     return this.requests.length < this.maxRequests;
   }
 
+  /**
+   * Record a new request timestamp
+   */
   recordRequest(): void {
     this.requests.push(Date.now());
   }
 
+  /**
+   * Get timestamp when rate limit resets
+   * @returns Reset timestamp
+   */
   getResetTime(): number {
     if (this.requests.length === 0) return Date.now();
     return this.requests[0] + this.windowMs;

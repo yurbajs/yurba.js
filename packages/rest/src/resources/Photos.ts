@@ -9,9 +9,10 @@ export class PhotosResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Photos Core }
-  */
+  /**
+   * Photos Core
+   * @namespace
+   */
 
   /**
    * Gets all photos (up to 12 per page)

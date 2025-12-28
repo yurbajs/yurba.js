@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { User, RelationshipsResult, FindUserPayload, Gift, BaseOkay } from '@yurbajs/types';
+import { UserModel, RelationshipsResult, FindUserPayload, Gift, BaseOkay } from '@yurbajs/types';
 
 export class UserResource {
   /**
@@ -7,9 +7,10 @@ export class UserResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Users Core }
-  */
+  /**
+   * Users Core
+   * @namespace
+   */
 
   /**
    * Gets current user information
@@ -21,8 +22,8 @@ export class UserResource {
    * const me = await rest.users.me();
    * ```
    */
-  async me(): Promise<User> {
-    return this.client.get<User>('/get_me');
+  async me(): Promise<UserModel> {
+    return this.client.get<UserModel>('/get_me');
   }
 
   /**
@@ -30,7 +31,7 @@ export class UserResource {
    * @group Users Core
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
-   * @returns {Promise<User>} {@link User} User information
+   * @returns {Promise<UserModel>} {@link UserModel} User information
    * @throws {Error} If user identifier is invalid
    * @example
    * ```javascript
@@ -39,22 +40,23 @@ export class UserResource {
    * const userByUid = await rest.users.get('u12345');
    * ```
    */
-  async get(user: string | number): Promise<User> {
+  async get(user: string | number): Promise<UserModel> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.get<User>(`/user/${resolvedUser}`);
+    return this.client.get<UserModel>(`/user/${resolvedUser}`);
   }
 
-  /* 
-  //               { User Friends }
-  */
+  /**
+   * User Friends
+   * @namespace
+   */
 
   /**
    * Gets current user's friends
    * @group User Friends
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @returns {Promise<UserModel[]>} Array of {@link UserModel} objects
    * @throws {Error} If user not found in cache
    * @example
    * ```javascript
@@ -62,11 +64,11 @@ export class UserResource {
    * const nextPage = await rest.users.friends(1);
    * ```
    */
-  async friends(page: number = 0): Promise<User[]> {
+  async friends(page: number = 0): Promise<UserModel[]> {
     if (page < 0) throw new Error('Invalid page number');
     const user = await this.client.getCachedUser();
     if (!user) throw new Error('User not found in cache');
-    return this.client.get<User[]>(`/user/${user.id}/friends`, { page });
+    return this.client.get<UserModel[]>(`/user/${user.id}/friends`, { page });
   }
 
   /**
@@ -75,7 +77,7 @@ export class UserResource {
    * @param user - User ({tag}/{id}/u{id})
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @returns {Promise<UserModel[]>} Array of {@link UserModel} objects
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -83,15 +85,16 @@ export class UserResource {
    * const friendsById = await rest.users.getFriends(12345, 1);
    * ```
    */
-  async getFriends(user: string | number, page: number): Promise<User[]> {
+  async getFriends(user: string | number, page: number): Promise<UserModel[]> {
     if (!user || page < 0) throw new Error('Invalid parameters');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.get<User[]>(`/user/${resolvedUser}/friends`, { page });
+    return this.client.get<UserModel[]>(`/user/${resolvedUser}/friends`, { page });
   }
 
-  /* 
-  //               { User Gifts }
-  */
+  /**
+   * User Gifts
+   * @namespace
+   */
 
   /**
    * Gets current user's gifts
@@ -178,7 +181,7 @@ export class UserResource {
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @returns {Promise<UserModel[]>} Array of {@link UserModel} objects
    * @throws {Error} If page number is invalid
    * @example
    * ```javascript
@@ -186,9 +189,9 @@ export class UserResource {
    * const nextPage = await rest.users.incomingRequests(1);
    * ```
    */
-  async incomingRequests(page: number = 0): Promise<User[]> {
+  async incomingRequests(page: number = 0): Promise<UserModel[]> {
     if (page < 0) throw new Error('Invalid page number');
-    return this.client.get<User[]>('/incoming_requests', { page });
+    return this.client.get<UserModel[]>('/incoming_requests', { page });
   }
 
   /**
@@ -196,7 +199,7 @@ export class UserResource {
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
-   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @returns {Promise<UserModel[]>} Array of {@link UserModel} objects
    * @throws {Error} If page number is invalid
    * @example
    * ```javascript
@@ -204,9 +207,9 @@ export class UserResource {
    * const nextPage = await rest.users.outgoingRequests(1);
    * ```
    */
-  async outgoingRequests(page: number = 0): Promise<User[]> {
+  async outgoingRequests(page: number = 0): Promise<UserModel[]> {
     if (page < 0) throw new Error('Invalid page number');
-    return this.client.get<User[]>('/outcoming_requests', { page });
+    return this.client.get<UserModel[]>('/outcoming_requests', { page });
   }
 
   /**
@@ -228,11 +231,11 @@ export class UserResource {
 
   /**
    * Find users
-   * @group User Core
+   * @group Users Core
    * @param payload - Search filters
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<User[]>} User list
+   * @returns {Promise<UserModel[]>} User list
    * @deprecated Use rest.search.users() instead
    * @example
    * ```javascript
@@ -249,7 +252,7 @@ export class UserResource {
    * });
    * ```
    */
-  async find(payload: FindUserPayload, page: number = 0): Promise<User[]> {
+  async find(payload: FindUserPayload, page: number = 0): Promise<UserModel[]> {
     return this.client.search.users(payload, page);
   }
 }

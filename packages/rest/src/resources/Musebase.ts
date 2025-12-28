@@ -15,9 +15,10 @@ export class MusebaseResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Tracks }
-  */
+  /**
+   * Tracks
+   * @namespace
+   */
 
   /**
    * Gets a track by identifier
@@ -36,9 +37,10 @@ export class MusebaseResource {
     return this.client.get<Track>(`/musebase/${trackId}`);
   }
 
-  /* 
-  //               { Playlists }
-  */
+  /**
+   * Playlists
+   * @namespace
+   */
 
   /**
    * Creates a new playlist

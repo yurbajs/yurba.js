@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { CreatePostPayload, GetPostPayload, Post, DeletePostResponse, Comment, BaseDelete } from '@yurbajs/types';
+import { CreatePostPayload, GetPostPayload, PostModel, DeletePostResponse, Comment, BaseDelete } from '@yurbajs/types';
 
 export class PostResource {
   /**
@@ -7,9 +7,10 @@ export class PostResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Posts Core }
-  */
+  /**
+   * Posts Core
+   * @namespace
+   */
 
   /**
    * Gets posts from user
@@ -17,7 +18,7 @@ export class PostResource {
    * @param user - User ({tag}/{id}/u{id}/@me)
    * @param payload - {@link GetPostPayload} Get posts parameters
    * @since 1.0.0
-   * @returns {Promise<Post[]>} Array of {@link Post} objects
+   * @returns {Promise<PostModel[]>} Array of {@link PostModel} objects
    * @throws {Error} If user is invalid
    * @example
    * ```javascript
@@ -28,12 +29,12 @@ export class PostResource {
    * const olderPosts = await rest.posts.get('username', { lastId: 123 });
    * ```
    */
-  async get(user: string | number, payload: GetPostPayload): Promise<Post[]> {
+  async get(user: string | number, payload: GetPostPayload): Promise<PostModel[]> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     const resolvedUser = await this.client.resolveUser(user);
     const params: Record<string, unknown> = { last_id: payload.lastId || 0, feed: payload.feed || false };
     if ('lang' in payload && payload.lang) params.lang = payload.lang;
-    return this.client.get<Post[]>(`/user/${resolvedUser}/posts`, params);
+    return this.client.get<PostModel[]>(`/user/${resolvedUser}/posts`, params);
   }
 
   /**
@@ -42,7 +43,7 @@ export class PostResource {
    * @param user - User ({tag}/{id}/u{id}/@me)
    * @param payload - {@link CreatePostPayload} Post data
    * @since 1.0.0
-   * @returns {Promise<Post>} {@link Post} Created post
+   * @returns {Promise<PostModel>} {@link PostModel} Created post
    * @throws {Error} If user or data is invalid
    * @example
    * ```javascript
@@ -79,11 +80,11 @@ export class PostResource {
    * });
    * ```
    */
-  async create(user: string | number, payload: CreatePostPayload): Promise<Post> {
+  async create(user: string | number, payload: CreatePostPayload): Promise<PostModel> {
     if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
     if (!payload || !payload.content) throw new Error('Invalid post data');
     const resolvedUser = await this.client.resolveUser(user);
-    return this.client.post<Post>(`/user/${resolvedUser}/post`, payload);
+    return this.client.post<PostModel>(`/user/${resolvedUser}/post`, payload);
   }
 
   /**
@@ -109,7 +110,7 @@ export class PostResource {
    * @param postId - Post identifier
    * @param data - {@link CreatePostPayload} Updated post data
    * @since 1.0.0
-   * @returns {Promise<Post>} {@link Post} Updated post
+   * @returns {Promise<PostModel>} {@link PostModel} Updated post
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -118,15 +119,16 @@ export class PostResource {
    * });
    * ```
    */
-  async edit(postId: number, data: CreatePostPayload): Promise<Post> {
+  async edit(postId: number, data: CreatePostPayload): Promise<PostModel> {
     if (postId < 1) throw new Error('Invalid post ID');
     if (!data || (!data.content && !data.photos_list?.length)) throw new Error('Invalid post data');
-    return this.client.patch<Post>(`/posts/${postId}`, data);
+    return this.client.patch<PostModel>(`/posts/${postId}`, data);
   }
 
-  /* 
-  //               { Post Comments }
-  */
+  /**
+   * Post Comments
+   * @namespace
+   */
 
   /**
    * Gets comments from post
@@ -134,7 +136,7 @@ export class PostResource {
    * @param postId - Post identifier
    * @param lastId - Last comment ID for pagination
    * @since 1.0.0
-   * @returns {Promise<any[]>} Array of comments
+   * @returns {Promise<Comment[]>} Array of comments
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -154,7 +156,7 @@ export class PostResource {
    * @param content - Comment content
    * @param photos - Photo IDs array
    * @since 1.0.0
-   * @returns {Promise<any>} Created comment
+   * @returns {Promise<Comment>} Created comment
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -173,7 +175,7 @@ export class PostResource {
    * @group Post Comments
    * @param commentId - Comment identifier
    * @since 1.0.0
-   * @returns {Promise<any>} Delete response
+   * @returns {Promise<BaseDelete>} Delete response
    * @throws {Error} If comment ID is invalid
    * @example
    * ```javascript

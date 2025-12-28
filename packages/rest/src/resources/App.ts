@@ -13,9 +13,10 @@ export class AppResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Apps Core }
-  */
+  /**
+   * Apps Core
+   * @namespace
+   */
 
   /**
    * Gets all apps
@@ -87,9 +88,10 @@ export class AppResource {
     return this.client.delete<BaseOkay>(`/apps/${appId}`);
   }
 
-  /* 
-  //               { App Tokens }
-  */
+  /**
+   * App Tokens
+   * @namespace
+   */
 
   /**
    * Gets app token
@@ -167,7 +169,7 @@ export class AppResource {
    * @param token - App token
    * @param secretKey - App secret key
    * @since 1.0.0
-   * @returns {Promise<Author>} {@link Author} object
+   * @returns {Promise<ShortUserModel>} {@link ShortUserModel} object
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript

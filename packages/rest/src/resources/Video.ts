@@ -8,9 +8,10 @@ export class VideoResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Video Core }
-  */
+  /**
+   * Video Core
+   * @namespace
+   */
 
   /**
    * Gets a video by identifier

@@ -40,7 +40,7 @@ export class BaseClient extends EventEmitter {
     super();
     
     this.options = {
-      baseURL: 'https://api.yurba.one', // * Hardcoded API URL - should be configurable
+      baseURL: 'https://api.yurba.one',
       timeout: 30000,
       maxRetries: 3,
       retryDelay: 1000,
@@ -58,46 +58,96 @@ export class BaseClient extends EventEmitter {
     };
   }
 
+  /**
+   * Set authentication token
+   * @param token - Authentication token or null to remove
+   * @returns {BaseClient} This instance for chaining
+   */
   public setToken(token: string | null): this {
     if (!token) {
       delete this.defaultHeaders['token'];
       this.clearCache();
       return this;
     }
-    this.defaultHeaders['token'] = token; // !WARN: Token stored in plain object - potential security risk if logged
+    this.defaultHeaders['token'] = token;
     this.clearCache();
     return this;
   }
 
+  /**
+   * Set rate limiting configuration
+   * @param config - Rate limit configuration
+   */
   public setRateLimit(config: RateLimitConfig): void {
     this.rateLimiter = new RateLimiter(config);
   }
 
+  /**
+   * Perform GET request
+   * @param endpoint - API endpoint
+   * @param queryParams - Query parameters
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async get<T = unknown>(endpoint: string, queryParams: Record<string, unknown> = {}, config?: RequestConfig): Promise<T> {
-    const resolvedEndpoint = await this.resolveEndpoint(endpoint); // * Async resolution for every request - could be cached
+    const resolvedEndpoint = await this.resolveEndpoint(endpoint);
     return this.request<T>('GET', this.buildUrl(resolvedEndpoint, queryParams), undefined, config);
   }
 
+  /**
+   * Perform POST request
+   * @param endpoint - API endpoint
+   * @param data - Request body data
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async post<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     const resolvedEndpoint = await this.resolveEndpoint(endpoint);
     return this.request<T>('POST', this.buildUrl(resolvedEndpoint), data, config);
   }
 
+  /**
+   * Perform PUT request
+   * @param endpoint - API endpoint
+   * @param data - Request body data
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async put<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     const resolvedEndpoint = await this.resolveEndpoint(endpoint);
     return this.request<T>('PUT', this.buildUrl(resolvedEndpoint), data, config);
   }
 
+  /**
+   * Perform PATCH request
+   * @param endpoint - API endpoint
+   * @param data - Request body data
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async patch<T = unknown>(endpoint: string, data: unknown = {}, config?: RequestConfig): Promise<T> {
     const resolvedEndpoint = await this.resolveEndpoint(endpoint);
     return this.request<T>('PATCH', this.buildUrl(resolvedEndpoint), data, config);
   }
 
+  /**
+   * Perform DELETE request
+   * @param endpoint - API endpoint
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async delete<T = unknown>(endpoint: string, config?: RequestConfig): Promise<T> {
     const resolvedEndpoint = await this.resolveEndpoint(endpoint);
     return this.request<T>('DELETE', this.buildUrl(resolvedEndpoint), undefined, config);
   }
 
+  /**
+   * Upload file using multipart/form-data
+   * @param endpoint - API endpoint
+   * @param formData - Form data containing file
+   * @param config - Request configuration
+   * @returns Promise resolving to response data
+   */
   public async uploadFile<T = unknown>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<T> {
     const headers = { ...this.defaultHeaders, ...config?.headers };
     delete headers['Content-Type']; // Let browser set multipart boundary
@@ -106,13 +156,17 @@ export class BaseClient extends EventEmitter {
       ...config,
       headers: {
         'Accept': 'application/json',
-        'token': headers['token'] // !WARN: Token could be undefined - no validation
+        'token': headers['token']
       }
     };
     
     return this.request<T>('POST', this.buildUrl(endpoint), formData, uploadConfig);
   }
 
+  /**
+   * Cancel a specific request by endpoint
+   * @param endpoint - API endpoint to cancel
+   */
   public cancelRequest(endpoint: string): void {
     const controller = this.abortControllers.get(endpoint);
     if (controller) {
@@ -121,6 +175,9 @@ export class BaseClient extends EventEmitter {
     }
   }
 
+  /**
+   * Cancel all pending requests
+   */
   public cancelAllRequests(): void {
     for (const [, controller] of this.abortControllers) {
       controller.abort();
@@ -128,6 +185,10 @@ export class BaseClient extends EventEmitter {
     this.abortControllers.clear();
   }
 
+  /**
+   * Get current rate limit status
+   * @returns Rate limit status or null if not configured
+   */
   public getRateLimitStatus(): { canMakeRequest: boolean; resetTime: number } | null {
     return this.rateLimiter ? {
       canMakeRequest: this.rateLimiter.canMakeRequest(),
@@ -137,9 +198,13 @@ export class BaseClient extends EventEmitter {
 
 
 
+  /**
+   * Get cached user data
+   * @returns Promise resolving to cached user or null
+   */
   public async getCachedUser(): Promise<CachedUser | null> {
     const token = this.defaultHeaders['token'];
-    let cached = userCache.get(token); // !WARN: Token could be undefined - cache.get(undefined) behavior unclear
+    let cached = userCache.get(token);
     if (!cached) {
       try {
         const userData: unknown = await this.get('/get_me');
@@ -150,9 +215,9 @@ export class BaseClient extends EventEmitter {
             Surname?: unknown;
             Link?: unknown;
             Avatar?: unknown;
-          }; // * Complex type assertion - should use proper type guards
+          };
           cached = {
-            id: typeof data.ID === 'number' ? data.ID : 0, // * Default to 0 for invalid ID - could cause issues
+            id: typeof data.ID === 'number' ? data.ID : 0,
             name: typeof data.Name === 'string' ? data.Name : '',
             surname: typeof data.Surname === 'string' ? data.Surname : '',
             link: typeof data.Link === 'string' ? data.Link : '',
@@ -165,20 +230,27 @@ export class BaseClient extends EventEmitter {
             surname: cached.surname,
             link: cached.link,
             avatar: cached.avatar
-          }); // * Redundant object creation - could use cached directly
+          });
         }
       } catch {
-        return null; // * Silent error handling - important errors might be hidden
+        return null;
       }
     }
     return cached;
   }
 
+  /**
+   * Set cached user data
+   * @param user - User data to cache
+   */
   public setCachedUser(user: Omit<CachedUser, 'timestamp'>): void {
     const token = this.defaultHeaders['token'];
     userCache.set(token, user);
   }
 
+  /**
+   * Clear user cache
+   */
   public clearCache(): void {
     userCache.clear();
   }
@@ -199,6 +271,11 @@ export class BaseClient extends EventEmitter {
     return endpoint;
   }
 
+  /**
+   * Resolve user identifier
+   * @param user - User identifier (string, number, or @me)
+   * @returns Promise resolving to resolved user identifier
+   */
   public async resolveUser(user: string | number): Promise<string | number> {
     if (user === '@me') {
       const cachedUser = await this.getCachedUser();
@@ -221,12 +298,12 @@ export class BaseClient extends EventEmitter {
       } catch (error: unknown) {
         lastError = error instanceof Error ? error : new Error(String(error));
 
-        if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) { // * Missing parentheses - operator precedence issue
+        if (error instanceof ApiError && error.isClientError() || attempt === maxRetries) {
           throw error;
         }
 
         if (attempt < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt))); // * Exponential backoff without jitter
+          await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt)));
         }
       }
     }
@@ -236,7 +313,7 @@ export class BaseClient extends EventEmitter {
     }
     
     // This should never happen, but TypeScript needs it for safety
-    throw new Error('Unknown error occurred'); // * Unreachable code due to loop logic
+    throw new Error('Unknown error occurred');
   }
 
   private async executeRequest<T>(method: string, url: string, data?: unknown, config?: RequestConfig, endpoint?: string): Promise<T> {

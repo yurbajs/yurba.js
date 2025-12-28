@@ -8,9 +8,10 @@ export class FilesResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Files Core }
-  */
+  /**
+   * Files Core
+   * @namespace
+   */
 
   /**
    * Gets a file by identifier

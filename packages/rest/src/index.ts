@@ -32,56 +32,100 @@ export class REST extends BaseClient {
     super(options);
   }
 
+  /**
+   * Get users resource
+   * @returns UserResource instance
+   */
   get users(): UserResource {
     if (!this._users) this._users = new UserResource(this);
     return this._users;
   }
 
+  /**
+   * Get dialogs resource
+   * @returns DialogResource instance
+   */
   get dialogs(): DialogResource {
     if (!this._dialogs) this._dialogs = new DialogResource(this);
     return this._dialogs;
   }
 
+  /**
+   * Get posts resource
+   * @returns PostResource instance
+   */
   get posts(): PostResource { 
     if (!this._posts) this._posts = new PostResource(this);
     return this._posts;
   }
 
+  /**
+   * Get musebase resource
+   * @returns MusebaseResource instance
+   */
   get musebase(): MusebaseResource {
     if (!this._musebase) this._musebase = new MusebaseResource(this);
     return this._musebase;
   }
 
+  /**
+   * Get photos resource
+   * @returns PhotosResource instance
+   */
   get photos(): PhotosResource {
     if (!this._photos) this._photos = new PhotosResource(this);
     return this._photos;
   }
 
+  /**
+   * Get account resource
+   * @returns AccountResource instance
+   */
   get account(): AccountResource {
     if (!this._auth) this._auth = new AccountResource(this);
     return this._auth;
   }
 
+  /**
+   * Get files resource
+   * @returns FilesResource instance
+   */
   get files(): FilesResource {
     if (!this._files) this._files = new FilesResource(this);
     return this._files;
   }
 
+  /**
+   * Get video resource
+   * @returns VideoResource instance
+   */
   get video(): VideoResource {
     if (!this._video) this._video = new VideoResource(this);
     return this._video;
   }
 
+  /**
+   * Get search resource
+   * @returns SearchResource instance
+   */
   get search(): SearchResource {
     if (!this._search) this._search = new SearchResource(this);
     return this._search;
   }
 
+  /**
+   * Get shop resource
+   * @returns ShopResource instance
+   */
   get shop(): ShopResource {
     if (!this._shop) this._shop = new ShopResource(this);
     return this._shop;
   }
 
+  /**
+   * Get apps resource
+   * @returns AppResource instance
+   */
   get apps(): AppResource {
     if (!this._apps) this._apps = new AppResource(this);
     return this._apps;

@@ -1,14 +1,14 @@
 import { REST } from '../index';
 import {
-  Dialog,
-  DialogMember,
+  DialogModel,
+  DialogMemberModel,
   CreateDialogPayload,
   CreateDialogResponse,
   CreatePrivateDialogResponse,
   SendMessagePayload,
   UpdateDialogPayload,
   FindDialogPayload,
-  Message,
+  MessageModel,
   response,
   responseMute
 } from '@yurbajs/types';
@@ -19,9 +19,10 @@ export class DialogResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Dialog Core }
-  */
+  /**
+   * Dialog Core
+   * @namespace
+   */
 
   /**
    * Gets a dialog by identifier
@@ -29,7 +30,7 @@ export class DialogResource {
    * @param id - Dialog identifier
    * @param code - Invitation code (optional)
    * @since 0.1.10
-   * @returns {Promise<Dialog>} {@link Dialog} object
+   * @returns {Promise<DialogModel>} {@link DialogModel} object
    * @throws {Error} If dialog not found
    * @example
    * ```javascript
@@ -37,23 +38,23 @@ export class DialogResource {
    * const privateDialog = await rest.dialogs.get(456, 'invite123');
    * ```
    */
-  async get(id: number, code: string = ''): Promise<Dialog> {
-    return this.client.get<Dialog>(`/dialogs/${id}?code=${code}`);
+  async get(id: number, code: string = ''): Promise<DialogModel> {
+    return this.client.get<DialogModel>(`/dialogs/${id}?code=${code}`);
   }
 
   /**
    * Gets all dialogs where the client is a member
    * @group Dialog Core
    * @since 0.1.10
-   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @returns {Promise<DialogModel[]>} Array of {@link DialogModel} objects
    * @throws {Error} If dialogs cannot be retrieved
    * @example
    * ```javascript
    * const dialogs = await rest.dialogs.getAll();
    * ```
    */
-  async getAll(): Promise<Dialog[]> {
-    return this.client.get<Dialog[]>('/dialogs');
+  async getAll(): Promise<DialogModel[]> {
+    return this.client.get<DialogModel[]>('/dialogs');
   }
 
   /**
@@ -85,7 +86,7 @@ export class DialogResource {
    * Creates a private dialog with a user
    * @group Dialog Core
    * @param userId - User identifier to create private dialog with
-   * @returns {Promise<Dialog>} {@link Dialog} Created private dialog
+   * @returns {Promise<DialogModel>} {@link DialogModel} Created private dialog
    * @since 0.1.10
    * @throws {Error} If user ID is invalid or user not found
    * @example
@@ -93,7 +94,7 @@ export class DialogResource {
    * const privateDialog = await rest.dialogs.createPrivate(12345);
    * ```
    */
-  async createPrivate(userId: number): Promise<Dialog> {
+  async createPrivate(userId: number): Promise<DialogModel> {
     if (userId < 1) throw new Error('Invalid user ID');
     return this.client.post<CreatePrivateDialogResponse>(
       `/dialogs/private/${userId}`, {}
@@ -106,7 +107,7 @@ export class DialogResource {
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @since 1.0.0
-   * @returns {Promise<any>} Operation result
+   * @returns {Promise<response>} Operation result
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -125,7 +126,7 @@ export class DialogResource {
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @since 1.0.0
-   * @returns {Promise<any>} Operation result
+   * @returns {Promise<response>} Operation result
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -161,7 +162,7 @@ export class DialogResource {
    * @param payload - Search data
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<Dialog[]>} Dialog list
+   * @returns {Promise<DialogModel[]>} Dialog list
    * @deprecated Use rest.search.dialogs() instead
    * @example
    * ```javascript
@@ -174,7 +175,7 @@ export class DialogResource {
    * });
    * ```
    */
-  async find(query: string, payload: FindDialogPayload, page: number = 0): Promise<Dialog[]> {
+  async find(query: string, payload: FindDialogPayload, page: number = 0): Promise<DialogModel[]> {
     return this.client.search.dialogs(query, payload, page);
   }
 
@@ -200,9 +201,10 @@ export class DialogResource {
     return this.client.patch<response>(`/dialogs/${dialogId}`, payload);
   }
 
-  /* 
-  //               { Dialog Members }
-  */
+  /**
+   * Dialog Members
+   * @namespace
+   */
 
   /**
    * Get dialog members
@@ -210,7 +212,7 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param page - Page number (default 0)
    * @since 0.1.10
-   * @returns {Promise<DialogMember[]>} Array of {@link DialogMember} objects
+   * @returns {Promise<DialogMemberModel[]>} Array of {@link DialogMemberModel} objects
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -218,9 +220,9 @@ export class DialogResource {
    * const nextPage = await rest.dialogs.getMembers(123, 1);
    * ```
    */
-  async getMembers(dialogId: number, page = 0): Promise<DialogMember[]> {
+  async getMembers(dialogId: number, page = 0): Promise<DialogMemberModel[]> {
     if (dialogId < 1 || page < 0) throw new Error('Invalid parameters');
-    return this.client.get<DialogMember[]>(`/dialogs/${dialogId}/members`, {
+    return this.client.get<DialogMemberModel[]>(`/dialogs/${dialogId}/members`, {
       page,
     });
   }
@@ -232,7 +234,7 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
    * @since 0.1.10
-   * @returns {Promise<any>} Operation result
+   * @returns {Promise<response>} Operation result
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -250,7 +252,7 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
    * @since 0.1.10
-   * @returns {Promise<any>} Operation result
+   * @returns {Promise<response>} Operation result
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -262,24 +264,25 @@ export class DialogResource {
     return this.client.delete(`/dialogs/${dialogId}/leave/${userId}`);
   }
 
-  /* 
-  //               { Dialog Messages }
-  */
+  /**
+   * Dialog Messages
+   * @namespace
+   */
 
   /**
    * Get message (by id)
    * @group Dialog Messages
    * @param messageId - Message ID
    * @since 1.0.0
-   * @returns {Promise<Message>} Array of messages
+   * @returns {Promise<MessageModel>} Array of messages
    * @deprecated This method may not work due to restricted access to view all messages
    * @example
    * ```javascript
    * const messages = await rest.dialogs.getMessage(123);
    * ```
    */
-  async getMessage(dialogId: number): Promise<Message> { 
-    return this.client.get<Message>(`/dialogs/${dialogId}/messages`);
+  async getMessage(dialogId: number): Promise<MessageModel> { 
+    return this.client.get<MessageModel>(`/dialogs/${dialogId}/messages`);
   }
 
 
@@ -289,16 +292,16 @@ export class DialogResource {
    * @param dialogId - Dialog identifier
    * @param lastId - Last message ID for pagination (optional)
    * @since 0.1.10
-   * @returns {Promise<Message[]>} Array of messages
+   * @returns {Promise<MessageModel[]>} Array of messages
    * @example
    * ```javascript
    * const messages = await rest.dialogs.getMessages(123);
    * const older_messages = await rest.dialogs.getMessages(123, 999);
    * ```
    */
-  async getMessages(dialogId: number, lastId?: number): Promise<Message[]> {
+  async getMessages(dialogId: number, lastId?: number): Promise<MessageModel[]> {
     const params = lastId ? { last_id: lastId } : {};
-    return this.client.get<Message[]>(`/dialogs/${dialogId}/messages`, params);
+    return this.client.get<MessageModel[]>(`/dialogs/${dialogId}/messages`, params);
   }
 
   /**
@@ -354,7 +357,7 @@ export class DialogResource {
   async sendMessage(
     dialogId: number,
     payload: SendMessagePayload
-  ): Promise<Message> {
+  ): Promise<MessageModel> {
     const messageData: SendMessagePayload = {
       text: payload.text || '',
       photos_list: payload.photos_list || [],
@@ -363,7 +366,7 @@ export class DialogResource {
       attachments: payload.attachments || [],
     };
 
-    return this.client.post<Message>(
+    return this.client.post<MessageModel>(
       `/dialogs/${dialogId}/messages`,
       messageData
     );

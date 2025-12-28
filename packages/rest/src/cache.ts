@@ -1,3 +1,6 @@
+/**
+ * User cache interface
+ */
 export interface CachedUser {
   readonly id: number;
   readonly name: string;
@@ -7,6 +10,9 @@ export interface CachedUser {
   readonly timestamp: number;
 }
 
+/**
+ * User cache implementation with TTL support
+ */
 class UserCache {
   private readonly cache = new Map<string, CachedUser>();
   private readonly TTL = 5 * 60 * 1000; // 5 minutes
@@ -16,10 +22,20 @@ class UserCache {
     this.startCleanupTimer();
   }
 
+  /**
+   * Set user data in cache
+   * @param token - Authentication token
+   * @param user - User data to cache
+   */
   set(token: string, user: Omit<CachedUser, 'timestamp'>): void {
     this.cache.set(token, { ...user, timestamp: Date.now() });
   }
 
+  /**
+   * Get user data from cache
+   * @param token - Authentication token
+   * @returns Cached user data or null if not found/expired
+   */
   get(token: string): CachedUser | null {
     const cached = this.cache.get(token);
     if (!cached) return null;
@@ -32,18 +48,35 @@ class UserCache {
     return cached;
   }
 
+  /**
+   * Check if user exists in cache
+   * @param token - Authentication token
+   * @returns True if user exists and not expired
+   */
   has(token: string): boolean {
     return this.get(token) !== null;
   }
 
+  /**
+   * Delete user from cache
+   * @param token - Authentication token
+   * @returns True if user was deleted
+   */
   delete(token: string): boolean {
     return this.cache.delete(token);
   }
 
+  /**
+   * Clear all cached users
+   */
   clear(): void {
     this.cache.clear();
   }
 
+  /**
+   * Get cache size
+   * @returns Number of cached users
+   */
   size(): number {
     return this.cache.size;
   }
@@ -67,6 +100,9 @@ class UserCache {
     }
   }
 
+  /**
+   * Destroy cache and cleanup timer
+   */
   destroy(): void {
     if (this.cleanupTimer) {
       clearInterval(this.cleanupTimer);
@@ -75,4 +111,7 @@ class UserCache {
   }
 }
 
+/**
+ * Singleton user cache instance
+ */
 export const userCache = new UserCache();

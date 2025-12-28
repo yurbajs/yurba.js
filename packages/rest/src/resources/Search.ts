@@ -1,5 +1,5 @@
 import { REST } from '../index';
-import { Dialog, FindDialogPayload, User, FindUserPayload, Track } from '@yurbajs/types';
+import { DialogModel, FindDialogPayload, UserModel, FindUserPayload, Track } from '@yurbajs/types';
 
 export class SearchResource {
   /**
@@ -7,9 +7,10 @@ export class SearchResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Search }
-  */
+  /**
+   * Search
+   * @namespace
+   */
 
   /**
    * Finds dialogs
@@ -18,7 +19,7 @@ export class SearchResource {
    * @param payload - {@link FindDialogPayload} Search data
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<Dialog[]>} Array of {@link Dialog} objects
+   * @returns {Promise<DialogModel[]>} Array of {@link DialogModel} objects
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -56,10 +57,10 @@ export class SearchResource {
    * });
    * ```
    */
-  async dialogs(query: string, payload: FindDialogPayload, page: number = 0): Promise<Dialog[]> {
+  async dialogs(query: string, payload: FindDialogPayload, page: number = 0): Promise<DialogModel[]> {
     if (!query || page < 0) throw new Error('Invalid parameters');
     if (!payload) throw new Error('Invalid search payload');
-    return this.client.post<Dialog[]>(`/dialogs/find/${query}?page=${page}`, payload);
+    return this.client.post<DialogModel[]>(`/dialogs/find/${query}?page=${page}`, payload);
   }
 
   /**
@@ -68,7 +69,7 @@ export class SearchResource {
    * @param payload - {@link FindUserPayload} Search filters
    * @param page - Page number (default 0)
    * @since 1.0.0
-   * @returns {Promise<User[]>} Array of {@link User} objects
+   * @returns {Promise<UserModel[]>} Array of {@link UserModel} objects
    * @throws {Error} If parameters are invalid
    * @example
    * ```javascript
@@ -97,9 +98,9 @@ export class SearchResource {
    * });
    * ```
    */
-  async users(payload: FindUserPayload, page: number = 0): Promise<User[]> {
+  async users(payload: FindUserPayload, page: number = 0): Promise<UserModel[]> {
     if (!payload || page < 0) throw new Error('Invalid parameters');
-    return this.client.post<User[]>(`/users/find?page=${page}`, payload);
+    return this.client.post<UserModel[]>(`/users/find?page=${page}`, payload);
   }
 
   /**

@@ -7,9 +7,10 @@ export class ShopResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Shop }
-  */
+  /**
+   * Shop
+   * @namespace
+   */
 
   /**
    * Gets shop categories and items

@@ -12,9 +12,10 @@ export class AccountResource {
    */
   constructor(private client: REST) {}
 
-  /* 
-  //               { Auth Core }
-  */
+  /**
+   * Auth Core
+   * @namespace
+   */
 
   /**
    * Login to account
@@ -94,7 +95,7 @@ export class AccountResource {
    * @group Auth Core
    * @param promo - Promo code
    * @since 1.0.0
-   * @returns {Promise<any>} Promo activation response
+   * @returns {Promise<BaseOkay>} Promo activation response
    * @throws {Error} If promo code is invalid
    * @example
    * ```javascript
@@ -110,7 +111,7 @@ export class AccountResource {
    * Get user tokens
    * @group Auth Core
    * @since 1.0.0
-   * @returns {Promise<any>} User tokens
+   * @returns {Promise<Token[]>} User tokens
    * @example
    * ```javascript
    * const tokens = await rest.auth.getTokens();
@@ -124,7 +125,7 @@ export class AccountResource {
    * Logout from account
    * @group Auth Core
    * @since 1.0.0
-   * @returns {Promise<any>} Logout response
+   * @returns {Promise<BaseOkay>} Logout response
    * @example
    * ```javascript
    * await rest.auth.logout();
