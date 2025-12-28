@@ -1,14 +1,14 @@
-# Project Structure
+# Структура проєкту
 
-Welcome! If you've completed all the previous steps, you've already created your first `yurba.js` bot! 
-Now let's improve the code structure. The current structure is fine, but in the future, it might make managing and updating the bot more difficult.
+Вітаємо! Якщо ви виконали всі попередні кроки, ви вже створили свого першого `yurba.js` бота! 
+Тепер давайте покращимо структуру коду. Поточна структура цілком нормальна, але в майбутньому вона може ускладнити управління та оновлення бота.
 
-## Creating the `src` folder
-SRC - or source code, contains the main bot code. Let's move `index.js` and `config.json` there and update `package.json`
+## Створення папки `src`
+SRC - або source code, містить основний код бота. Давайте перемістимо `index.js` та `config.json` туди і оновимо `package.json`
 
-### Updating `package.json`
+### Оновлення `package.json`
 
-Since our `index.js` is now in the `src` folder, we need to update the start script
+Оскільки наш `index.js` тепер знаходиться в папці `src`, нам потрібно оновити start скрипт
 
 ```json [package.json]
 {
@@ -31,12 +31,12 @@ Since our `index.js` is now in the `src` folder, we need to update the start scr
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
 
-After our updates, the structure will look like this:
+Після наших оновлень структура виглядатиме так:
 ```console
  .
 ├──  package.json
@@ -46,11 +46,11 @@ After our updates, the structure will look like this:
     └──  index.js
 ```
 
-## Creating the `commands` folder and adding command loading function
+## Створення папки `commands` і додавання функції завантаження команд
 
-Now let's create a commands folder. If you want a more structured approach with command categories, you can also create additional subfolders inside the commands folder.
+Тепер давайте створимо папку команд. Якщо ви хочете більш структурований підхід з категоріями команд, ви також можете створити додаткові підпапки всередині папки commands.
 
-### Adding the command loading function
+### Додавання функції завантаження команд
 
 ```javascript:line-numbers [index.js]
 // Import Client from yurba.js
@@ -63,31 +63,31 @@ const config = require('./config.json');
 require('dotenv').config()
 
 // Create client (bot) with your token and prefix
-const client = new Client(process.env.YURBA_TOKEN, {prefix: config.prefix});
+const client = new Client({prefix: config.prefix});
 
-// -- Function for loading commands -- //
+// -- Функція для завантаження команд -- //
 
-// Import standart modules for work with files
+// Імпорт стандартних модулів для роботи з файлами
 const fs = require('fs');
 const path = require('path');
 
 /**
- * Loads all commands from the commands folder and its subdirectories
- * @param {Object} client - Bot client
- * @param {string} commandsPath - Path to commands folder
+ * Завантажує всі команди з папки commands та її піддиректорій
+ * @param {Object} client - Клієнт бота
+ * @param {string} commandsPath - Шлях до папки команд
  */
 function loadCommands(client, commandsPath = './commands') {
     const commandsDir = path.resolve(__dirname, commandsPath);
     
-    // Check if commands folder exists
+    // Перевірити, чи існує папка команд
     if (!fs.existsSync(commandsDir)) {
-        console.warn(`Commands folder not found: ${commandsDir}`);
+        console.warn(`Папка команд не знайдена: ${commandsDir}`);
         return;
     }
     
     /**
-     * Recursively loads commands from a directory and its subdirectories
-     * @param {string} dir - Directory to load commands from
+     * Рекурсивно завантажує команди з директорії та її піддиректорій
+     * @param {string} dir - Директорія для завантаження команд
      */
     function loadCommandsFromDir(dir) {
         const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -96,34 +96,34 @@ function loadCommands(client, commandsPath = './commands') {
             const itemPath = path.join(dir, item.name);
             
             if (item.isDirectory()) {
-                // Recursively load commands from subdirectory
+                // Рекурсивно завантажити команди з піддиректорії
                 loadCommandsFromDir(itemPath);
             } else if (item.isFile() && item.name.endsWith('.js')) {
                 try {
                     const command = require(itemPath);
                     
-                    // Check command structure
+                    // Перевірити структуру команди
                     if (!command.name || !command.handler) {
-                        console.error(`Error in ${itemPath}: command must have 'name' and 'handler' properties`);
+                        console.error(`Помилка в ${itemPath}: команда повинна мати властивості 'name' і 'handler'`);
                         continue;
                     }
                     
-                    // Register command
-                    client.registerCommand(
-                        command.name, // Name of command
-                        command.args || {}, // Arguments in command
+                    // Зареєструвати команду
+                    client.commands.register(
+                        command.name, // Назва команди
+                        command.args || {}, // Аргументи в команді
                         command.handler,
                     );
                     
-                    console.log(`Loaded command: ${command.name} from ${path.relative(commandsDir, itemPath)}`);
+                    console.log(`Завантажено команду: ${command.name} з ${path.relative(commandsDir, itemPath)}`);
                 } catch (error) {
-                    console.error(`Error loading command from ${itemPath}:`, error.message);
+                    console.error(`Помилка завантаження команди з ${itemPath}:`, error.message);
                 }
             }
         }
     }
     
-    // Start loading commands recursively
+    // Почати рекурсивне завантаження команд
     loadCommandsFromDir(commandsDir)
 }
 
@@ -131,31 +131,30 @@ loadCommands(client);
 
 // -- -- -- -- -- -- -- -- -- -- //
 
-// First event - ready
-// When the bot starts, it will log 'Ready!' to the console
+// Перша подія - ready
+// Коли бот запускається, він виведе 'Ready!' в консоль
 client.once('ready', () => {
     console.log('Ready!');
-    console.log(`Registered commands: ${client.getCommands().length}`);
-    console.log(`Available commands: ${client.getCommands().join(', ')}`);
+    console.log(`Зареєстровано команд: ${client.commands.getAll().length}`);
+    console.log(`Доступні команди: ${client.commands.getAll().join(', ')}`);
 });
 
-// Initialize the bot (start it)
-client.init();
+// Ініціалізувати бота (запустити його)
+client.init(process.env.YURBA_TOKEN);
 
 ```
-#### Add ping command 
-Add a ping command either in commands or in commands/utils
+#### Додавання команди ping 
+Додайте команду ping або в commands, або в commands/utils
 ```javascript [ping.js]
 module.exports = {
     name: 'ping',
-    description: 'Responds with pong!',
     argsSchema: {},
     handler: (message, args) => {
         message.reply(`pong!, ${message.Author.Name}`);
     }
 };
 ```
-Now our project structure looks something like this:
+Тепер структура нашого проєкту виглядає приблизно так:
 ```console
  .
 ├──  package.json
@@ -168,7 +167,7 @@ Now our project structure looks something like this:
     └──  index.js
 ```
 
-And after running it:
+І після запуску:
 ```
 λ ~/Projects/yurbajs/examples/guide-bot main* ❯❯ pnpm start
 
@@ -176,17 +175,17 @@ And after running it:
 > node src/index.js
 
 [dotenv@17.2.0] injecting env (1) from .env (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
-Loaded command: ping from utils/ping.js
+Завантажено команду: ping з utils/ping.js
 Ready!
-Registered commands: 1
-Available commands: ping
+Зареєстровано команд: 1
+Доступні команди: ping
 ```
-> [!NOTE] Second achievement!
-> You have completed the first stage of the Guide and understood the basics of creating a bot.
-> You can proceed to [the next page](/development/repo) if you have created a Github/Gitlab repository and want to improve it by creating README.md and LICENSE
-> Also, all the code from the first stage is available on [Github](https://github.com/yurbajs/yurba.js/tree/main/examples/guide-bot)
+> [!NOTE] Друге досягнення!
+> Ви завершили перший етап Посібника і зрозуміли основи створення бота.
+> Ви можете перейти до [наступної сторінки](/development/repo), якщо ви створили репозиторій Github/Gitlab і хочете покращити його, створивши README.md і LICENSE
+> Також весь код з першого етапу доступний на [Github](https://github.com/yurbajs/yurba.js/tree/main/examples/guide-bot)
 
-> [!NOTE] Thank you for being with us
-> Regarding the guide and specifically information about continuing the main work on creating the bot - this is the end for now, continuation will appear over time.
-> Also, I would be very happy to see ideas and reports about issues with the Guide and not only in [issues](https://github.com/yurbajs/yurba.js/issues) and [pull requests](https://github.com/yurbajs/yurba.js/pulls) with labels `Ideas` and `Guide`.
-> Personally RastGame ;)
+> [!NOTE] Дякуємо, що ви з нами
+> Щодо посібника і конкретно інформації про продовження основної роботи по створенню бота - на цьому поки все, продовження з'явиться з часом.
+> Також я був би дуже радий побачити ідеї і звіти про проблеми з Посібником і не тільки в [issues](https://github.com/yurbajs/yurba.js/issues) і [pull requests](https://github.com/yurbajs/yurba.js/pulls) з мітками `Ideas` і `Guide`.
+> Особисто RastGame `;)`

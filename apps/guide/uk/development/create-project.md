@@ -1,26 +1,26 @@
 ---
-title: Creating Your Bot Project
+title: Створення проєкту бота
 editLink: true
 sidebar: true
 ---
 
-# Creating Your Bot Project
+# Створення проєкту вашого бота
 
-Now that you have Node.js installed and your bot account configured, it's time to create your first yurba.js project. This guide will walk you through setting up a professional project structure with proper configuration management and security practices.
+Тепер, коли у вас встановлено Node.js і налаштовано акаунт бота, настав час створити ваш перший проєкт yurba.js. Цей посібник проведе вас через налаштування професійної структури проєкту з належним управлінням конфігурацією та практиками безпеки.
 
-## Project Initialization
+## Ініціалізація проєкту
 
-### Step 1: Create Project Directory
+### Крок 1: Створення директорії проєкту
 
-First, create a dedicated directory/folder for your bot project:
+Спочатку створіть окрему директорію/папку для вашого бот-проєкту:
 
 ```sh
 cd my-yurba-bot
 ```
 
-### Step 2: Initialize Package.json
+### Крок 2: Ініціалізація Package.json
 
-Initialize your Node.js project using your preferred package manager:
+Ініціалізуйте ваш Node.js проєкт, використовуючи ваш улюблений менеджер пакетів:
 
 ::: code-group
 
@@ -42,14 +42,14 @@ bun init
 
 :::
 
-You'll be prompted to fill out project information. Here's an example configuration:
+Вас попросять заповнити інформацію про проєкт. Ось приклад конфігурації:
 
-<img src="/images/npm-init.png" width="700" alt="npm init process" />
+<img src="/images/npm-init.png" width="700" alt="процес npm init" />
 
 
-### Step 3: Verify Package.json
+### Крок 3: Перевірка Package.json
 
-After initialization, your `package.json` should look similar to this:
+Після ініціалізації ваш `package.json` повинен виглядати приблизно так:
 
 ```json:line-numbers [package.json]
 {
@@ -66,9 +66,9 @@ After initialization, your `package.json` should look similar to this:
 }
 ```
 
-### Configuration Files
+### Файли конфігурації
 
-Create a `.env` file and the `config.json` file
+Створіть файл `.env` та файл `config.json`
 
 ::: code-group
 
@@ -85,24 +85,24 @@ YURBA_TOKEN=your-token-here
 :::
 
 
-::: danger Security Warning
-Never commit sensitive files like [`.env`](/development/create-project#create-gitignore) or [`config.json`](/development/create-project#create-gitignore) containing tokens to version control. These files contain private credentials that should be kept secure.
+::: danger Попередження про безпеку
+Ніколи не комітьте чутливі файли, такі як [`.env`](/development/create-project#create-gitignore) або [`config.json`](/development/create-project#create-gitignore), що містять токени, до системи контролю версій. Ці файли містять приватні облікові дані, які повинні зберігатися в безпеці.
 
-Make sure to add these files to your [`.gitignore`](/development/create-project#create-gitignore) to prevent accidental commits.
+Переконайтеся, що додали ці файли до вашого [`.gitignore`](/development/create-project#create-gitignore), щоб запобігти випадковим комітам.
 :::
 
-## Git Setup
+## Налаштування Git
 
-> [!NOTE] What is Git?
-> [Git](https://git-scm.com/about/1) is a distributed version control system that helps you track changes in your code, collaborate with others, and manage different versions of your project.
+> [!NOTE] Що таке Git?
+> [Git](https://git-scm.com/about/1) — це розподілена система контролю версій, яка допомагає відстежувати зміни у вашому коді, співпрацювати з іншими та керувати різними версіями вашого проєкту.
 
-### Initialize Git
+### Ініціалізація Git
 
 ```bash
 git init
 ```
 ::: tip
-If you use [GitHub](https://github.com) or [GitLab](https://gitlab.com), you can initialize your repository with these commands:
+Якщо ви використовуєте [GitHub](https://github.com) або [GitLab](https://gitlab.com), ви можете ініціалізувати ваш репозиторій за допомогою цих команд:
 
 ::: code-group
 
@@ -120,12 +120,12 @@ git push -u origin main
 
 :::
 
-### Create .gitignore
+### Створення .gitignore
 
-Create a comprehensive [`.gitignore`](https://git-scm.com/docs/gitignore) file to exclude sensitive and unnecessary files:
+Створіть вичерпний файл [`.gitignore`](https://git-scm.com/docs/gitignore), щоб виключити чутливі та непотрібні файли:
 
-> [!NOTE] What is `.gitignore`?
-> The `.gitignore` file specifies which files and directories Git should ignore and not track in version control. Any files or folders listed in `.gitignore` will not be included in git commits.
+> [!NOTE] Що таке `.gitignore`?
+> Файл `.gitignore` вказує, які файли та директорії Git повинен ігнорувати і не відстежувати в системі контролю версій. Будь-які файли або папки, перелічені в `.gitignore`, не будуть включені в git коміти.
 
 ::: code-group
 
@@ -137,11 +137,11 @@ node_modules/
 .env
 ```
 
-```bash [with config.json]
-# Dependencies
+```bash [з config.json]
+# Залежності
 node_modules/
-config.json # if it contains tokens or other sensitive information
+config.json # якщо містить токени або іншу чутливу інформацію
 
-# Environment variables and configuration
+# Змінні середовища та конфігурація
 .env
 ```

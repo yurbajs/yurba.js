@@ -1,17 +1,17 @@
 
-> [!DANGER] In dev
+> [!DANGER] У розробці
 
-# Repositories
+# Репозиторії
 
-## Improving any repository
-If you want to improve your repository, as you plan to make it public or work with other people - then it won't hurt to create a simple `README.md` that will immediately explain everything and make others understand about the project, as well as create a `LICENSE` to preserve your copyrights or provide specific rules about it.
+## Покращення будь-якого репозиторію
+Якщо ви хочете покращити свій репозиторій, оскільки плануєте зробити його публічним або працювати з іншими людьми - то не завадить створити простий `README.md`, який одразу все пояснить і дасть іншим зрозуміти про проєкт, а також створити `LICENSE` для збереження ваших авторських прав або надання конкретних правил щодо цього.
 
-### Creating a Readme
-There is nothing difficult in creating a Readme - but after it, a lot changes. For example, imagine you go to the [Yurba.js repository](https://github.com/yurbajs/yurba.js/) and there is no Readme - you might have some vague understanding about the library from the description and categories - but what it does and how to use it - no.
-But when you visit it, you immediately see everything you need (although it depends on who you are and what your purpose is), like the logo and quick information about the project through badges created with [shields.io](https://shields.io/)
-For example, the version of the main library, downloads, release, latest tests, latest commit, contributing, and even the latest library update. And this already gives a lot. After that, you see About with brief information, then the packages in the project, their versions, links, and so on. Because of this, you don't need to go anywhere to search but see everything right away.
+### Створення Readme
+У створенні Readme немає нічого складного - але після нього багато що змінюється. Наприклад, уявіть, що ви заходите до [репозиторію Yurba.js](https://github.com/yurbajs/yurba.js/) і там немає Readme - у вас може бути якесь смутне розуміння про бібліотеку з опису та категорій - але що вона робить і як її використовувати - ні.
+Але коли ви відвідуєте його, ви одразу бачите все, що потрібно (хоча це залежить від того, хто ви і яка ваша мета), як-от логотип і швидку інформацію про проєкт через значки, створені за допомогою [shields.io](https://shields.io/)
+Наприклад, версія основної бібліотеки, завантаження, реліз, останні тести, останній коміт, внесок і навіть останнє оновлення бібліотеки. І це вже дає багато. Після цього ви бачите About з короткою інформацією, потім пакети в проєкті, їх версії, посилання тощо. Через це вам не потрібно нікуди йти шукати, а бачити все одразу.
 
 <img src="/images/repo-readme.png" width="800" alt="readme" />
 
-Today, using the guide bot as an example, I will show you how to create a simple Readme for your project.
-Most likely you will have a question - where to start?
+Сьогодні, використовуючи бота-посібника як приклад, я покажу вам, як створити простий Readme для вашого проєкту.
+Найімовірніше у вас виникне питання - з чого почати?

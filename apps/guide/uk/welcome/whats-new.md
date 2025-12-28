@@ -46,7 +46,7 @@ sidebar: true
   та покращує розділення конфігурації й коду.
 
 
-<p>З Devblog №1,2,3 -> <a href="https://t.me/justtealord">Source</a></p>
+<p>From: Devblog - №: 1,2,3 -> <a href="https://t.me/justtealord">Source</a></p>
 
 
 ## Реліз - v0.1.9 (12 липня, 2025)

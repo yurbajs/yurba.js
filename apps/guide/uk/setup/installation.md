@@ -1,134 +1,134 @@
 ---
-title: Installing Node.js and yurba.js
+title: Встановлення Node.js та yurba.js
 editLink: true
 sidebar: true
 ---
 
-# Installing Node.js and yurba.js
+# Встановлення Node.js та yurba.js
 
-Setting up your development environment is the first step toward building powerful bots with yurba.js. This guide will walk you through installing Node.js and the yurba.js library on your system.
+Налаштування середовища розробки — це перший крок до створення потужних ботів за допомогою yurba.js. Цей посібник проведе вас через встановлення Node.js та бібліотеки yurba.js на вашій системі.
 
-## System Requirements
+## Системні вимоги
 
-Before we begin, ensure your system meets these requirements:
+Перш ніж почати, переконайтеся, що ваша система відповідає цим вимогам:
 
-- **Node.js 20.0.0 or higher** (LTS version recommended)
-- **npm, yarn, pnpm, or bun** (package manager)
-- **Operating System**: Windows 10+, macOS 10.15+, or Linux (Ubuntu 18.04+, CentOS 7+)
+- **Node.js 20.0.0 або вище** (рекомендується LTS версія)
+- **npm, yarn, pnpm або bun** (менеджер пакетів)
+- **Операційна система**: Windows 10+, macOS 10.15+ або Linux (Ubuntu 18.04+, CentOS 7+)
 
-## Installing Node.js
+## Встановлення Node.js
 
-Node.js is the JavaScript runtime that powers yurba.js. You'll need to install it before proceeding with the library installation.
+Node.js — це JavaScript runtime, який живить yurba.js. Вам потрібно встановити його перш ніж продовжити встановлення бібліотеки.
 
-::: tip Checking Existing Installation
-To verify if Node.js is already installed on your system, open a terminal and run:
+::: tip Перевірка існуючої інсталяції
+Щоб перевірити, чи вже встановлено Node.js на вашій системі, відкрийте термінал і виконайте:
 ```bash
 node --version
 ```
-If you see a version number (e.g., `v20.10.0`), Node.js is installed. Ensure it's version 20.0.0 or higher.
+Якщо ви бачите номер версії (наприклад, `v20.10.0`), Node.js встановлено. Переконайтеся, що це версія 20.0.0 або вище.
 :::
 
-### Windows Installation
+### Встановлення на Windows
 
-1. **Download the Installer**
-   - Visit the [official Node.js website](https://nodejs.org/en/download)
-   - Download the Windows Installer (.msi) for the LTS version
-   - Choose the appropriate architecture (x64 for most modern systems)
+1. **Завантажте інсталятор**
+   - Відвідайте [офіційний сайт Node.js](https://nodejs.org/en/download)
+   - Завантажте Windows Installer (.msi) для LTS версії
+   - Оберіть відповідну архітектуру (x64 для більшості сучасних систем)
 
-2. **Run the Installation**
-   - Double-click the downloaded `.msi` file
-   - Follow the installation wizard steps
-   - Accept the license agreement
-   - Choose the installation directory (default is recommended)
-   - Ensure "Add to PATH" is checked
+2. **Запустіть інсталяцію**
+   - Двічі клацніть на завантажений `.msi` файл
+   - Дотримуйтеся кроків майстра інсталяції
+   - Прийміть ліцензійну угоду
+   - Оберіть директорію інсталяції (рекомендується за замовчуванням)
+   - Переконайтеся, що позначено "Додати до PATH"
 
-3. **Verify Installation**
+3. **Перевірте інсталяцію**
    ```bash
    node --version
    npm --version
    ```
 
-#### Windows Path Issues
-If Node.js commands aren't recognized in Windows:
+#### Проблеми з PATH у Windows
+Якщо команди Node.js не розпізнаються у Windows:
 
-1. Open System Properties → Advanced → Environment Variables
-2. Ensure `C:\Program Files\nodejs\` is in your PATH
-3. Restart your command prompt/PowerShell
+1. Відкрийте Властивості системи → Додатково → Змінні середовища
+2. Переконайтеся, що `C:\Program Files\nodejs\` є у вашому PATH
+3. Перезапустіть командний рядок/PowerShell
 
-### macOS Installation
+### Встановлення на macOS
 
-Choose one of these methods:
+Оберіть один із цих способів:
 
-#### Option 1: Official Installer
-1. Download the macOS installer from [nodejs.org](https://nodejs.org/en/download)
-2. Open the `.pkg` file and follow the installation steps
-3. Verify the installation in Terminal
+#### Варіант 1: Офіційний інсталятор
+1. Завантажте macOS інсталятор з [nodejs.org](https://nodejs.org/en/download)
+2. Відкрийте `.pkg` файл і дотримуйтеся кроків інсталяції
+3. Перевірте інсталяцію в Terminal
 
-#### Option 2: Homebrew (Recommended)
+#### Варіант 2: Homebrew (рекомендовано)
 ```bash
-# Install Homebrew if you haven't already
+# Встановіть Homebrew, якщо ще не встановлено
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install Node.js
+# Встановити Node.js
 brew install node
 
-# Verify installation
+# Перевірити інсталяцію
 node --version
 npm --version
 ```
 
-#### Option 3: Node Version Manager (nvm)
+#### Варіант 3: Node Version Manager (nvm)
 ```bash
-# Install nvm
+# Встановити nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
-# Restart terminal or run:
+# Перезапустити термінал або виконати:
 source ~/.bashrc
 
-# Install latest LTS Node.js
+# Встановити останню LTS версію Node.js
 nvm install --lts
 nvm use --lts
 ```
 
-### Linux Installation
+### Встановлення на Linux
 
 #### Ubuntu/Debian
 ```bash
-# Update package index
+# Оновити індекс пакетів
 sudo apt update
 
-# Install Node.js from NodeSource repository
+# Встановити Node.js з репозиторію NodeSource
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Verify installation
+# Перевірити інсталяцію
 node --version
 npm --version
 ```
 
 #### CentOS/RHEL/Fedora
 ```bash
-# Install Node.js from NodeSource repository
+# Встановити Node.js з репозиторію NodeSource
 curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
 sudo dnf install -y nodejs npm
 
-# For older systems, use yum instead of dnf
+# Для старіших систем використовуйте yum замість dnf
 # sudo yum install -y nodejs npm
 ```
 
 #### Arch Linux
 ```bash
-# Install Node.js and npm
+# Встановити Node.js та npm
 sudo pacman -S nodejs npm
 
-# Verify installation
+# Перевірити інсталяцію
 node --version
 npm --version
 ```
 
-## Installing yurba.js
+## Встановлення yurba.js
 
-Once Node.js is properly installed, you can install yurba.js using your preferred package manager. The library is available on npm and supports all major package managers.
+Коли Node.js правильно встановлено, ви можете встановити yurba.js, використовуючи ваш улюблений менеджер пакетів. Бібліотека доступна на npm і підтримує всі основні менеджери пакетів.
 
 ::: code-group
 
@@ -155,13 +155,13 @@ bun add yurba.js
 
 :::
 
-::: tip Recommendation
-For new projects, we recommend **[pnpm](https://pnpm.io/)** for its speed and efficiency, or **npm** for its universal compatibility. The [yurba.js](https://github.com/yurbajs/yurba.js) project itself uses pnpm.
+::: tip Рекомендація
+Для нових проєктів ми рекомендуємо **[pnpm](https://pnpm.io/)** за його швидкість і ефективність, або **npm** за універсальну сумісність. Проєкт [yurba.js](https://github.com/yurbajs/yurba.js) сам використовує pnpm.
 :::
 
-## Installing dotenv
+## Встановлення dotenv
 
-For secure environment variable management, we recommend installing [dotenv](https://www.npmjs.com/package/dotenv). This package allows you to load environment variables from a `.env` file into `process.env`.
+Для безпечного управління змінними середовища ми рекомендуємо встановити [dotenv](https://www.npmjs.com/package/dotenv). Цей пакет дозволяє завантажувати змінні середовища з файлу `.env` в `process.env`.
 
 ::: code-group
 
@@ -178,7 +178,7 @@ pnpm add dotenv
 ```
 
 ```bash [bun]
-# Note: Bun has built-in .env support, but you can still use dotenv if needed
+# Примітка: Bun має вбудовану підтримку .env, але ви все одно можете використовувати dotenv за потреби
 bun add dotenv
 ```
 
@@ -186,11 +186,11 @@ bun add dotenv
 
 
 
-### Verifying Installation
+### Перевірка інсталяції
 
-After installation, verify that yurba.js is properly installed:
+Після інсталяції перевірте, що yurba.js правильно встановлено:
 
-**Check Package Installation**
+**Перевірка інсталяції пакета**
     
 ::: code-group
 
@@ -219,16 +219,16 @@ my-bot@0.0.1 /Projects/yurbajs/examples/guide-bot
 
 dependencies:
 dotenv 17.2.0
-yurba.js 0.1.9
+yurba.js 1.0.0-next.15
 ```
 
-## Next Steps
+## Наступні кроки
 
-Congratulations! You now have Node.js and yurba.js installed on your system. You're ready to move on to the next step: [setting up your bot account](/setup/setting-up-bot-account).
+Вітаємо! Тепер у вас встановлено Node.js та yurba.js на вашій системі. Ви готові перейти до наступного кроку: [налаштування акаунта вашого бота](/setup/setting-up-bot-account).
 
-## Additional Resources
+## Додаткові ресурси
 
-- **[Node.js Documentation](https://nodejs.org/docs/latest/api/)** - Official Node.js documentation
-- **[npm Documentation](https://docs.npmjs.com/)** - Package manager documentation
-- **[TypeScript Handbook](https://www.typescriptlang.org/docs/)** - If you plan to use TypeScript
-- **[Vscodium](https://vscodium.com/)** - Recommended code editor  (`Free/Libre Open Source Software Binaries of VS Code`)
+- **[Документація Node.js](https://nodejs.org/docs/latest/api/)** - Офіційна документація Node.js
+- **[Документація npm](https://docs.npmjs.com/)** - Документація менеджера пакетів
+- **[Посібник TypeScript](https://www.typescriptlang.org/docs/)** - Якщо ви плануєте використовувати TypeScript
+- **[Vscodium](https://vscodium.com/)** - Рекомендований редактор коду (`Безкоштовне/Вільне Програмне Забезпечення з відкритим кодом бінарні файли VS Code`)

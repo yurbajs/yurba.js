@@ -1,119 +1,120 @@
 ---
-title: Setting up a bot application
+title: Налаштування бот-акаунта
 editLink: true
 sidebar: true
 ---
 
-# Setting up a Bot Application
+# Налаштування бот-акаунта
 
-Creating a bot account is a crucial step in your yurba.js development journey. This guide will walk you through the process of setting up your bot account and obtaining the necessary authentication tokens.
+Створення бот-акаунта — це важливий крок у вашій подорожі розробки з yurba.js. Цей посібник проведе вас через процес налаштування вашого бот-акаунта та отримання необхідних токенів аутентифікації.
 
-## Understanding Bot Accounts on Yurba.one
+## Розуміння бот-акаунтів на Yurba.one
 
-> [!NOTE] Important Information
-> Currently, Yurba.one does not provide dedicated bot application endpoints. Instead, you'll need to create a regular user account that will serve as your bot. This approach is temporary and may change in future API versions.
+> [!NOTE] Важлива інформація
+> Наразі Yurba.one не надає спеціальні ендпоінти для бот-додатків. Натомість вам потрібно створити звичайний користувацький акаунт, який служитиме вашим ботом. Цей підхід є тимчасовим і може змінитися в майбутніх версіях API.
 
-### Why Use a Separate Account?
+### Навіщо використовувати окремий акаунт?
 
-While you could technically use your personal account for bot development, we **strongly recommend** creating a dedicated account for several reasons:
+Хоча технічно ви могли б використовувати свій особистий акаунт для розробки бота, ми **наполегливо рекомендуємо** створити окремий акаунт з кількох причин:
 
-- **Security**: Keeps your personal account separate from bot activities
-- **Organization**: Makes it easier to manage bot-specific settings and data
-- **Safety**: Reduces risk to your main account during development and testing
-- **Professionalism**: Provides a clean, dedicated identity for your bot
+- **Безпека**: Тримає ваш особистий акаунт окремо від діяльності бота
+- **Організація**: Полегшує управління налаштуваннями і даними, специфічними для бота
+- **Безпечність**: Зменшує ризик для вашого основного акаунта під час розробки та тестування
+- **Професіоналізм**: Надає чисту, виділену ідентичність для вашого бота
 
-## Creating Your Bot Account
+## Створення вашого бот-акаунта
 
-### Step 1: Account Registration
+### Крок 1: Реєстрація акаунта
 
-Choose one of these registration methods:
+Оберіть один із цих способів реєстрації:
 
-#### Option A: Direct Registration
-1. Navigate to [yurba.one/register](https://yurba.one/register/)
-2. Fill out the registration form with your bot's information
-3. Use a any email address for your bot (e.g., `mybot@domain.com`)
-- You can also use temporary email, but then it's recommended to add your real email as a `reserve email` in [settings](https://yurba.one/settings/?page=profile)
-4. Choose a username that clearly identifies it as a bot
-5. Complete the registration process
+#### Варіант A: Пряма реєстрація
+1. Перейдіть на [yurba.one/register](https://yurba.one/register/)
+2. Заповніть форму реєстрації інформацією про вашого бота
+3. Використовуйте будь-яку електронну адресу для вашого бота (наприклад, `mybot@domain.com`)
+- Ви також можете використовувати тимчасову електронну пошту, але тоді рекомендується додати вашу справжню електронну пошту як `резервну електронну пошту` в [налаштуваннях](https://yurba.one/settings/?page=profile)
+4. Оберіть ім'я користувача, яке чітко ідентифікує його як бота
+5. Завершіть процес реєстрації
 
-<img src="/images/register.png" width="800" alt="Yurba.one registration page" />
+<img src="/images/register.png" width="800" alt="Сторінка реєстрації Yurba.one" />
 
-#### Option B: Google OAuth Registration
-1. Visit [yurba.one/login](https://yurba.one/login/)
-2. Click "Sign in with Google"
-3. Use a Google account dedicated to your bot
-4. Complete the OAuth flow
+#### Варіант B: Реєстрація через Google OAuth
+1. Відвідайте [yurba.one/login](https://yurba.one/login/)
+2. Натисніть "Увійти через Google"
+3. Використовуйте Google акаунт, призначений для вашого бота
+4. Завершіть OAuth потік
 
-> [!TIP] Best Practices for Bot Accounts
-> - Use descriptive usernames (e.g., `WeatherBot`, `ModeratorBot`)
-> - Set a clear profile picture that represents your bot's function
-> - Write a bio that explains what your bot does
+> [!TIP] Кращі практики для бот-акаунтів
+> - Використовуйте описові імена користувачів (наприклад, `WeatherBot`, `ModeratorBot`)
+> - Завжди додавайте в кінець посилання (**@**) закінцення `_bot`
+> - Встановіть чітке зображення профілю, яке представляє функцію вашого бота
+> - Напишіть біографію, яка пояснює, що робить ваш бот
 
-### Step 2: Account Configuration
+### Крок 2: Конфігурація акаунта
 
-After registration, configure your bot account:
+Після реєстрації налаштуйте ваш бот-акаунт:
 
-- **Profile Setup**
-   - Write a clear description of your bot's purpose
+- **Налаштування профілю**
+   - Напишіть чіткий опис призначення вашого бота
 
-## Obtaining Your Authentication Token
+## Отримання вашого токена аутентифікації
 
-The authentication token is your bot's key to accessing the Yurba API. Handle it with extreme care.
+Токен аутентифікації — це ключ вашого бота для доступу до Yurba API. Обробляйте його з надзвичайною обережністю.
 
-### Accessing Token Settings
+### Доступ до налаштувань токена
 
-1. **Navigate to Security Settings**
-   - Go to [Settings → Security](https://yurba.one/settings/?page=security)
-   - Copy the token from sessions
-   - Store it securely
+1. **Перейдіть до налаштувань безпеки**
+   - Перейдіть до [Налаштування → Безпека](https://yurba.one/settings/?page=security)
+   - Скопіюйте токен з сесій
+   - Зберігайте його безпечно
 
-<img src="/images/tokens.png" width="800" alt="Token generation interface" />
+<img src="/images/tokens.png" width="800" alt="Інтерфейс генерації токена" />
 
-> [!DANGER] Critical Security Warning
-> **Never share your token with anyone!** Your token provides complete access to your bot account. Treat it like a password and store it securely using environment variables or secure configuration files.
+> [!DANGER] Критичне попередження про безпеку
+> **Ніколи не діліться своїм токеном ні з ким!** Ваш токен надає повний доступ до вашого бот-акаунта. Обробляйте його як пароль і зберігайте безпечно, використовуючи змінні середовища або безпечні файли конфігурації.
 
-## Understanding Yurba Tokens
+## Розуміння токенів Yurba
 
-### Token Format
+### Формат токена
 
-Yurba tokens follow a specific format:
-- **Prefix**: Always start with `y.`
-- **Length**: Typically 32-34 characters total
-- **Characters**: Alphanumeric characters
+Токени Yurba дотримуються специфічного формату:
+- **Префікс**: Завжди починаються з `y.`
+- **Довжина**: Зазвичай 32-34 символи загалом
+- **Символи**: Алфавітно-цифрові символи
 
-**Example formats:**
+**Приклади форматів:**
 ```y.token
 y.RT0ZALrC4tUwU7WmEGvq5XdlsRjpMlrL
 y.lSRjyiajBHC3EoZ8lLbYDnBpwXiPN9u3
 ```
 
-> [!NOTE] Example Tokens
-> The tokens shown above are examples only and were invalidated before publication. 
+> [!NOTE] Приклади токенів
+> Показані вище токени є лише прикладами і були деактивовані перед публікацією. 
 
-## What If Your Token Is Compromised?
+## Що робити, якщо ваш токен скомпрометовано?
 
-If you suspect your token has been compromised:
+Якщо ви підозрюєте, що ваш токен був скомпрометований:
 
-### Immediate Actions
+### Негайні дії
 
-1. **Revoke the Token**
-   - Go to [Settings → Security](https://yurba.one/settings/?page=security)
-   - Click "Stop sessions" 
-   - This immediately invalidates the compromised token
+1. **Відкликайте токен**
+   - Перейдіть до [Налаштування → Безпека](https://yurba.one/settings/?page=security)
+   - Натисніть "Зупинити сесії"
+   - Це негайно деактивує скомпрометований токен
    ::: warning
-    Also, when logging into the account, a new token will be created. It's recommended `to delete it as well`, since there might be a script running that copies all tokens. Log into your account again - this token will definitely not be accessible to anyone but you
+    Також, коли ви входите в акаунт, створюється новий токен. Рекомендується `також видалити його`, оскільки може бути запущений скрипт, який копіює всі токени. Увійдіть в акаунт знову - цей токен точно не буде доступний нікому, крім вас
    :::
 
-## Account Recovery
+## Відновлення акаунта
 
-If you lose access to your bot account:
+Якщо ви втратили доступ до вашого бот-акаунта:
 
-1. **Password Reset**
-   - Use the standard password reset process
-   - Check the email associated with your bot account
+1. **Скидання пароля**
+   - Використовуйте стандартний процес скидання пароля
+   - Перевірте електронну пошту, пов'язану з вашим бот-акаунтом
 
-2. **Contact Support**
-   - If password reset fails, contact Yurba.one support
-   - Provide proof of account ownership
-   - Explain that this is a bot account
+2. **Звернення до підтримки**
+   - Якщо скидання пароля не спрацьовує, зверніться до підтримки Yurba.one
+   - Надайте доказ власності акаунта
+   - Поясніть, що це бот-акаунт
 

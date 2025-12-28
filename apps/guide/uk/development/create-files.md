@@ -1,14 +1,14 @@
 ---
-title: Creating main Bot Files
+title: Створення основних файлів бота
 editLink: true
 sidebar: true
 ---
 
-# Creating Your Bot Files
+# Створення файлів вашого бота
 
-Welcome! We're now starting to create code for your bot. We already have [config.json](/development/create-project#configuration-file-s) and [.env](/development/create-project#configuration-file-s), and we've set up [version control with git](/development/create-project#configuration-file-s).
+Вітаємо! Тепер ми починаємо створювати код для вашого бота. У нас вже є [config.json](/development/create-project#configuration-file-s) та [.env](/development/create-project#configuration-file-s), і ми налаштували [контроль версій з git](/development/create-project#configuration-file-s).
 
-## Creating `index.js`
+## Створення `index.js`
 
 ::: code-group
 
@@ -23,10 +23,10 @@ const config = require('./config.json');
 require('dotenv').config()
 
 // Create client (bot) with your token and prefix
-const client = new Client(process.env.YURBA_TOKEN, {prefix: config.prefix});
+const client = new Client({prefix: config.prefix});
 
 // Register first command - ping
-client.registerCommand('ping', {}, (message, args) => {
+client.commands.register('ping', {}, (message, args) => {
     message.reply(`pong!, ${message.Author.Name}`);
 });
 
@@ -37,7 +37,7 @@ client.once('ready', () => {
 });
 
 // Initialize the bot (start it)
-client.init();
+client.init(process.env.YURBA_TOKEN);
 
 ```
 
@@ -70,14 +70,14 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
 :::
 
 
-## Add start script
+## Додавання start скрипта
 
 ```json:line-numbers [package.json]
 {
@@ -99,12 +99,12 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
 
-## Start the bot
+## Запуск бота
 
 ::: code-group
 
@@ -126,7 +126,7 @@ bun start
 
 :::
 
-After starting, you should see something like this:
+Після запуску ви повинні побачити щось подібне:
 
 
 ```console
@@ -139,9 +139,9 @@ After starting, you should see something like this:
 Ready!
 ```
 
-Let's execute our first command [`/ping`](/development/create-files#creating-index-js)
+Давайте виконаємо нашу першу команду [`/ping`](/development/create-files#creating-index-js)
 
 <img src="/images/ping.png" width="800" alt="Ping!" />
 
-> [!NOTE] First achievement!
-> Creating your bot's first command
+> [!NOTE] Перше досягнення!
+> Створення першої команди вашого бота
