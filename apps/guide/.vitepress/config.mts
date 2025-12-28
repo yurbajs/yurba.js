@@ -341,7 +341,7 @@ function createSidebar(lang: 'en' | 'uk') {
       ]
     },
     {
-      text: 'Setup',
+      text: lang === 'uk' ? t('sidebar.setup', 'uk') : t('sidebar.setup', 'en'),
       collapsed: false,
       items: [
         { 
@@ -349,29 +349,29 @@ function createSidebar(lang: 'en' | 'uk') {
           link: lang === 'uk' ? '/uk/setup/installation' : '/setup/installation' 
         },
         { 
-          text: 'Bot account', 
+          text: lang === 'uk' ? t('sidebar.botAccount', 'uk') : t('sidebar.botAccount', 'en'), 
           link: lang === 'uk' ? '/uk/setup/setting-up-bot-account' : '/setup/setting-up-bot-account' 
         },
         { 
-          text: 'Chat', 
+          text: lang === 'uk' ? t('sidebar.chat', 'uk') : t('sidebar.chat', 'en'), 
           link: lang === 'uk' ? '/uk/setup/chat-with-bot' : '/setup/chat-with-bot' 
         }
       ]
     },
     {
-      text: 'Development',
+      text: lang === 'uk' ? t('sidebar.development', 'uk') : t('sidebar.development', 'en'),
       collapsed: false,
       items: [
         { 
-          text: 'Project', 
+          text: lang === 'uk' ? t('sidebar.project', 'uk') : t('sidebar.project', 'en'), 
           link: lang === 'uk' ? '/uk/development/create-project' : '/development/create-project' 
         },
         { 
-          text: 'Files', 
+          text: lang === 'uk' ? t('sidebar.files', 'uk') : t('sidebar.files', 'en'), 
           link: lang === 'uk' ? '/uk/development/create-files' : '/development/create-files' 
         },
         { 
-          text: 'Structure', 
+          text: lang === 'uk' ? t('sidebar.structure', 'uk') : t('sidebar.structure', 'en'), 
           link: lang === 'uk' ? '/uk/development/structure' : '/development/structure' 
         }
       ]

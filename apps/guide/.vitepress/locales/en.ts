@@ -13,13 +13,18 @@ export const en = {
     introduction: "Introduction",
     installation: "Installation",
     quickStart: "Quick Start",
-
     creatingBot: "Creating a Bot",
+    "What's new": "What's new",
     commands: "Commands",
     events: "Events",
     overview: "Overview",
     setup: "Setup",
-    development: "Development"
+    development: "Development",
+    botAccount: "Bot account",
+    chat: "Chat",
+    project: "Project",
+    files: "Files",
+    structure: "Structure"
   },
   ui: {
     onThisPage: "On this page",

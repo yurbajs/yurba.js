@@ -19,7 +19,12 @@ export const uk = {
     events: "Події",
     overview: "Огляд",
     setup: "Налаштування",
-    development: "Розробка"
+    development: "Розробка",
+    botAccount: "Бот-акаунт",
+    chat: "Спілкування",
+    project: "Проєкт",
+    files: "Файли",
+    structure: "Структура"
   },
   ui: {
     onThisPage: "На цій сторінці",
