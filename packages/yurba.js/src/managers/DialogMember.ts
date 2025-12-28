@@ -1,7 +1,6 @@
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
-import { DialogMemberModel } from '@yurbajs/types';
 import { DialogMember } from '../structures/DialogMember';
 
 const log = CDLog('DialogMemberManager');
