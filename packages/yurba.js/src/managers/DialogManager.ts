@@ -1,7 +1,6 @@
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
-import { DialogModel } from '@yurbajs/types';
 import { Dialog } from '../structures/Dialog';
 
 const log = CDLog('DialogManager');
@@ -37,28 +36,16 @@ export default class DialogManager extends CachedManager<number, Dialog> {
   async fetch(dialog: number | string, { cache = true, force = false } = {}): Promise<Dialog | null> {
     const id = this.resolveId(dialog);
     
-    if (!id && typeof dialog === 'string') {
-      try {
-        const data = await this.client.api.dialogs.get(dialog);
-        return this._add(data, cache, { id: data.ID });
-      } catch (error) {
-        log.error(`Error fetching dialog by link ${dialog}:`, error);
-        return null;
-      }
-    }
-    
-    if (!id) return null;
-    
-    if (!force) {
+    if (!force && id) {
       const existing = this.cache.get(id);
       if (existing) return existing;
     }
 
     try {
-      const data = await this.client.api.dialogs.get(id);
-      return this._add(data, cache, { id });
+      const data = await this.client.api.dialogs.get(typeof dialog === 'string' ? parseInt(dialog, 10) : dialog);
+      return this._add(data, cache, { id: data.ID });
     } catch (error) {
-      log.error(`Error fetching dialog ${id}:`, error);
+      log.error(`Error fetching dialog ${dialog}:`, error);
       return null;
     }
   }

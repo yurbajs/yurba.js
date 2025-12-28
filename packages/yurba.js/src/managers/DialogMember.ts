@@ -46,7 +46,7 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
    * @param {boolean} [options.force=false] - Whether to skip the cache check and request the API
    * @returns {Promise<DialogMember[]>} Array of dialog members
    */
-  async fetchAll({ cache = true, force = false } = {}): Promise<DialogMember[]> {
+  async fetchAll({ cache = true } = {}): Promise<DialogMember[]> {
     try {
       const members: DialogMember[] = [];
       let page = 0;
