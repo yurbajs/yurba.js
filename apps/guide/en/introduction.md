@@ -1,26 +1,28 @@
-# Introduction to Yurba.js <Badge type="tip" text="0.1.9+" />
+# Introduction to Yurba.js <Badge type="tip" text="next.15+" />
 
-Welcome to the comprehensive guide for **yurba.js** - the powerful and flexible library for creating bots and automating interactions with the Yurba API. Whether you're building your first bot or developing advanced automation solutions, this guide will walk you through everything you need to know.
+Welcome to the comprehensive guide for **yurba.js** — a powerful and flexible library for creating bots, integrations, automation, and working with the [Yurba API](https://docs.yurba.one/overview). Whether you're creating your first bot or developing complex automated solutions, this guide will help you step by step master everything you need.
 
-> [!CAUTION] Beta Version
-> This library is currently in active development. The stable release will begin with version 1.0.0+. Breaking changes may occur between minor versions.
+> [!CAUTION] Important about bots 
+> Unfortunately, at this time, Yurba.one does not provide the ability to create real bots, so we have to use alternative ways - creating a user account and using it
 
-## Quick Start Guide
-
-Ready to get started? Follow these essential steps:
+## Quick Start
+Ready to get started? Follow these basic steps:
 
 1. **[Installation](/setup/installation)** - Set up Node.js and install yurba.js
 2. **[Bot Account Setup](/setup/setting-up-bot-account)** - Create and configure your bot account
 3. **[Project Creation](/development/create-project)** - Initialize your bot project
-4. **[File Structure](/development/create-files)** - Create your main bot files
-5. **[Project Organization](/development/structure)** - Upgrade structure code
+4. **[File Structure](/development/create-files)** - Create the main bot files
+5. **[Project Organization](/development/structure)** - Improve code structure
 
 ## Prerequisites
 
-Before diving in, ensure you have:
+Before starting, make sure you have:
 
 - **Node.js 20+** - The library requires Node.js version 20 or higher
-- **Basic JavaScript Knowledge** 
-- **Yurba.one Account** - You'll need an account to obtain API tokens
+- **Basic JavaScript knowledge**
+- **Yurba.one account** - You'll need an account to get API tokens
 
-Ready to start building? Let's move on to [setting up your development environment](/setup/installation)!
+Ready to start development? Let's move on to [setting up the development environment](/setup/installation)!
+
+## Additional
+[What is yurba.js](/about/yurbaone)

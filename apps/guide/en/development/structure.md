@@ -31,7 +31,7 @@ Since our `index.js` is now in the `src` folder, we need to update the start scr
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
@@ -63,11 +63,11 @@ const config = require('./config.json');
 require('dotenv').config()
 
 // Create client (bot) with your token and prefix
-const client = new Client(process.env.YURBA_TOKEN, {prefix: config.prefix});
+const client = new Client({prefix: config.prefix});
 
 // -- Function for loading commands -- //
 
-// Import standart modules for work with files
+// Import standard modules for work with files
 const fs = require('fs');
 const path = require('path');
 
@@ -109,7 +109,7 @@ function loadCommands(client, commandsPath = './commands') {
                     }
                     
                     // Register command
-                    client.registerCommand(
+                    client.commands.register(
                         command.name, // Name of command
                         command.args || {}, // Arguments in command
                         command.handler,
@@ -135,12 +135,12 @@ loadCommands(client);
 // When the bot starts, it will log 'Ready!' to the console
 client.once('ready', () => {
     console.log('Ready!');
-    console.log(`Registered commands: ${client.getCommands().length}`);
-    console.log(`Available commands: ${client.getCommands().join(', ')}`);
+    console.log(`Registered commands: ${client.commands.getAll().length}`);
+    console.log(`Available commands: ${client.commands.getAll().join(', ')}`);
 });
 
 // Initialize the bot (start it)
-client.init();
+client.init(process.env.YURBA_TOKEN);
 
 ```
 #### Add ping command 
@@ -148,7 +148,6 @@ Add a ping command either in commands or in commands/utils
 ```javascript [ping.js]
 module.exports = {
     name: 'ping',
-    description: 'Responds with pong!',
     argsSchema: {},
     handler: (message, args) => {
         message.reply(`pong!, ${message.Author.Name}`);
@@ -189,4 +188,4 @@ Available commands: ping
 > [!NOTE] Thank you for being with us
 > Regarding the guide and specifically information about continuing the main work on creating the bot - this is the end for now, continuation will appear over time.
 > Also, I would be very happy to see ideas and reports about issues with the Guide and not only in [issues](https://github.com/yurbajs/yurba.js/issues) and [pull requests](https://github.com/yurbajs/yurba.js/pulls) with labels `Ideas` and `Guide`.
-> Personally RastGame ;)
+> Personally RastGame `;)`

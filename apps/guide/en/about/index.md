@@ -11,7 +11,7 @@ const members = [
     title: 'Founder | developer | tester | others..',
     links: [
       { icon: 'github', link: 'https://github.com/rastgame' },
-      { icon: 'https://yurba.js.org/icons/yurba.svg', link: 'https://github.com/rastgame' }
+      { icon: 'yurba', link: 'https://github.com/rastgame' }
     ]
   }
 ]
@@ -19,6 +19,8 @@ const members = [
 </script>
 
 # About Yurba.js
+
+A powerful library for creating bots and integrating with the Yurba API.
 
 ## Team
 
@@ -28,10 +30,10 @@ Currently, the entire project is created, maintained, and developed by the found
 
 ## Goal
 
-Our goal is simple: to provide developers working with api.yurba.one a convenient and simple library with all the necessary functionality. This library is designed not only for bot developers but also for anyone who needs integration with api.yurba.one. That's why all packages are independent: [REST](https://github.com/yurbajs/yurba.js/tree/main/packages/rest) is exclusively for working with the Yurba API, while the main library [Yurba.js](https://github.com/yurbajs/yurba.js/tree/main/packages/yurba.js) is for creating bots. We believe in:
+Our goal is simple: to provide developers working with Yurba.one or its API a convenient and simple library with all the necessary functionality. This library is designed not only for bot developers but also for anyone who needs integration with api.yurba.one. That's why all packages are independent: [REST](https://github.com/yurbajs/yurba.js/tree/main/packages/rest) is exclusively for working with the Yurba API, while the main library [Yurba.js](https://github.com/yurbajs/yurba.js/tree/main/packages/yurba.js) is for creating bots. We believe in:
 
 - **Simplicity** - Making bot development accessible to developers of all skill levels
-- **Productivity** - Ensuring speed and efficiency of our library
+- **Performance** - Ensuring speed and efficiency of our library
 - **Reliability** - Creating stable tools that developers can rely on
 - **Community** - Developing a completely open project where [all code is available for review](https://github.com/yurbajs) under the [Apache 2.0](https://github.com/yurbajs/yurba.js/blob/main/LICENSE) license and [anyone can propose solutions to problems](https://github.com/yurbajs/yurba.js/issues) or [code improvements](https://github.com/yurbajs/yurba.js/pulls)
 

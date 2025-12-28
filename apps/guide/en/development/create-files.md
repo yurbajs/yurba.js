@@ -23,10 +23,10 @@ const config = require('./config.json');
 require('dotenv').config()
 
 // Create client (bot) with your token and prefix
-const client = new Client(process.env.YURBA_TOKEN, {prefix: config.prefix});
+const client = new Client({prefix: config.prefix});
 
 // Register first command - ping
-client.registerCommand('ping', {}, (message, args) => {
+client.commands.register('ping', {}, (message, args) => {
     message.reply(`pong!, ${message.Author.Name}`);
 });
 
@@ -37,7 +37,7 @@ client.once('ready', () => {
 });
 
 // Initialize the bot (start it)
-client.init();
+client.init(process.env.YURBA_TOKEN);
 
 ```
 
@@ -70,7 +70,7 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
@@ -99,7 +99,7 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "^1.0.0-next.15"
   }
 }
 ```
