@@ -4,7 +4,7 @@ import {
   AppToken,
   CreateAppPayload,
   BaseOkay,
-  Author
+  ShortUserModel
 } from '@yurbajs/types';
 
 export class AppResource {
@@ -174,10 +174,10 @@ export class AppResource {
    * const user = await rest.apps.getUser('token_here', 'secret_key_here');
    * ```
    */
-  async getUser(token: string, secretKey: string): Promise<Author> {
+  async getUser(token: string, secretKey: string): Promise<ShortUserModel> {
     if (!token || token.length < 1) throw new Error('Invalid token');
     if (!secretKey || secretKey.length < 1) throw new Error('Invalid secret key');
-    return this.client.get<Author>(`/apps/user/${token}`, {}, {
+    return this.client.get<ShortUserModel>(`/apps/user/${token}`, {}, {
       headers: { 'Secret-Key': secretKey }
     });
   }

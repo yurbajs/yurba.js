@@ -1,6 +1,6 @@
 import { default as ReconnectingWebSocket } from '@yurbajs/ws';
 import { EventEmitter } from 'events';
-import { Dialog, IWebSocketManager } from '@yurbajs/types';
+import { DialogModel, IWebSocketManager } from '@yurbajs/types';
 import { CDLog } from '../utils/devlog';
 
 // Локальні типи для WebSocket subscribe/unsubscribe
@@ -27,8 +27,6 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
   private connectionTimeoutId: NodeJS.Timeout | null = null;
   private uptimeTimeoutId: NodeJS.Timeout | null = null;
   private messageQueue: string[] = [];
-  private isConnectionStable = false; // * Property declared but only used internally
-  private connectionStartTime: number = 0; // * Property declared but never used
 
   /**
    * Creates a new WebSocket manager
@@ -44,9 +42,9 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @param dialogs Dialogs
    * @returns Promise that resolves after successful connection
    */
-  async connect(dialogs: Dialog[]): Promise<void> {
+  async connect(dialogs: DialogModel[]): Promise<void> {
     this.ws = new ReconnectingWebSocket(
-      `wss://api.yurba.one/ws?token=${this.token}`, // !WARN: Token exposed in URL - potential security risk in logs
+      `wss://api.yurba.one/ws?token=${this.token}`,
       {
         maxReconnectAttempts: 10,
         retryDelay: 5000,
@@ -55,7 +53,6 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     );
 
     this.ws.on('open', () => {
-      this.connectionStartTime = Date.now();
       log.info('WebSocket connection opened.');
       
       // Clear connection timeout
@@ -64,11 +61,10 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         this.connectionTimeoutId = null;
       }
       
-      // Set uptime timeout (wait 5 seconds before considering connection stable)
+      // Set uptime timeout (wait 3 seconds before considering connection stable)
       this.uptimeTimeoutId = setTimeout(() => {
-        this.isConnectionStable = true;
         log.info('WebSocket connection is now stable');
-      }, 3000); // !WARN: Comment says 5 seconds but timeout is 3000ms
+      }, 3000);
       
       // Send queued messages
       while (this.messageQueue.length > 0) {
@@ -84,7 +80,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       if (dialogs && dialogs.length > 0) {
         for (const dialog of dialogs) {
           this.subscribeToEvents('dialog', dialog.ID);
-          log.info('Subscribed to dialog:', dialog.ID);; // !WARN: Double semicolon
+          log.info('Subscribed to dialog:', dialog.ID);
         }
       } else {
         log.info('No dialogs to subscribe to');
@@ -152,7 +148,11 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       this.subscriptions.get(category)?.push(thing_id); // * Optional chaining with mutation - could fail silently
     }
 
-    this.ws?.send(JSON.stringify(subscribeData)); // !WARN: No error handling if send fails
+    try {
+      this.ws?.send(JSON.stringify(subscribeData));
+    } catch (err) {
+      log.error('Failed to send subscribe message:', err);
+    }
   }
 
   /**
@@ -265,7 +265,6 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       clearTimeout(this.uptimeTimeoutId);
       this.uptimeTimeoutId = null;
     }
-    this.isConnectionStable = false;
     this.ws?.close();
     this.ws = null;
   }
@@ -275,7 +274,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @returns true if connected
    */
   isConnected(): boolean {
-    return this.ws?.isOpen() || false;
+    return this.ws?.isOpen() ?? false;
   }
 
   /**
@@ -283,8 +282,8 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    * @param data Data to send
    */
   send(data: string): void {
-    if (this.isConnected()) {
-      this.ws?.send(data); // !WARN: Optional chaining after isConnected check is redundant
+    if (this.isConnected() && this.ws) {
+      this.ws.send(data);
       log.debug('Sent message:', data);
     } else {
       // Queue message if not connected

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Logging levels
  */
@@ -126,8 +127,10 @@ export default class Logger {
     const levelStr = `[${levelName}] `;
 
     if (this.useColors) {
+      // eslint-disable-next-line no-console
       console.log(`${timeStr}${color}${prefixStr}${levelStr}\x1b[0m`, ...args);
     } else {
+      // eslint-disable-next-line no-console
       console.log(`${timeStr}${prefixStr}${levelStr}`, ...args);
     }
 
@@ -143,22 +146,17 @@ export default class Logger {
    */
   private writeToFile(message: string): void {
     try {
-      if (typeof window !== 'undefined') {
-        const logs = localStorage.getItem('yurba_logs') || '';
-        localStorage.setItem('yurba_logs', logs + message);
+      const fs = require('fs');
+      const path = require('path');
+      const dir = path.dirname(this.logFilePath);
+      
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
       }
-      else if (typeof require !== 'undefined') {
-        const fs = require('fs');
-        const path = require('path');
-        const dir = path.dirname(this.logFilePath);
-        
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true });
-        }
-        
-        fs.appendFileSync(this.logFilePath, message);
-      }
+      
+      fs.appendFileSync(this.logFilePath, message);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to write log to file:', error);
     }
   }
