@@ -6,22 +6,48 @@ import { User } from '../structures/User';
 const log = CDLog('UserManager');
 
 /**
- * Manages API methods for users and stores their cache.
+ * Manages API methods for users and stores their cache
+ * @extends {CachedManager}
  */
 export default class UserManager extends CachedManager<number, User> {
+  /**
+   * Cache for mapping user links to IDs
+   * @type {Map<string, number>}
+   * @private
+   */
   private linkCache = new Map<string, number>(); // link -> ID mapping
 
+  /**
+   * @param {Client} client - The client that instantiated this manager
+   * @param {Iterable<User>} [iterable] - An iterable of users to cache
+   */
   constructor(client: Client, iterable?: Iterable<User>) {
     super(client, User, iterable);
   }
 
   /**
-   * The cache of this manager
+   * The cache of users
    * @type {Map<number, User>}
+   * @name UserManager#cache
+   * @readonly
    */
 
   /**
-   * Obtains a user from Yurba, or the user cache if it's already available.
+   * Obtains a user from Yurba, or the user cache if it's already available
+   * @param {number|string} user - The user ID or link to fetch
+   * @param {Object} [options] - Additional options
+   * @param {boolean} [options.cache=true] - Whether to cache the fetched user
+   * @param {boolean} [options.force=false] - Whether to skip the cache check and request the API
+   * @returns {Promise<?User>} The user, or null if not found
+   * @example
+   * // Fetch a user by ID
+   * const user = await client.users.fetch(123456);
+   * 
+   * // Fetch a user by link
+   * const user = await client.users.fetch('username');
+   * 
+   * // Force fetch from API
+   * const user = await client.users.fetch(123456, { force: true });
    */
   async fetch(user: number | string, { cache = true, force = false } = {}): Promise<User | null> {
     const id = this.resolveId(user);
@@ -72,14 +98,18 @@ export default class UserManager extends CachedManager<number, User> {
   }
 
   /**
-   * Resolves a user resolvable to a User object.
+   * Resolves a user resolvable to a User object
+   * @param {User} user - The user resolvable to resolve
+   * @returns {?User} The resolved user
    */
   resolve(user: User): User | null {
     return super.resolve(user);
   }
 
   /**
-   * Resolves a user resolvable to a user id.
+   * Resolves a user resolvable to a user ID
+   * @param {string|number|User} user - The user resolvable to resolve
+   * @returns {?number} The resolved user ID
    */
   resolveId(user: string | number | User): number | null {
     if (typeof user === 'number') return user;

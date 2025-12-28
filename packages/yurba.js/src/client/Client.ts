@@ -82,8 +82,25 @@ class Client extends EventEmitter {
   public readonly api: REST;
 
   // Public Managers
+  /**
+   * The user manager of this client
+   * @type {UserManager}
+   * @readonly
+   */
   public readonly users: UserManager;
+  
+  /**
+   * The user client manager of this client
+   * @type {UserClientManager}
+   * @readonly
+   */
   public readonly userClient: UserClientManager;
+  
+  /**
+   * The command manager of this client
+   * @type {CommandManager}
+   * @readonly
+   */
   public readonly commands: CommandManager;
 
   // System Managers

@@ -68,9 +68,19 @@ class LRUCache<K, V> {
   }
 }
 
-export default class CachedManager<K, V> extends DataManager<K, V> {
+/**
+ * Abstract manager for handling cached data structures
+ * @abstract
+ * @extends {DataManager}
+ */
+export default abstract class CachedManager<K, V> extends DataManager<K, V> {
   private _cache: LRUCache<K, V>;
 
+  /**
+   * @param {Client} client - The client that instantiated this manager
+   * @param {Function} holds - The data structure this manager holds
+   * @param {Iterable<V>} [iterable] - An iterable of items to cache
+   */
   constructor(client: Client, holds: new (...args: any[]) => V, iterable?: Iterable<V>) {
     super(client, holds);
     
@@ -84,7 +94,9 @@ export default class CachedManager<K, V> extends DataManager<K, V> {
   }
 
   /**
-   * The cache of items for this manager.
+   * The cache of items for this manager
+   * @type {Map<K, V>}
+   * @readonly
    */
   get cache(): Map<K, V> {
     if (Math.random() < 0.1) {
@@ -93,6 +105,16 @@ export default class CachedManager<K, V> extends DataManager<K, V> {
     return this._cache as any;
   }
 
+  /**
+   * Adds an item to the cache
+   * @param {*} data - The data to add
+   * @param {boolean} [cache=true] - Whether to cache the item
+   * @param {Object} [options] - Additional options
+   * @param {K} [options.id] - The ID of the item
+   * @param {Array} [options.extras=[]] - Extra parameters for the constructor
+   * @returns {V} The cached item
+   * @protected
+   */
   protected _add(data: any, cache = true, { id, extras = [] }: { id?: K; extras?: any[] } = {}): V {
     const existing = this.cache.get(id ?? data.id);
     if (existing) {

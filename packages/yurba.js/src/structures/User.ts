@@ -2,10 +2,24 @@ import { User as UserData } from '@yurbajs/types';
 import { Client } from '../client/Client';
 import { Base } from './Base';
 
+/**
+ * Represents a user on Yurba
+ * @extends {Base}
+ */
 export class User extends Base {
+  /**
+   * The user's ID
+   * @type {number}
+   * @readonly
+   */
   public readonly id: number;
+  
   private _data: UserData;
 
+  /**
+   * @param {Client} client - The instantiating client
+   * @param {UserData} data - The data for the user
+   */
   constructor(client: Client, data: UserData) {
     super(client);
     this.id = data.ID;
@@ -13,31 +27,44 @@ export class User extends Base {
     this._patch(data);
   }
 
+  /**
+   * Updates the user with new data
+   * @param {UserData} data - The new user data
+   * @returns {UserData} The updated data
+   * @private
+   */
   _patch(data: UserData) {
     this._data = data;
     Object.assign(this, data);
     return data;
   }
 
+  /**
+   * Returns the user data as JSON
+   * @returns {UserData} The user data
+   */
   toJSON(): UserData {
     return this._data;
   }
 
+  /**
+   * Returns a string representation of the user
+   * @returns {string} The user's link with @ prefix
+   */
   toString(): string {
     return `@"${this._data.Link}"`;
   }
-
 
   get [Symbol.for('nodejs.util.inspect.custom')]() {
     return () => this.toJSON();
   }
 
   /**
-   * Checks if the user is a bot
-   * @returns {boolean} True if user is a bot (link ends with _bot)
+   * Whether this user is a bot
+   * @type {boolean}
+   * @readonly
    */
   get bot(): boolean {
     return this._data.Link?.endsWith('_bot') ?? false;
   }
-  
 }
