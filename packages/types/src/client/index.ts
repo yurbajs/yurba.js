@@ -1,10 +1,5 @@
-import { Message, User, Author, Photo, Dialog } from '../api';
+import { MessageModel, DialogModel } from '../api';
 import { CommandArgsSchema, CommandHandler } from '../core';
-
-// Типи для зворотної сумісності
-export type UserModel = User;
-export type PhotoModel = Photo;
-export type ShortUserModel = Author;
 
 export interface ClientOptions {
   prefix?: string;
@@ -19,28 +14,28 @@ export interface MiddlewareConfig {
 }
 
 export interface MiddlewareFunction {
-  (message: Message, next?: () => Promise<void>): Promise<void>;
+  (message: MessageModel, next?: () => Promise<void>): Promise<void>;
 }
 
 export interface ICommandManager {
   regusre(command: string, argsSchema: CommandArgsSchema, handler: CommandHandler): void;
   getCommands(): string[];
-  handleCommand(message: Message, enhanceMessage: (msg: Message) => void): Promise<void>;
+  handleCommand(message: MessageModel, enhanceMessage: (msg: MessageModel) => void): Promise<void>;
 }
 
 export interface IMessageManager {
-  enhanceMessage(message: Message): void;
+  enhanceMessage(message: MessageModel): void;
 }
 
 export interface IMiddlewareManager {
   use(middleware: MiddlewareFunction, config?: Partial<MiddlewareConfig>): void;
-  execute(message: Message): Promise<void>;
+  execute(message: MessageModel): Promise<void>;
   remove(name: string): boolean;
   list(): MiddlewareConfig[];
 }
 
 export interface IWebSocketManager {
-  connect(dialogs: Dialog[]): Promise<void>;
+  connect(dialogs: DialogModel[]): Promise<void>;
   on(event: string, listener: (...args: any[]) => void): this;
   off(event: string, listener: (...args: any[]) => void): this;
   send(data: string): void;
@@ -53,7 +48,7 @@ interface WSConnected {
 
 interface WSMessage {
   Type: string;
-  Message: Message ;
+  Message: MessageModel ;
 }
 
 export type WSEvent = WSConnected | WSMessage ;

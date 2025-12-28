@@ -2,7 +2,7 @@ import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
 import {
-  Message,
+  MessageModel,
   WebSocketError,
   ApiRequestError,
   ClientOptions,
@@ -10,8 +10,8 @@ import {
   MiddlewareConfig,
   WSEvent,
   SendMessagePayload,
-  Dialog,
-  User,
+  DialogModel,
+  UserModel,
   Photo
 } from '@yurbajs/types';
 
@@ -70,7 +70,7 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  */
 class Client extends EventEmitter {
   // Options
-  private token: string | boolean | undefined; // !WARN: token type includes boolean which seems incorrect - should be string | undefined
+  private token: string | boolean | undefined; 
   public prefix: string = '/';
 
   private reconnectAttempts: number = 0;
@@ -104,13 +104,13 @@ class Client extends EventEmitter {
   public readonly commands: CommandManager;
 
   // System Managers
-  private wsm!: WSM; // !WARN: Definite assignment assertion without null checks - potential runtime errors
-  private messageManager!: MessageManager; // !WARN: Same issue - should initialize or add null checks
-  private middlewareManager!: MiddlewareManager; // !WARN: Same issue
+  private wsm!: WSM;
+  private messageManager!: MessageManager;
+  private middlewareManager!: MiddlewareManager;
 
 
   // Other
-  private _dialogs?: Dialog[];
+  private _dialogs?: DialogModel[];
   private isReady: boolean = false;
 
 
@@ -170,42 +170,25 @@ class Client extends EventEmitter {
    * Gets bot user data (synchronous)
    * @returns User | null Bot user data or null if loading
    */
-  get user(): User | null {
+  get user(): UserModel | null {
     return this.userClient.get();
   }
 
   /**
    * Getter for bot user dialogs
-   * @returns {Dialog[]} Dialogs 
+   * @returns {DialogModel[]} Dialogs 
    */
-  get dialogs(): Dialog[] | undefined {
-    // зроби якщо dialogs немає то запить api.dialogs.getAll():
-    // + кешування на 2 хвилини
-      if (!this._dialogs) this.api.dialogs.getAll() // !WARN: Async operation in getter without error handling - can cause unhandled promise rejections
-        .then((dialogs: Dialog[]) => {
+  get dialogs(): DialogModel[] | undefined {
+      if (!this._dialogs) void this.api.dialogs.getAll()
+        .then((dialogs: DialogModel[]) => {
           this._dialogs = dialogs;
-          return this._dialogs; // * Unnecessary return in promise chain
-        }); // !WARN: Missing .catch() for error handling
-      return this._dialogs; // !WARN: Returns undefined while async operation is pending - confusing behavior
-    
+          return this._dialogs;
+        })
+        .catch(err => {
+          erlog('Error fetching dialogs:', err);
+        });
+      return this._dialogs;
   }
-
-
-
-
-
-  // /**
-  //  * Returns list of registered commands
-  //  * @returns {string[]} Array of command names
-  //  *
-  //  * @example
-  //  * const commands = client.getCommands();
-  //  * console.log('Registered commands:', commands);
-  //  * // Result: Registered commands: [ 'info', 'help' ]
-  //  */
-  // public getCommands(): string[] {
-  //   return this.commandManager.getCommands();
-  // }
 
   /**
    * Initializes the client
@@ -253,11 +236,11 @@ class Client extends EventEmitter {
 
       // Захист від подвійної підписки на подію message
       if (!this.wsmMessageSubscribed) {
-        this.wsm.on('message', (message: any) => {
-          log('YURBA.JS ::', JSON.stringify(message, null, 2));
-          this.handleMessage(message);
+        this.wsm.on('message', (message: WSEvent) => {
+          void log('YURBA.JS ::', JSON.stringify(message, null, 2));
+          void this.handleMessage(message);
         });
-        this.wsmMessageSubscribed = true; // * Boolean flag is fragile - consider using WeakSet or other tracking
+        this.wsmMessageSubscribed = true;
       }
 
       await this.wsm.connect(this._dialogs ?? []);
@@ -268,8 +251,6 @@ class Client extends EventEmitter {
       );
     }
   }
-
-
 
   /**
    * Handles WebSocket reconnection
@@ -306,7 +287,7 @@ class Client extends EventEmitter {
    * @param msg Message object
    * @private
    */
-  private async handleCommandMessage(msg: Message): Promise<void> {
+  private async handleCommandMessage(msg: MessageModel): Promise<void> {
     try {
       await this.commands[kHandleCommand](
         msg,
@@ -412,18 +393,43 @@ class Client extends EventEmitter {
    * // Wait for user event and get all arguments
    * const [arg1, arg2] = await client.waitFor('customEvent', () => true, { multiple: true });
    */
-  async waitFor<T extends any[] = any[]>(
+  async waitFor<T extends unknown[] = unknown[]>(
     event: string,
     check: (...args: T) => boolean,
     options: {
       timeout?: number;
-      multiple?: boolean;
+      multiple?: boolean; 
       signal?: AbortSignal;
     } = {}
-  ): Promise<any> { // !WARN: Return type 'any' loses type safety - should be more specific
+  ): Promise<unknown> {
+    // Validate event name is non-empty string
+    if (!event || typeof event !== 'string') {
+      throw new Error('Event name must be a non-empty string');
+    }
+
+    // Validate check is a function
+    if (typeof check !== 'function') {
+      throw new Error('Check must be a function');
+    }
+
     const { timeout = 60000, multiple = false, signal } = options;
 
-    return new Promise<any>((resolve, reject) => {
+    // Validate timeout is positive number
+    if (typeof timeout !== 'number' || timeout <= 0) {
+      throw new Error('Timeout must be a positive number');
+    }
+
+    // Validate multiple is boolean
+    if (typeof multiple !== 'boolean') {
+      throw new Error('Multiple option must be a boolean');
+    }
+
+    // Validate signal is AbortSignal if provided
+    if (signal && !(signal instanceof AbortSignal)) {
+      throw new Error('Signal must be an AbortSignal');
+    }
+
+    return new Promise<unknown>((resolve, reject) => {
       let finished = false;
 
       const cleanup = () => {
@@ -436,9 +442,9 @@ class Client extends EventEmitter {
       const timeoutId = setTimeout(() => {
         if (!finished) {
           cleanup();
-          reject(new Error(`Timeout waiting for event: ${event}`)); // * Consider using custom error class for timeouts
+          reject(new Error(`Timeout waiting for event: ${event}`));
         }
-      }, timeout); // !WARN: No validation that timeout is positive number
+      }, timeout);
 
       const abortHandler = () => {
         if (!finished) {
@@ -455,7 +461,7 @@ class Client extends EventEmitter {
         signal.addEventListener('abort', abortHandler);
       }
 
-      const listener = (...args: any[]) => {
+      const listener = (...args: unknown[]) => {
         try {
           if (check(...(args as T))) {
             cleanup();
@@ -513,7 +519,7 @@ class Client extends EventEmitter {
   async sendMessage(
     dialogId: number, // * Add validation for positive integer
     payload: SendMessagePayload
-  ): Promise<Message> {
+  ): Promise<MessageModel> {
     try {
       log(`Sending message to dialog ${dialogId}: ${payload.text}`);
       const response = await this.api.dialogs.sendMessage(dialogId, payload);
@@ -571,7 +577,7 @@ class Client extends EventEmitter {
    *   console.log('Received message:', msg);
    * });
    */
-  on(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
+  on(event: string | symbol, listener: (...args: unknown[]) => void): this {
     return super.on(event, listener);
   }
 
@@ -586,7 +592,7 @@ class Client extends EventEmitter {
    *   console.log('Bot is ready!');
    * });
    */
-  once(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
+  once(event: string | symbol, listener: (...args: unknown[]) => void): this {
     return super.once(event, listener);
   }
 
@@ -600,7 +606,7 @@ class Client extends EventEmitter {
    * client.on('message', handler);
    * client.off('message', handler);
    */
-  off(event: string | symbol, listener: (...args: any[]) => void): this { // * Using 'any[]' loses type safety
+  off(event: string | symbol, listener: (...args: unknown[]) => void): this { 
     return super.off(event, listener);
   }
 
@@ -615,7 +621,7 @@ class Client extends EventEmitter {
     client.emit('customEvent', { foo: 'bar' });
    ```
    */
-  emit(event: string | symbol, ...args: any[]): boolean { // * Using 'any[]' loses type safety
+  emit(event: string | symbol, ...args: unknown[]): boolean { 
     return super.emit(event, ...args);
   }
 
@@ -628,7 +634,7 @@ class Client extends EventEmitter {
    */
   removeListener(
     event: string | symbol,
-    listener: (...args: any[]) => void // * Using 'any[]' loses type safety
+    listener: (...args: unknown[]) => void 
   ): this {
     return super.removeListener(event, listener);
   }
@@ -648,36 +654,55 @@ class Client extends EventEmitter {
    * Adds a middleware function to execute for each incoming message
    * @param middleware Middleware function
    * @param config Middleware configuration
+   * @throws {Error} If middleware manager is not initialized
    */
   use(middleware: MiddlewareFunction, config?: MiddlewareConfig): void {
-    this.middlewareManager.use(middleware, config); // !WARN: No validation that middlewareManager is initialized
+    if (!this.middlewareManager) {
+      throw new Error('Middleware manager not initialized');
+    }
+    this.middlewareManager.use(middleware, config);
   }
 
   /**
    * Removes middleware by name
    * @param name Middleware name
    * @returns Boolean indicating whether the middleware was removed
+   * @throws {Error} If middleware manager is not initialized
    */
   removeMiddleware(name: string): boolean {
-    return this.middlewareManager.remove(name); // !WARN: No validation that middlewareManager is initialized
+    if (!this.middlewareManager) {
+      throw new Error('Middleware manager not initialized');
+    }
+    return this.middlewareManager.remove(name);
   }
 
   /**
    * Gets a list of all middleware
    * @returns Array of middleware configurations
+   * @throws {Error} If middleware manager is not initialized
    */
   getMiddlewares(): MiddlewareConfig[] {
-    return this.middlewareManager.list(); // !WARN: No validation that middlewareManager is initialized
+    if (!this.middlewareManager) {
+      throw new Error('Middleware manager not initialized');
+    }
+    return this.middlewareManager.list();
   }
 
   /**
    * Shows typing indicator in dialog
    * @param dialogId Dialog ID
+   * @throws {Error} If WebSocket manager is not initialized or connection is closed
    */
   typing(dialogId: number): void {
-    this.wsm.send(JSON.stringify({ // !WARN: No error handling if wsm is not initialized or connection is closed
-      command: 'typing',
-      thing_id: dialogId // * Consider validating dialogId is positive integer
+    if (!this.wsm) {
+      throw new Error('WebSocket manager not initialized');
+    }
+    if (!this.wsm.isConnected()) {
+      throw new Error('WebSocket connection is closed');
+    }
+    this.wsm.send(JSON.stringify({
+      command: 'typing', 
+      thing_id: dialogId
     }));
   }
 

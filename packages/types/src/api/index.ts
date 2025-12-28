@@ -56,14 +56,14 @@
 // ================================
 
 // -------- MESSAGE TYPES --------
-export interface Message {
+export interface MessageModel {
   ID: number;
-  Author: Author;
+  Author: ShortUserModel;
   Dialog: DialogInfo;
   Type: MessageType;
   Text: string;
   Photos: Photo['ID'][];
-  ReplyTo: Message | null;
+  ReplyTo: MessageModel | null;
   Attachments: Attachment[];
   Views: number;
   Timestamp: number;
@@ -74,14 +74,14 @@ export interface Message {
 export interface SendMessagePayload {
   text?: string | '';
   photos_list?: Photo['ID'][] | null;
-  replyTo?: Message['ID'] | null;
-  edit?: Message['ID'] | null;
+  replyTo?: MessageModel['ID'] | null;
+  edit?: MessageModel['ID'] | null;
   attachments?: AttachmentPayload[] | null;
 }
 
 export type DeleteMessageResponse = BaseDelete;
-export type EditMessageResponse = Message;
-export type SendMessageResponse = Message;
+export type EditMessageResponse = MessageModel;
+export type SendMessageResponse = MessageModel;
 
 export type MessageType =
   | 'join'
@@ -93,10 +93,10 @@ export type MessageType =
   | '';
 
 // -------- POST TYPES --------
-export interface Post {
+export interface PostModel {
   ID: number;
-  Author: Author;
-  Target: Author | null;
+  Author: ShortUserModel;
+  Target: ShortUserModel | null;
   Content: string;
   Photos: number[];
   Attachments: Attachment[];
@@ -108,7 +108,7 @@ export interface Post {
   Views: number;
   IsAd: boolean;
   Language: Language;
-  Repost: Post | null;
+  Repost: PostModel | null;
   Nsfw: boolean; // Spoiler
 }
 
@@ -123,8 +123,8 @@ export interface CreatePostPayload {
   photos_list: Photo['ID'][] | [];
   language: Language | null;
   nsfw: boolean | false;
-  edit: Post['ID'] | null;
-  repost: Post['ID'] | null;
+  edit: PostModel['ID'] | null;
+  repost: PostModel['ID'] | null;
   timestamp: number | 0;
   attachments: AttachmentPayload[] | [];
 }
@@ -135,24 +135,24 @@ export interface Likes {
 }
 
 export type DeletePostResponse = BaseDelete;
-export type EditPostResponse = Post;
-export type CreatePostResponse = Post;
+export type EditPostResponse = PostModel;
+export type CreatePostResponse = PostModel;
 
 // -------- COMMENTS TYPES -------
-export interface Comment {
+export interface CommentModel {
   ID: number;
-  Author: Author;
+  Author: ShortUserModel;
   Content: string;
   Photos: number[];
   Timestamp: number;
   Likes: Likes;
-  Post: Post;
+  Post: PostModel;
 }
 
 // -------- PHOTO TYPES --------
 export interface Photo {
   ID: number;
-  Author: Author['ID'];
+  Author: ShortUserModel['ID'];
   Caption: string;
   Timestamp: number;
   Url: string;
@@ -169,19 +169,19 @@ export interface DialogInfo {
   Avatar: Photo['ID'];
 }
 
-export interface Dialog {
+export interface DialogModel {
   ID: number;
   Type: DialogType;
   Members: number;
-  Author: Author | null;
-  DialogDude: Author | null;
+  Author: ShortUserModel | null;
+  DialogDude: ShortUserModel | null;
   Name: string;
   Link: string;
   Description: string;
   Avatar: Photo['ID'];
   Verify: DialogVerify;
   Private: boolean;
-  LastMessage: Message;
+  LastMessage: MessageModel;
   Timestamp: number;
   Country: number;
   Topic: number;
@@ -190,10 +190,10 @@ export interface Dialog {
   Member: boolean;
 }
 
-export interface DialogMember {
+export interface DialogMemberModel {
   ID: number;
   Dialog: number;
-  Member: User;
+  Member: UserModel;
   Timestamp: number;
 }
 
@@ -241,7 +241,7 @@ export interface UpdateDialogPayload {
 
 export type CreateDialogResponse = DialogInfo;
 
-export type CreatePrivateDialogResponse = Dialog;
+export type CreatePrivateDialogResponse = DialogModel;
 
 export type DialogCreateType = 'group' | 'channel';
 
@@ -258,7 +258,7 @@ export enum DialogVerify {
 
 // -------- USER TYPES --------
 // Short model user
-export interface Author {
+export interface ShortUserModel {
   ID: number;
   Name: string;
   Surname: string;
@@ -296,7 +296,7 @@ export interface Author {
  * Optional sensitive data: Password, Email, EmailReserve
  * Optional user-specific data: TrackList, NewMessages, NewNotifications, FriendsRequests, Relationships
  */
-export interface User {
+export interface UserModel {
   ID: number; // Unique user identifier
   Name: string; // First name
   Surname: string; // Last name
@@ -377,7 +377,7 @@ export enum RelationshipState {
 // -------- Notification types --------
 export interface Notification {
   ID: number;
-  User: Author;
+  User: ShortUserModel;
   Type: NotificationType;
   Item: NotificationItem;
   Read: boolean;
@@ -417,8 +417,8 @@ export interface Shop {
 
 export interface Gift {
   ID: number;
-  User: User;
-  Target: User;
+  User: UserModel;
+  Target: UserModel;
   Item: ShopItem;
   Timestamp: number;
 }
@@ -441,22 +441,22 @@ export enum ShopItemType {
 
 export interface CommentLikeItem {
   ID: number;
-  Author: User;
+  Author: UserModel;
   Content: string;
   Photos: number[] | null;
   Timestamp: number;
   Likes: Likes;
-  Post: Post;
+  Post: PostModel;
 }
 
 export interface CommentMentionItem {
   ID: number;
-  Author: User;
+  Author: UserModel;
   Content: string;
   Photos: number[] | null;
   Timestamp: number;
   Likes: Likes;
-  Post: Post;
+  Post: PostModel;
 }
 
 export interface AcceptFriendRequestItem {
@@ -469,17 +469,17 @@ export interface NewFriendRequestItem {
 
 export interface CommentPostItem {
   ID: number;
-  Author: User;
+  Author: UserModel;
   Content: string;
   Photos: number[] | null;
   Timestamp: number;
   Likes: Likes;
-  Post: Post;
+  Post: PostModel;
 }
 
-export type PostMentionItem = Post;
-export type PostOnWallItem = Post;
-export type PostLikeItem = Post;
+export type PostMentionItem = PostModel;
+export type PostOnWallItem = PostModel;
+export type PostLikeItem = PostModel;
 
 // -------- Friends types --------
 
@@ -565,7 +565,7 @@ export interface Playlist {
   Release: string;
   Description: string;
   Tracks: Track['ID'][];
-  Author: Author;
+  Author: ShortUserModel;
   Timestamp: number;
   Cover: Photo['ID'];
 }
@@ -577,7 +577,7 @@ export enum Authorship {
 export interface TrackPayload {
   audio: Blob;
   name: string;
-  author: Author;
+  author: ShortUserModel;
   release: number;
   cover: Photo['ID'];
   mode: 'public' | 'private';
@@ -614,12 +614,12 @@ export interface Video {
 
 export interface Comment {
   ID: number;
-  Author: Author;
+  Author: ShortUserModel;
   Content: string;
   Photos: Photo['ID'][];
   Timestamp: number;
   Likes: Likes;
-  Post: Post;
+  Post: PostModel;
 }
 
 export interface CommentPayload {
@@ -744,13 +744,13 @@ export interface VideoItem {
   Url: string;
 }
 
-export type PostItem = Post;
+export type PostItem = PostModel;
 
 // -------- GIFT TYPES --------
 export interface Gift {
   ID: number;
-  User: User;
-  Target: User;
+  User: UserModel;
+  Target: UserModel;
   Item: ShopItem;
   Timestamp: number;
 }
