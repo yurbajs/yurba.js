@@ -27,7 +27,6 @@
   "plugin": ["typedoc-plugin-markdown"],
   "hidePageHeader": true,
   "entryFileName": "index.md",
-  "docsRoot": "./",
   "skipErrorChecking": true,
   "navigationLinks": {
     "Guide": "https://yurba.js.org",
@@ -44,32 +43,5 @@
   "disableSources": false,
   "lightHighlightTheme": "github-light",
   "darkHighlightTheme": "github-dark",
-  "useCodeBlocks": true,
-  "blockTags": [
-    "@alpha",
-    "@beta",
-    "@defaultValue",
-    "@decorator",
-    "@deprecated",
-    "@eventProperty",
-    "@example",
-    "@experimental",
-    "@inheritDoc",
-    "@internal",
-    "@label",
-    "@override",
-    "@packageDocumentation",
-    "@param",
-    "@privateRemarks",
-    "@public",
-    "@readonly",
-    "@remarks",
-    "@returns",
-    "@sealed",
-    "@see",
-    "@since",
-    "@throws",
-    "@typeParam",
-    "@virtual"
-  ]
+  "useCodeBlocks": true
 }
