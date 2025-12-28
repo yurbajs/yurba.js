@@ -2,7 +2,7 @@
   <br />
   <p>
     <a href="https://yurba.js.org">
-      <img src="https://yurba.js.org/banner-white.svg" width="500" alt="yurba.js" />
+      <img src="https://yurba.js.org/banner.svg" width="700" alt="yurba.js" />
     </a>
   </p>
   <br />
