@@ -1,6 +1,6 @@
 import { DialogModel, DialogType, DialogVerify } from '@yurbajs/types';
 import { Client } from '../client/Client';
-import Base from './Base';
+import {Base} from './Base';
 import DialogMemberManager from '../managers/DialogMember';
 
 /**
