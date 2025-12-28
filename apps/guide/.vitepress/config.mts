@@ -228,7 +228,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: { src: '/logo.svg1', alt: 'Yurba.js Logo' },
+    logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
     
     sidebar: {
       '/': createSidebar('en'),
