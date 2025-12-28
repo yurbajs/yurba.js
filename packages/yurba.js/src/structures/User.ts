@@ -1,4 +1,4 @@
-import { User as UserData } from '@yurbajs/types';
+import { UserModel } from '@yurbajs/types';
 import { Client } from '../client/Client';
 import { Base } from './Base';
 
@@ -14,13 +14,13 @@ export class User extends Base {
    */
   public readonly id: number;
   
-  private _data: UserData;
+  private _data: UserModel;
 
   /**
    * @param {Client} client - The instantiating client
    * @param {UserData} data - The data for the user
    */
-  constructor(client: Client, data: UserData) {
+  constructor(client: Client, data: UserModel) {
     super(client);
     this.id = data.ID;
     this._data = data;
@@ -33,7 +33,7 @@ export class User extends Base {
    * @returns {UserData} The updated data
    * @private
    */
-  _patch(data: UserData) {
+  _patch(data: UserModel) {
     this._data = data;
     Object.assign(this, data);
     return data;
@@ -43,7 +43,7 @@ export class User extends Base {
    * Returns the user data as JSON
    * @returns {UserData} The user data
    */
-  toJSON(): UserData {
+  toJSON(): UserModel {
     return this._data;
   }
 

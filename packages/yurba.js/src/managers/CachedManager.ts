@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DataManager from './DataManager';
 import { Client } from '../client/Client';
 
