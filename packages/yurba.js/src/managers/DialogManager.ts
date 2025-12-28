@@ -1,59 +1,88 @@
-import { REST } from '@yurbajs/rest';
-import { DialogModel } from '@yurbajs/types';
 import CachedManager from './CachedManager';
 import { Client } from '../client/Client';
 import { CDLog } from '../utils/devlog';
+import { DialogModel } from '@yurbajs/types';
+import { Dialog } from '../structures/Dialog';
 
 const log = CDLog('DialogManager');
 
 /**
- * Manages API methods for dialogs and stores their cache.
+ * Manages API methods for dialogs and stores their cache
+ * @extends {CachedManager}
  */
-export default class DialogManager extends CachedManager<number, DialogModel> {
-  private api: REST;
-
-  constructor(client: Client, api: REST, iterable?: Iterable<DialogModel>) {
-    super(client, Object as any, iterable);
-    this.api = api;
+export default class DialogManager extends CachedManager<number, Dialog> {
+  /**
+   * @param {Client} client - The client that instantiated this manager
+   * @param {Iterable<Dialog>} [iterable] - An iterable of dialogs to cache
+   */
+  constructor(client: Client, iterable?: Iterable<Dialog>) {
+    super(client, Dialog, iterable);
   }
 
   /**
-   * The cache of this manager
+   * The cache of dialogs
    * @type {Map<number, Dialog>}
+   * @name DialogManager#cache
+   * @readonly
    */
 
   /**
-   * Obtains a dialog from Yurba, or the dialog cache if it's already available.
+   * Obtains a dialog from Yurba, or the dialog cache if it's already available
+   * @param {number|string} dialog - The dialog ID or link to fetch
+   * @param {Object} [options] - Additional options
+   * @param {boolean} [options.cache=true] - Whether to cache the fetched dialog
+   * @param {boolean} [options.force=false] - Whether to skip the cache check and request the API
+   * @returns {Promise<?Dialog>} The dialog, or null if not found
    */
-  async fetch(dialogId: number, { cache = true, force = false } = {}): Promise<DialogModel | null> {
+  async fetch(dialog: number | string, { cache = true, force = false } = {}): Promise<Dialog | null> {
+    const id = this.resolveId(dialog);
+    
+    if (!id && typeof dialog === 'string') {
+      try {
+        const data = await this.client.api.dialogs.get(dialog);
+        return this._add(data, cache, { id: data.ID });
+      } catch (error) {
+        log.error(`Error fetching dialog by link ${dialog}:`, error);
+        return null;
+      }
+    }
+    
+    if (!id) return null;
+    
     if (!force) {
-      const existing = this.cache.get(dialogId);
+      const existing = this.cache.get(id);
       if (existing) return existing;
     }
 
     try {
-      const data = await this.api.dialogs.get(dialogId);
-      return this._add(data, cache, { id: dialogId });
+      const data = await this.client.api.dialogs.get(id);
+      return this._add(data, cache, { id });
     } catch (error) {
-      log.error(`Error fetching dialog ${dialogId}:`, error);
+      log.error(`Error fetching dialog ${id}:`, error);
       return null;
     }
   }
 
   /**
-   * Resolves a dialog resolvable to a Dialog object.
+   * Resolves a dialog resolvable to a Dialog object
+   * @param {Dialog} dialog - The dialog resolvable to resolve
+   * @returns {?Dialog} The resolved dialog
    */
-  resolve(dialog: any): DialogModel | null {
+  resolve(dialog: Dialog): Dialog | null {
     return super.resolve(dialog);
   }
 
   /**
-   * Resolves a dialog resolvable to a dialog id.
+   * Resolves a dialog resolvable to a dialog ID
+   * @param {string|number|Dialog} dialog - The dialog resolvable to resolve
+   * @returns {?number} The resolved dialog ID
    */
-  resolveId(dialog: any): number | null {
+  resolveId(dialog: string | number | Dialog): number | null {
     if (typeof dialog === 'number') return dialog;
+    if (typeof dialog === 'string') {
+      const parsed = parseInt(dialog, 10);
+      return isNaN(parsed) ? null : parsed;
+    }
     return super.resolveId(dialog);
   }
-
-
 }

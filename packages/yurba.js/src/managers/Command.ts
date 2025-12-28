@@ -1,7 +1,7 @@
 import {
   CommandArgsSchema,
   CommandHandler,
-  Message,
+  MessageModel,
 } from '@yurbajs/types';
 import { CommandError } from '@yurbajs/types';
 import { Client } from '../client/Client';
@@ -91,8 +91,8 @@ export default class CommandManager {
    * @param enhanceMessage Function to enhance message
    */
    async [kHandleCommand](
-    message: Message,
-    enhanceMessage: (msg: Message) => void
+    message: MessageModel,
+    enhanceMessage: (msg: MessageModel) => void
   ): Promise<void> {
     enhanceMessage(message);
 
