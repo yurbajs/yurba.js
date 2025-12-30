@@ -1,0 +1,25 @@
+{
+	"name": ".env",
+	"scopeName": "source.env",
+	"fileTypes": ["env"],
+	"uuid": "b18e38c7-9730-4b27-aecb-8e49ff77a459",
+
+	"patterns": [
+		{
+			"match": "([A-Z,_]*)(?==)",
+			"name": "constant",
+			"comment": "Uppercase text e.g. hello"
+		},
+		{
+			"match": "(?<==)[\\w\\D+.-:]+",
+			"name": "entity.other.attribute-name",
+			"comment": "Lowercase text e.g. world"
+		},
+		{
+			"match": "#[a-zA-Z0-9\\s]*",
+			"name": "comment",
+			"comment": "comments"
+		}
+	],
+  	"repository": {}
+}
