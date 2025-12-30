@@ -68,9 +68,9 @@ export default {
         // Форсуємо перерендер соціальних іконок
         const socialLinks = document.querySelectorAll('.VPSocialLink')
         socialLinks.forEach(link => {
-          link.style.opacity = '0.99'
+          (link as HTMLElement).style.opacity = '0.99'
           setTimeout(() => {
-            link.style.opacity = '1'
+            (link as HTMLElement).style.opacity = '1'
           }, 10)
         })
       }
