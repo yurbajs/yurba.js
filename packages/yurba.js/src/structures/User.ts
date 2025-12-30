@@ -5,6 +5,7 @@ import { Base } from './Base';
 /**
  * Represents a user on Yurba
  * @extends {Base}
+ * @category Structures
  */
 export class User extends Base {
   /**

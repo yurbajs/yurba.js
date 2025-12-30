@@ -57,8 +57,5 @@ features:
     title: Перша і єдина
     details: Сама перша і єдина повноцінна бібліотека для інтеграції з Yurba.one.
 
-Spacer1:
-  height: 4rem
-
 ---
 

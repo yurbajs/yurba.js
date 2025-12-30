@@ -57,7 +57,4 @@ features:
     title: First and Only
     details: The very first and only full-featured library for Yurba.one integration.
 
-Spacer1:
-  height: 4rem
-
 --- 

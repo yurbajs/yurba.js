@@ -2,9 +2,9 @@ import WebSocket from 'ws';
 import { EventEmitter } from 'events';
 
 /**
- * @internal
+ * WebSocket configuration options
  */
-interface _ReconnectingWebSocketOptions {
+export interface _ReconnectingWebSocketOptions {
   maxReconnectAttempts?: number;
   retryDelay?: number;
   debug?: boolean;

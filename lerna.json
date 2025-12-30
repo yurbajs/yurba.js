@@ -14,7 +14,12 @@
     "version": {
       "conventionalCommits": true,
       "allowBranch": ["main", "dev"],
-      "changelogPreset": "angular",
+      "changelogPreset": {
+        "name": "angular",
+        "header": ""
+      },
+      "createRelease": "github",
+      "changelog": true,
       "exact": true,
       "forcePublish": true
     },

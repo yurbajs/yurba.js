@@ -22,6 +22,12 @@ export default defineConfig({
     }
   ],
   metaChunk: false,
+  markdown: {
+    languages: [
+      import('./md/langs/ytoken.json'),
+      import('./md/langs/dot-env.json') 
+    ],
+  },
   sitemap: {
     hostname: 'https://yurba.js.org',
     xslUrl: "/sitemap.xsl",

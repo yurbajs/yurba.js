@@ -41,12 +41,18 @@ export interface IWebSocketManager {
   send(data: string): void;
 }
 
-interface WSConnected {
+/**
+ * WebSocket connection established event
+ */
+export interface WSConnected {
   ok: number;
   version: string;
 }
 
-interface WSMessage {
+/**
+ * WebSocket message event
+ */
+export interface WSMessage {
   Type: string;
   Message: MessageModel ;
 }

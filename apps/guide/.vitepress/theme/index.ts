@@ -3,13 +3,10 @@ import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
-import './clean-style.css'
-import './custom.css'
+import './main.css'
 import HeroActions from './components/HeroActions.vue'
-import SimpleHero from './components/SimpleHero.vue'
 import Spacer from './components/Spacer.vue'
 import CallToAction from './components/CallToAction.vue'
-import MyLayout from './MyLayout.vue'
 
 export default {
   extends: DefaultTheme,
@@ -42,7 +39,6 @@ export default {
   },
   enhanceApp({ app, router, siteData }) {
     app.component('HeroActions', HeroActions)
-    app.component('SimpleHero', SimpleHero)
     app.component('Spacer', Spacer)
     app.component('CallToAction', CallToAction)
     
@@ -69,9 +65,9 @@ export default {
         // Форсуємо перерендер соціальних іконок
         const socialLinks = document.querySelectorAll('.VPSocialLink')
         socialLinks.forEach(link => {
-          link.style.opacity = '0.99'
+          (link as HTMLElement).style.opacity = '0.99'
           setTimeout(() => {
-            link.style.opacity = '1'
+            (link as HTMLElement).style.opacity = '1'
           }, 10)
         })
       }

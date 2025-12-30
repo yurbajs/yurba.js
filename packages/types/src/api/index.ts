@@ -631,7 +631,10 @@ export type DeleteCommentResponse = BaseDelete;
 
 // -------- Search types --------
 
-enum Sort {
+/**
+ * Sort options for search results
+ */
+export enum Sort {
   ByRelevance = 0,
   ByPopularity = 1,
   ByAlphabet = 2,
@@ -819,26 +822,38 @@ export enum Language {
   'Russian' = 3,
 }
 
-enum Subscription {
+/**
+ * User subscription levels
+ */
+export enum Subscription {
   None = 0,
   YurbaPlus = 1,
   YurbaPremium = 2,
 }
 
-enum Verification {
+/**
+ * User verification types
+ */
+export enum Verification {
   None = '',
   Default = 'Default',
   Organisation = 'Organisation',
   Goverment = 'Goverment',
 }
 
-enum Privacy {
+/**
+ * Privacy settings for user profile
+ */
+export enum Privacy {
   All = 0,
   Friends = 1,
   Nobody = 2,
 }
 
-enum OnlineDisplayType {
+/**
+ * Online status display types
+ */
+export enum OnlineDisplayType {
   Default = 0,
   Approximate = 1,
   Invisible = 2,

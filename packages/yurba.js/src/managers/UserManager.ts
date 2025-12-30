@@ -8,6 +8,7 @@ const log = CDLog('UserManager');
 /**
  * Manages API methods for users and stores their cache
  * @extends {CachedManager}
+ * @category Managers
  */
 export default class UserManager extends CachedManager<number, User> {
   /**

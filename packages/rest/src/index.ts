@@ -155,7 +155,7 @@ export type { CachedUser } from './cache';
 
 export {
   ApiError, BaseClientOptions,RequestConfig, RateLimitConfig,
-  UserResource, BatchRequest, DialogResource, AppResource, PostResource, MusebaseResource, PhotosResource, AccountResource, FilesResource, VideoResource, SearchResource
+  UserResource, BatchRequest, DialogResource, AppResource, PostResource, MusebaseResource, PhotosResource, AccountResource, FilesResource, VideoResource, SearchResource, ShopResource
 };
 
 // Default export for convenience

@@ -1,0 +1,15 @@
+{
+  "name": "y.token",
+  "scopeName": "source.ytoken",
+  "patterns": [
+    {
+      "match": "([a-zA-Z0-9]+)(\\.)([a-zA-Z0-9]{32})",
+      "captures": {
+        "1": { "name": "entity.name.type.y" },
+        "2": { "name": "punctuation.separator.dot" },
+        "3": { "name": "string.token" }
+      }
+    }
+  ],
+  "repository": {}
+}

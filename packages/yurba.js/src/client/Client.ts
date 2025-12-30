@@ -617,9 +617,9 @@ class Client extends EventEmitter {
    * @param args Arguments to pass to event listeners
    * @returns True if the event had listeners, false otherwise
    * @example
-   ```
-    client.emit('customEvent', { foo: 'bar' });
-   ```
+   * ```javascript
+   * client.emit('customEvent', { foo: 'bar' });
+   * ```
    */
   emit(event: string | symbol, ...args: unknown[]): boolean { 
     return super.emit(event, ...args);

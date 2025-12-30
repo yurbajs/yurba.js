@@ -25,6 +25,7 @@ export interface LoggerOptions {
 
 /**
  * Class for logging messages
+ * @category Utilities
  */
 export default class Logger {
   private level: LogLevel;

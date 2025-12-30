@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "types": ["vitepress/client", "vue"]
+  },
+  "include": [
+    ".vitepress/**/*",
+    "**/*.md",
+    "**/*.vue",
+    ".vitepress/theme/vue-shim.d.ts"
+  ]
+}
