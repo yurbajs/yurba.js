@@ -3,7 +3,7 @@ import { redirectPlugin } from './redirect-plugin.js';
 
 let typedocSidebar = [];
 try {
-  typedocSidebar = require('../docs/typedoc-sidebar.json');
+  typedocSidebar = require('../l/typedoc-sidebar.json');
 } catch (e) {
   console.warn('typedoc-sidebar.json not found. Run "pnpm run predocs" first.');
 }

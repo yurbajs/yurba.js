@@ -25,7 +25,57 @@
       "dependsOn": ["build", "test", "lint"],
       "cache": false,
       "outputs": []
-    }
+    },
+		"@discordjs/1": {
+			"env": [
+				"VERCEL_ENV",
+				"NEXT_PUBLIC_LOCAL_DEV",
+				"EDGE_CONFIG",
+				"MAX_FETCH_SIZE",
+				"CF_ACCOUNT_ID",
+				"CF_R2_DOCS_URL",
+				"CF_R2_DOCS_ACCESS_KEY_ID",
+				"CF_R2_DOCS_SECRET_ACCESS_KEY",
+				"CF_R2_DOCS_TOKEN",
+				"CF_R2_DOCS_BUCKET",
+				"CF_R2_DOCS_BUCKET_URL",
+				"CF_D1_DOCS_ID",
+				"CF_D1_DOCS_API_KEY"
+			],
+			"dependsOn": ["^build", "^docs"],
+			"inputs": [
+				"../../packages/*/README.md",
+				"public/**",
+				"src/**",
+				"scripts/**",
+				"!src/assets/readme/**",
+				"scripts/**",
+				"next.config.ts",
+				"package.json",
+				"tsconfig.json"
+			],
+			"outputs": [".next/**", ".next/cache/**", "src/assets/readme/**"],
+			"outputLogs": "full"
+		},
+		"docs": {
+			"dependsOn": ["build"],
+			"inputs": [
+				"../api-extractor/src/**",
+				"../api-extractor-model/src/**",
+				"../api-extractor-utils/src/**",
+				"../../api-extractor.json",
+				"../../tsconfig.docs.json",
+				"api-extractor.json",
+				"docs/**",
+				"!docs/docs.json",
+				"!docs/docs.api.json",
+				"!docs/*/split/**",
+				"tsconfig.docs.json"
+			],
+			"outputs": ["dist-docs/**", "docs/docs.json", "docs/docs.api.json", "docs/*/split/**"],
+			"cache": false,
+			"outputLogs": "errors-only"
+		}
   },
   "globalDependencies": [
     "package.json",

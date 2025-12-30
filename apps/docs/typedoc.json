@@ -16,7 +16,7 @@
   "sort": ["source-order"],
   "gitRevision": "main",
   "sourceLinkTemplate": "https://github.com/yurbajs/yurba.js/blob/main/{path}#L{line}",
-  "cleanOutputDir": true,
+  "cleanOutputDir": false,
   "treatWarningsAsErrors": false,
   "validation": {
     "notExported": false,
@@ -28,7 +28,7 @@
   "entryFileName": "index.md",
   "docsRoot": "./",
   "sidebar": {
-    "autoConfiguration": false,
+    "autoConfiguration": true,
     "format": "vitepress",
     "pretty": true,
     "collapsed": true
@@ -48,5 +48,26 @@
   "searchInComments": true,
   "disableSources": false,
   "lightHighlightTheme": "github-light",
-  "darkHighlightTheme": "github-dark"
+  "darkHighlightTheme": "github-dark",
+  "excludeNotDocumentedKinds": [
+      "Module",
+      "Namespace",
+      "Enum",
+      // "EnumMember", // Not enabled by default
+      "Variable",
+      "Function",
+      "Class",
+      "Interface",
+      "Constructor",
+      "Property",
+      "Method",
+      "CallSignature",
+      "IndexSignature",
+      "ConstructorSignature",
+      "Accessor",
+      "GetSignature",
+      "SetSignature",
+      "TypeAlias",
+      "Reference"
+  ]
 }

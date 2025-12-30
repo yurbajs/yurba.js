@@ -1,0 +1,24 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig.json",
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"allowImportingTsExtensions": false,
+		"noEmit": false,
+		"outDir": "dist"
+	},
+	"include": ["src/**/*.ts", "bin/**/*.ts"],
+	"exclude": ["node_modules", "dist"]
+}
