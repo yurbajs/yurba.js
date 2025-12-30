@@ -56,16 +56,6 @@
 /*           ------------------------           */ 
 
 
-.VPNavBar .title {
-  font-weight: 700;
-  color: var(--vp-c-brand-1);
-}
-
-/* ===== SIDEBAR ПОКРАЩЕННЯ ===== */
-.VPSidebarItem .link.active {
-  color: var(--vp-c-brand-1);
-  font-weight: 600;
-}
 
 /*           ------------------------1           */ 
 
