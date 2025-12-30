@@ -5,6 +5,7 @@
     "../../packages/*"
   ],
   "out": "./l",
+  "json": "./docs.json",
   "theme": "default",
   "includeVersion": true,
   "excludePrivate": true,
