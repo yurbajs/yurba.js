@@ -272,7 +272,7 @@ export class DialogResource {
   /**
    * Get message (by id)
    * @group Dialog Messages
-   * @param messageId - Message ID
+   * @param dialogId - Dialog ID
    * @since 1.0.0
    * @returns {Promise<MessageModel>} Array of messages
    * @deprecated This method may not work due to restricted access to view all messages

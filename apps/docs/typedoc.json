@@ -24,16 +24,10 @@
     "invalidLink": false,
     "notDocumented": false
   },
-  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "plugin": ["typedoc-plugin-markdown"],
   "hidePageHeader": true,
   "entryFileName": "index.md",
   "docsRoot": "./",
-  "sidebar": {
-    "autoConfiguration": true,
-    "format": "vitepress",
-    "pretty": false,
-    "collapsed": true
-  },
   "skipErrorChecking": true,
   "navigationLinks": {
     "Guide": "https://yurba.js.org",
@@ -47,7 +41,35 @@
     "external": false
   },
   "searchInComments": true,
-  "disableSources": true,
+  "disableSources": false,
   "lightHighlightTheme": "github-light",
-  "darkHighlightTheme": "github-dark"
+  "darkHighlightTheme": "github-dark",
+  "useCodeBlocks": true,
+  "blockTags": [
+    "@alpha",
+    "@beta",
+    "@defaultValue",
+    "@decorator",
+    "@deprecated",
+    "@eventProperty",
+    "@example",
+    "@experimental",
+    "@inheritDoc",
+    "@internal",
+    "@label",
+    "@override",
+    "@packageDocumentation",
+    "@param",
+    "@privateRemarks",
+    "@public",
+    "@readonly",
+    "@remarks",
+    "@returns",
+    "@sealed",
+    "@see",
+    "@since",
+    "@throws",
+    "@typeParam",
+    "@virtual"
+  ]
 }

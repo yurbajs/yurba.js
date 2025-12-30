@@ -2,6 +2,10 @@ import { UserModel } from '@yurbajs/types';
 import { User } from '../structures/User';
 import { Client } from '../client/Client';
 
+/**
+ * User client manager for handling current user data
+ * @category Managers
+ */
 export default class UserClientManager {
   private client: Client;
   private _user?: User;

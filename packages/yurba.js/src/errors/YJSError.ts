@@ -31,6 +31,18 @@ function message(code: keyof typeof ErrorCodes, args: any[]): string {
   return `${msg} ${args.join(' ')}`;
 }
 
+/**
+ * Custom error classes for Yurba.js
+ * @category Errors
+ */
 export const YurbajsError = makeYurbajsError(Error);
+/**
+ * Custom type error for Yurba.js
+ * @category Errors
+ */
 export const YurbajsTypeError = makeYurbajsError(TypeError);
+/**
+ * Custom range error for Yurba.js
+ * @category Errors
+ */
 export const YurbajsRangeError = makeYurbajsError(RangeError);

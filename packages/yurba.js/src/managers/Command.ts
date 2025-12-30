@@ -11,6 +11,7 @@ import { kHandleCommand } from '../utils/symbols';
 const log = CDLog('CommandManager');
 /**
  * Command manager for client
+ * @category Managers
  */
 export default class CommandManager {
   private commands: Map<
@@ -26,8 +27,7 @@ export default class CommandManager {
 
   /**
    * Creates a new command manager
-   * @param api Object with API methods
-   * @param getUser Function to get user
+   * @param client Client instance
    */
   constructor(
     client: Client
