@@ -6,11 +6,12 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "jsx": "preserve",
-    "types": ["vitepress/client"]
+    "types": ["vitepress/client", "vue"]
   },
   "include": [
     ".vitepress/**/*",
     "**/*.md",
-    "**/*.vue"
+    "**/*.vue",
+    ".vitepress/theme/vue-shim.d.ts"
   ]
 }
