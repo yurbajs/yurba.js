@@ -47,8 +47,6 @@
   },
   "searchInComments": true,
   "disableSources": false,
-  "lightHighlightTheme": "github-light",
-  "darkHighlightTheme": "github-dark",
   "excludeNotDocumentedKinds": [
       "Module",
       "Namespace",
