@@ -71,7 +71,7 @@
     transition: transform 0.25s ease;
     position: fixed;
     z-index: 100;
-    background: #EDF7FF;
+    background: #F8F9FA;
     height: 100vh;
     width: 260px;
     padding: 32px 20px;
@@ -108,7 +108,7 @@
 }
 
 :root:not(.dark) .curtain {
-  background: #EDF7FF;
+  background: #F8F9FA;
 }
 
 /* ===== SCROLLBAR ===== */
@@ -266,15 +266,15 @@ div[class*="language-"] {
 
 /* ===== СВІТЛА ТЕМА СПЕЦИФІКА ===== */
 :root:not(.dark) {
-  --vp-c-bg: #F8FCFF;
-  --vp-c-bg-alt: #f6f8fa;
-  --vp-c-bg-soft: #f6f8fa;
-  --vp-c-bg-elv: #F8FCFF;
+  --vp-c-bg: #FFFFFF;
+  --vp-c-bg-alt: #F8F9FA;
+  --vp-c-bg-soft: #F1F3F4;
+  --vp-c-bg-elv: #FFFFFF;
 }
 
 /* ===== LIGHT SIDEBAR ===== */
 :root:not(.dark) .VPSidebar {
-  background: #EDF7FF;
+  background: #F8F9FA;
 }
 
 /* ===== ТЕМНА ТЕМА СПЕЦИФІКА ===== */

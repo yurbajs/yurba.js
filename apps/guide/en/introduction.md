@@ -23,6 +23,3 @@ Before starting, make sure you have:
 - **Yurba.one account** - You'll need an account to get API tokens
 
 Ready to start development? Let's move on to [setting up the development environment](/setup/installation)!
-
-## Additional
-[What is yurba.js](/about/yurbaone)
