@@ -58,6 +58,11 @@
   font-weight: 700;
 }
 
+/* ===== LOGO TEXT COLOR ===== */
+.dark .VPNavBar .title {
+  color: #FFFFFF;
+}
+
 /*           ------------------------1           */ 
 
 /* ===== МОБІЛЬНЕ МЕНЮ ===== */
@@ -99,10 +104,29 @@
 /* ===== CURTAIN ===== */
 .dark .curtain {
   background: #191919;
+  color: #FFFFFF;
 }
 
 :root:not(.dark) .curtain {
   background: #EDF7FF;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-brand-1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-brand-2);
 }
 
 /*           ------------------------           */ 
