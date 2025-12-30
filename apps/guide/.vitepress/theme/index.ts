@@ -3,12 +3,10 @@ import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
-import './clean-style.css'
+import './main.css'
 import HeroActions from './components/HeroActions.vue'
-import SimpleHero from './components/SimpleHero.vue'
 import Spacer from './components/Spacer.vue'
 import CallToAction from './components/CallToAction.vue'
-import MyLayout from './MyLayout.vue'
 
 export default {
   extends: DefaultTheme,
@@ -41,7 +39,6 @@ export default {
   },
   enhanceApp({ app, router, siteData }) {
     app.component('HeroActions', HeroActions)
-    app.component('SimpleHero', SimpleHero)
     app.component('Spacer', Spacer)
     app.component('CallToAction', CallToAction)
     
