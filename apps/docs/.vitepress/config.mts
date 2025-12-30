@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress';
+import { redirectPlugin } from './redirect-plugin.js';
 
 let typedocSidebar = [];
 try {
@@ -11,6 +12,9 @@ export default defineConfig({
   title: 'Yurba.js',
   description: 'The powerful library for creating bots and integrating with the Yurba API',
   base: '/',
+  vite: {
+    plugins: [redirectPlugin()]
+  },
   head: [
     ['link', { rel: 'icon', href: '/logo.svg' }],
     ['link', { rel: 'apple-touch-icon', href: '/logo.svg' }],
@@ -33,11 +37,11 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
     
     nav: [
-      { text: 'Documentation', link: '/docs/' },
+      { text: 'Documentation', link: '/l/' },
       { text: 'Guide', link: 'https://yurba.js.org' }
     ],
     sidebar: {
-      '/docs/': [
+      '/l/': [
         {
           text: 'Documentation',
           items: typedocSidebar,

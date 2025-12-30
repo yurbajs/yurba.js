@@ -4,7 +4,7 @@
   "author": "RastGame",
   "license": "Apache-2.0",
   "private": true,
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.26.2",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -53,6 +53,7 @@
     "type-coverage": "^2.29.7",
     "typedoc": "^0.28.7",
     "typedoc-plugin-md": "^0.7.1",
+    "typedoc-theme-hierarchy": "^6.0.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0",
     "vitepress": "^1.6.3",
