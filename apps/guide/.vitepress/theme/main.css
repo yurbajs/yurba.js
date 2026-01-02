@@ -133,12 +133,38 @@
 
 
 /* ===== ПОКРАЩИТИ LAYOUT ===== */
+:root {
+  --vp-layout-max-width: 1600px;
+}
+
 .VPDoc .container {
   max-width: none;
 }
 
 .VPDoc .content {
   max-width: 1000px;
+}
+
+.VPDoc.has-aside .content {
+  max-width: 1600px !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 1600px !important;
+}
+
+.VPDoc.has-aside .vp-doc {
+  max-width: 1600px !important;
+}
+
+@media (min-width: 1280px) {
+  .VPDoc.has-aside .content {
+    max-width: 1600px !important;
+  }
+  
+  .VPDoc.has-aside .content-container {
+    max-width: 1600px !important;
+  }
 }
 
 
@@ -226,6 +252,10 @@ div[class*="language-"] {
   .VPDoc .content {
     max-width: 100%;
     padding: 0 32px;
+  }
+  
+  .VPDoc.has-aside .content {
+    max-width: 1600px !important;
   }
 }
 
@@ -464,4 +494,8 @@ div[class*="language-"] {
 
 .dark .VPFeatures .VPFeature img[src*="yurba-developers"] {
   filter: none !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 1600px !important;
 }
