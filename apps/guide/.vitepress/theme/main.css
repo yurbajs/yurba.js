@@ -3,71 +3,51 @@
  * Modern and clean styling for light and dark themes
  */
 
-/* ========================================
-   BRAND COLORS & DESIGN TOKENS
-   ======================================== */
+/* Design tokens & variables */
 :root {
-  /* Primary brand colors */
   --yurba-primary: #41d1ff;
   --yurba-secondary: #bd34fe;
   --yurba-gradient: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
   --yurba-gradient-hover: linear-gradient(120deg, #c945fe 30%, #4dd9ff);
-  
-  /* VitePress brand color overrides */
   --vp-c-brand-1: #41d1ff;
   --vp-c-brand-2: #39b8f3;
   --vp-c-brand-3: #46c1ff;
   --vp-c-brand-soft: rgba(0, 191, 255, 0.14);
-  
-  /* Spacing system */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2rem;
-  
-  /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
   --shadow-brand: 0 4px 16px rgba(65, 209, 255, 0.25);
-
   --dark-main-color: #191919;
-  
-  /* Easing functions */
+  --light-bg: #F8F9FA;
+  --light-bg-soft: #F1F3F4;
+  --dark-bg: #161618;
+  --dark-bg-alt: #262626;
+  --white: #FFF;
+  --github-dark: #24292f;
+  --warning-color: #ffc107;
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* ========================================
-   HOME PAGE HERO & BUTTON STYLES
-   ======================================== */
-:root {
-  /* Brand button default state */
+  --vp-layout-max-width: 1600px;
   --vp-button-brand-border: transparent;
   --vp-button-brand-text: var(--vp-c-white);
   --vp-button-brand-bg: var(--vp-c-brand-3);
-  
-  /* Brand button hover state */
   --vp-button-brand-hover-border: transparent;
   --vp-button-brand-hover-text: var(--vp-c-white);
   --vp-button-brand-hover-bg: var(--vp-c-brand-2);
-  
-  /* Brand button active state */
   --vp-button-brand-active-border: transparent;
   --vp-button-brand-active-text: var(--vp-c-white);
   --vp-button-brand-active-bg: var(--vp-c-brand-1);
-  
-  /* Hero title with gradient background */
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: var(--yurba-gradient);
-  
-  /* Hero background image gradient */
   --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
   --vp-home-hero-image-filter: blur(44px);
 }
 
-/* Responsive blur adjustments for hero image */
 @media (min-width: 640px) {
   :root { --vp-home-hero-image-filter: blur(56px); }
 }
@@ -101,9 +81,7 @@
   box-shadow: 0 6px 24px rgba(65, 209, 255, 0.35);
 }
 
-/* ========================================
-   BADGES
-   ======================================== */
+/* Badges */
 .vp-doc .badge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -116,22 +94,16 @@
   vertical-align: middle;
 }
 
-/* ========================================
-   NAVIGATION BAR
-   ======================================== */
-/* Logo title font weight */
+/* Navigation */
 .VPNavBar .title {
   font-weight: 700;
 }
 
-/* Logo text color in dark mode */
 .dark .VPNavBar .title {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
-/* ========================================
-   SIDEBAR
-   ======================================== */
+/* Sidebar */
 .dark .VPSidebar {
   background: var(--dark-main-color);
 }
@@ -141,7 +113,7 @@
     transition: transform 0.25s ease;
     position: fixed;
     z-index: 100;
-    background: #F8F9FA;
+    background: var(--light-bg);
     height: 100vh;
     width: 260px;
     padding: 32px 20px;
@@ -160,21 +132,9 @@
   }
 }
 
-/* ========================================
-   CURTAIN OVERLAY
-   ======================================== */
-.dark .curtain {
-  background: #0F1419;
-  color: #FFFFFF;
-}
 
-:root:not(.dark) .curtain {
-  background: #F8F9FA;
-}
 
-/* ========================================
-   CUSTOM SCROLLBAR
-   ======================================== */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -199,14 +159,7 @@
   scrollbar-color: var(--vp-c-brand-1) transparent;
 }
 
-/* ========================================
-   LAYOUT & CONTENT WIDTH
-   ======================================== */
-:root {
-  --vp-layout-max-width: 1600px;
-}
-
-.VPDoc .container {
+/* Layout */.VPDoc .container {
   max-width: none;
 }
 
@@ -220,9 +173,7 @@
   max-width: 1600px !important;
 }
 
-/* ========================================
-   CODE GROUPS & BLOCKS
-   ======================================== */
+/* Code groups */
 .vp-code-group {
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
@@ -277,9 +228,7 @@ div[class*="language-"] {
   border-radius: 0;
 }
 
-/* ========================================
-   CUSTOM BLOCKS (TIP, WARNING, etc.)
-   ======================================== */
+/* Custom blocks */
 .custom-block {
   border-radius: 12px;
   border-left: 4px solid;
@@ -298,7 +247,7 @@ div[class*="language-"] {
 
 .custom-block.warning {
   background: rgba(255, 193, 7, 0.05);
-  border-left-color: #ffc107;
+  border-left-color: var(--warning-color);
 }
 
 .custom-block-title {
@@ -310,9 +259,7 @@ div[class*="language-"] {
   gap: 0.5rem;
 }
 
-/* ========================================
-   SEARCH
-   ======================================== */
+/* Search */
 .DocSearch-Button {
   border-radius: 10px;
   transition: all 0.2s var(--ease-smooth);
@@ -329,23 +276,20 @@ div[class*="language-"] {
   display: none !important;
 }
 
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
-/* Tablet and below (max-width: 1279px) */
+/* Responsive */
 @media (max-width: 1279px) {
   .VPDoc .content {
     max-width: 100%;
     padding: 0 32px;
   }
   
-  /* Maintain wider content with aside on tablets */
+
   .VPDoc.has-aside .content {
     max-width: 1600px !important;
   }
 }
 
-/* Small tablets and large phones (max-width: 960px) */
+
 @media (max-width: 960px) {
   .VPDoc .container {
     padding: 0 24px;
@@ -356,7 +300,7 @@ div[class*="language-"] {
   }
 }
 
-/* Mobile devices (max-width: 640px) */
+
 @media (max-width: 640px) {
   .VPDoc .container {
     padding: 0 16px;
@@ -366,14 +310,14 @@ div[class*="language-"] {
     padding: 0 16px;
   }
   
-  /* Full-width code groups on mobile */
+
   .vp-code-group {
     margin: 16px -16px;
     border-radius: 0;
   }
 }
 
-/* Small mobile devices (max-width: 480px) */
+
 @media (max-width: 480px) {
   .VPDoc .container {
     padding: 0 12px;
@@ -384,49 +328,38 @@ div[class*="language-"] {
   }
 }
 
-/* ========================================
-   THEME COLORS - LIGHT MODE
-   ======================================== */
+/* Light theme */
 :root:not(.dark) {
-  --vp-c-bg: #FFFFFF;
-  --vp-c-bg-alt: #F8F9FA;
-  --vp-c-bg-soft: #F1F3F4;
-  --vp-c-bg-elv: #FFFFFF;
+  --vp-c-bg: var(--white);
+  --vp-c-bg-alt: var(--light-bg);
+  --vp-c-bg-soft: var(--light-bg-soft);
+  --vp-c-bg-elv: var(--white);
 }
 
-/* Light mode sidebar background */
 :root:not(.dark) .VPSidebar {
-  background: #F8F9FA;
+  background: var(--light-bg);
 }
 
-/* ========================================
-   THEME COLORS - DARK MODE
-   ======================================== */
+/* Dark theme */
 .dark {
-  --vp-c-bg: #161618;
-  --vp-c-bg-alt: #262626;
-  --vp-c-bg-soft: #262626;
-  --vp-c-bg-elv: #161618;
+  --vp-c-bg: var(--dark-bg);
+  --vp-c-bg-alt: var(--dark-bg-alt);
+  --vp-c-bg-soft: var(--dark-bg-alt);
+  --vp-c-bg-elv: var(--dark-bg);
 }
 
-/* ========================================
-   SMOOTH TRANSITIONS
-   ======================================== */
-/* Global smooth transitions for theme switching */
+/* Transitions */
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* ========================================
-   TYPOGRAPHY ENHANCEMENTS
-   ======================================== */
-/* H1 heading styling */
+/* Typography */
 .vp-doc h1 {
   color: var(--vp-c-brand-1);
   font-weight: 800;
 }
 
-/* H2 heading with bottom border */
+
 .vp-doc h2 {
   color: var(--vp-c-brand-1);
   font-weight: 700;
@@ -434,16 +367,13 @@ div[class*="language-"] {
   padding-bottom: 8px;
 }
 
-/* H3 heading styling */
+
 .vp-doc h3 {
   color: var(--vp-c-brand-2);
   font-weight: 600;
 }
 
-/* ========================================
-   LINKS
-   ======================================== */
-/* Link default state */
+/* Links */
 .vp-doc a {
   color: var(--vp-c-brand-1);
   text-decoration: none;
@@ -451,14 +381,11 @@ div[class*="language-"] {
   transition: border-color 0.2s ease;
 }
 
-/* Link hover state with underline */
 .vp-doc a:hover {
   border-bottom-color: var(--vp-c-brand-1);
 }
 
-/* ========================================
-   TABLES
-   ======================================== */
+/* Tables */
 .vp-doc table {
   width: 100%;
   border-radius: 12px;
@@ -504,87 +431,54 @@ div[class*="language-"] {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* ========================================
-   SOCIAL ICONS - GITHUB
-   ======================================== */
-/* GitHub icon base transition */
+/* Social icons - GitHub */
 .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-.VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
+.VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+.vpi-social-github {
   transition: color 0.2s ease !important;
 }
 
-/* Light mode - dark GitHub icon */
 :root:not(.dark) .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
-  color: #24292f !important;
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+:root:not(.dark) .vpi-social-github {
+  color: var(--github-dark) !important;
 }
 
-/* Dark mode - white GitHub icon */
 .dark .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-.dark .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
-  color: #ffffff !important;
+.dark .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+.dark .vpi-social-github {
+  color: var(--white) !important;
 }
 
-/* GitHub icon hover effect */
 .VPSocialLink[aria-label*="GitHub"]:hover .vpi-social-github,
 .VPSocialLink[aria-label*="GitHub Repository"]:hover .vpi-social-github {
   color: var(--vp-c-brand-1) !important;
 }
 
-/* Alternative approach using SVG filters */
 .VPSocialLink[aria-label*="GitHub"] svg,
-.VPSocialLink[aria-label*="GitHub Repository"] svg {
+.VPSocialLink[aria-label*="GitHub Repository"] svg,
+.VPSocialLinks .VPSocialLink:first-child svg {
   transition: filter 0.2s ease !important;
 }
 
-/* Light mode SVG filter */
 :root:not(.dark) .VPSocialLink[aria-label*="GitHub"] svg,
-:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] svg {
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] svg,
+:root:not(.dark) .VPSocialLinks .VPSocialLink:first-child svg {
   filter: brightness(0) saturate(100%) !important;
 }
 
-/* Dark mode SVG filter */
 .dark .VPSocialLink[aria-label*="GitHub"] svg,
-.dark .VPSocialLink[aria-label*="GitHub Repository"] svg {
+.dark .VPSocialLink[aria-label*="GitHub Repository"] svg,
+.dark .VPSocialLinks .VPSocialLink:first-child svg {
   filter: brightness(0) saturate(100%) invert(1) !important;
 }
 
-/* SVG hover effect with brand color */
 .VPSocialLink[aria-label*="GitHub"]:hover svg,
 .VPSocialLink[aria-label*="GitHub Repository"]:hover svg {
   filter: brightness(0) saturate(100%) invert(41%) sepia(100%) saturate(1000%) hue-rotate(180deg) !important;
 }
 
-/* Additional selector for all GitHub icons */
-.vpi-social-github {
-  transition: color 0.2s ease !important;
-}
-
-:root:not(.dark) .vpi-social-github {
-  color: #24292f !important;
-}
-
-.dark .vpi-social-github {
-  color: #ffffff !important;
-}
-
-/* Force correct color on page load */
-.VPSocialLinks .VPSocialLink:first-child svg {
-  transition: filter 0.2s ease !important;
-}
-
-:root:not(.dark) .VPSocialLinks .VPSocialLink:first-child svg {
-  filter: brightness(0) saturate(100%) !important;
-}
-
-.dark .VPSocialLinks .VPSocialLink:first-child svg {
-  filter: brightness(0) saturate(100%) invert(1) !important;
-}
-
-/* ========================================
-   FEATURE ICONS
-   ======================================== */
-/* Base transition for all feature icons */
+/* Feature icons */
 .VPFeatures .VPFeature .icon img,
 .VPFeatures .VPFeature .VPImage img,
 .VPFeature .icon img,
@@ -592,7 +486,7 @@ div[class*="language-"] {
   transition: filter 0.3s ease !important;
 }
 
-/* Light mode - inverted white icons */
+
 :root:not(.dark) .VPFeatures .VPFeature .icon img,
 :root:not(.dark) .VPFeatures .VPFeature .VPImage img,
 :root:not(.dark) .VPFeature .icon img,
@@ -600,7 +494,7 @@ div[class*="language-"] {
   filter: brightness(0) invert(1) !important;
 }
 
-/* Dark mode - gradient colored icons */
+
 .dark .VPFeatures .VPFeature .icon img,
 .dark .VPFeatures .VPFeature .VPImage img,
 .dark .VPFeature .icon img,
@@ -608,7 +502,7 @@ div[class*="language-"] {
   filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-/* Feature icon hover effect */
+
 .VPFeatures .VPFeature:hover .icon img,
 .VPFeatures .VPFeature:hover .VPImage img,
 .VPFeature:hover .icon img,
@@ -616,22 +510,22 @@ div[class*="language-"] {
   filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
 }
 
-/* Specific styling for PNG feature icons */
+
 .VPFeatures .VPFeature img[src$=".png"] {
   transition: filter 0.3s ease !important;
 }
 
-/* Light mode PNG icons */
+
 :root:not(.dark) .VPFeatures .VPFeature img[src$=".png"] {
   filter: brightness(0) !important;
 }
 
-/* Dark mode PNG icons */
+
 .dark .VPFeatures .VPFeature img[src$=".png"] {
   filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-/* Exception for specific icon (yurba-developers) - no filter */
+
 :root:not(.dark) .VPFeatures .VPFeature img[src*="yurba-developers"] {
   filter: none !important;
 }
@@ -640,9 +534,7 @@ div[class*="language-"] {
   filter: none !important;
 }
 
-/* ========================================
-   FEATURE CARDS - INTERACTIVE
-   ======================================== */
+/* Feature cards */
 .VPFeatures .VPFeature {
   border-radius: 12px;
   padding: var(--space-lg);
@@ -665,9 +557,7 @@ div[class*="language-"] {
   transform: scale(1.1) rotate(5deg);
 }
 
-/* ========================================
-   LISTS - ENHANCED STYLING
-   ======================================== */
+/* Lists */
 .vp-doc ul,
 .vp-doc ol {
   padding-left: 1.5rem;
@@ -683,9 +573,7 @@ div[class*="language-"] {
   color: var(--vp-c-brand-1);
 }
 
-/* ========================================
-   SOCIAL ICONS - HOVER EFFECTS
-   ======================================== */
+/* Social hover */
 .VPSocialLink {
   transition: all 0.2s var(--ease-smooth);
 }
@@ -698,9 +586,7 @@ div[class*="language-"] {
   transition: all 0.2s var(--ease-smooth);
 }
 
-/* ========================================
-   ANIMATIONS
-   ======================================== */
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -726,25 +612,20 @@ div[class*="language-"] {
   }
 }
 
-/* ========================================
-   CURTAIN OVERLAY
-   ======================================== */
 .curtain {
   backdrop-filter: blur(8px);
   transition: background 0.3s var(--ease-smooth);
 }
 
 .dark .curtain {
-  background: #191919;
+  background: var(--dark-main-color);
 }
 
 :root:not(.dark) .curtain {
   background: rgba(248, 250, 252, 0.95);
 }
 
-/* ========================================
-   ANIMATIONS - KEYFRAMES
-   ======================================== */
+
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -756,9 +637,7 @@ div[class*="language-"] {
   }
 }
 
-/* ========================================
-   PERFORMANCE OPTIMIZATIONS
-   ======================================== */
+/* Performance */
 .vp-doc img {
   content-visibility: auto;
 }
