@@ -282,34 +282,24 @@ div[class*="language-"] {
     max-width: 100%;
     padding: 0 32px;
   }
-  
 
   .VPDoc.has-aside .content {
     max-width: 1600px !important;
   }
 }
 
-
 @media (max-width: 960px) {
-  .VPDoc .container {
-    padding: 0 24px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 24px;
   }
 }
 
-
 @media (max-width: 640px) {
-  .VPDoc .container {
-    padding: 0 16px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 16px;
   }
-  
 
   .vp-code-group {
     margin: 16px -16px;
@@ -317,12 +307,8 @@ div[class*="language-"] {
   }
 }
 
-
 @media (max-width: 480px) {
-  .VPDoc .container {
-    padding: 0 12px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 12px;
   }
@@ -348,10 +334,7 @@ div[class*="language-"] {
   --vp-c-bg-elv: var(--dark-bg);
 }
 
-/* Transitions */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
+
 
 /* Typography */
 .vp-doc h1 {
@@ -359,14 +342,12 @@ div[class*="language-"] {
   font-weight: 800;
 }
 
-
 .vp-doc h2 {
   color: var(--vp-c-brand-1);
   font-weight: 700;
   border-bottom: 1px solid var(--vp-c-divider);
   padding-bottom: 8px;
 }
-
 
 .vp-doc h3 {
   color: var(--vp-c-brand-2);
@@ -378,7 +359,6 @@ div[class*="language-"] {
   color: var(--vp-c-brand-1);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
 }
 
 .vp-doc a:hover {
@@ -479,59 +459,20 @@ div[class*="language-"] {
 }
 
 /* Feature icons */
-.VPFeatures .VPFeature .icon img,
-.VPFeatures .VPFeature .VPImage img,
-.VPFeature .icon img,
 .VPFeature img {
   transition: filter 0.3s ease !important;
 }
 
-
-:root:not(.dark) .VPFeatures .VPFeature .icon img,
-:root:not(.dark) .VPFeatures .VPFeature .VPImage img,
-:root:not(.dark) .VPFeature .icon img,
-:root:not(.dark) .VPFeature img {
+:root:not(.dark) .VPFeature img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) !important;
 }
 
-
-.dark .VPFeatures .VPFeature .icon img,
-.dark .VPFeatures .VPFeature .VPImage img,
-.dark .VPFeature .icon img,
-.dark .VPFeature img {
+.dark .VPFeature img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-
-.VPFeatures .VPFeature:hover .icon img,
-.VPFeatures .VPFeature:hover .VPImage img,
-.VPFeature:hover .icon img,
-.VPFeature:hover img {
+.VPFeature:hover img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
-}
-
-
-.VPFeatures .VPFeature img[src$=".png"] {
-  transition: filter 0.3s ease !important;
-}
-
-
-:root:not(.dark) .VPFeatures .VPFeature img[src$=".png"] {
-  filter: brightness(0) !important;
-}
-
-
-.dark .VPFeatures .VPFeature img[src$=".png"] {
-  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
-}
-
-
-:root:not(.dark) .VPFeatures .VPFeature img[src*="yurba-developers"] {
-  filter: none !important;
-}
-
-.dark .VPFeatures .VPFeature img[src*="yurba-developers"] {
-  filter: none !important;
 }
 
 /* Feature cards */
@@ -582,10 +523,6 @@ div[class*="language-"] {
   transform: translateY(-2px);
 }
 
-.VPSocialLink svg {
-  transition: all 0.2s var(--ease-smooth);
-}
-
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -625,7 +562,6 @@ div[class*="language-"] {
   background: rgba(248, 250, 252, 0.95);
 }
 
-
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -644,11 +580,4 @@ div[class*="language-"] {
 
 .vp-doc pre {
   contain: layout style paint;
-}
-
-.VPButton,
-.VPFeature,
-.custom-block,
-.VPSocialLink {
-  will-change: transform;
 }
