@@ -40,37 +40,7 @@
 }
 
 /* ========================================
-   HOME PAGE HERO
-   ======================================== */
-:root {
-  /* Hero title with gradient background */
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: var(--yurba-gradient);
-  
-  /* Hero background image gradient */
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #bd34fe 50%,
-    #47caff 50%
-  );
-  --vp-home-hero-image-filter: blur(44px);
-}
-
-/* Responsive blur adjustments for hero image */
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
-  }
-}
-
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(68px);
-  }
-}
-
-/* ========================================
-   BUTTON STYLES
+   HOME PAGE HERO & BUTTON STYLES
    ======================================== */
 :root {
   /* Brand button default state */
@@ -87,6 +57,23 @@
   --vp-button-brand-active-border: transparent;
   --vp-button-brand-active-text: var(--vp-c-white);
   --vp-button-brand-active-bg: var(--vp-c-brand-1);
+  
+  /* Hero title with gradient background */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: var(--yurba-gradient);
+  
+  /* Hero background image gradient */
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+/* Responsive blur adjustments for hero image */
+@media (min-width: 640px) {
+  :root { --vp-home-hero-image-filter: blur(56px); }
+}
+
+@media (min-width: 960px) {
+  :root { --vp-home-hero-image-filter: blur(68px); }
 }
 
 .VPButton {
@@ -143,10 +130,13 @@
 }
 
 /* ========================================
-   SIDEBAR - MOBILE
+   SIDEBAR
    ======================================== */
+.dark .VPSidebar {
+  background: var(--dark-main-color);
+}
+
 @media (max-width: 768px) {
-  /* Mobile sidebar base styles */
   .VPSidebar {
     transition: transform 0.25s ease;
     position: fixed;
@@ -155,49 +145,29 @@
     height: 100vh;
     width: 260px;
     padding: 32px 20px;
-    box-shadow: none;
   }
   
-  /* Shadow when sidebar is open */
   .VPSidebar.open {
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   }
   
-  /* Hamburger menu z-index */
   .VPNavBarHamburger {
     z-index: 200;
   }
   
-  /* Dark mode mobile sidebar */
-  .dark .VPSidebar {
-    background: #191919;
-    box-shadow: none;
-  }
-  
-  /* Dark mode sidebar shadow when open */
   .dark .VPSidebar.open {
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
   }
 }
 
 /* ========================================
-   SIDEBAR - DESKTOP
-   ======================================== */
-/* Dark mode desktop sidebar background */
-.dark .VPSidebar {
-  background: #191919;
-}
-
-/* ========================================
    CURTAIN OVERLAY
    ======================================== */
-/* Dark mode curtain */
 .dark .curtain {
   background: #0F1419;
   color: #FFFFFF;
 }
 
-/* Light mode curtain */
 :root:not(.dark) .curtain {
   background: #F8F9FA;
 }
@@ -232,49 +202,27 @@
 /* ========================================
    LAYOUT & CONTENT WIDTH
    ======================================== */
-/* Maximum layout width variable */
 :root {
   --vp-layout-max-width: 1600px;
 }
 
-/* Remove max-width constraint from container */
 .VPDoc .container {
   max-width: none;
 }
 
-/* Default content max-width */
 .VPDoc .content {
   max-width: 1000px;
 }
 
-/* Wider content when aside/TOC is present */
-.VPDoc.has-aside .content {
-  max-width: 1600px !important;
-}
-
-.VPDoc.has-aside .content-container {
-  max-width: 1600px !important;
-}
-
+.VPDoc.has-aside .content,
+.VPDoc.has-aside .content-container,
 .VPDoc.has-aside .vp-doc {
   max-width: 1600px !important;
 }
 
-/* Ensure wider content on desktop screens */
-@media (min-width: 1280px) {
-  .VPDoc.has-aside .content {
-    max-width: 1600px !important;
-  }
-  
-  .VPDoc.has-aside .content-container {
-    max-width: 1600px !important;
-  }
-}
-
 /* ========================================
-   CODE GROUPS
+   CODE GROUPS & BLOCKS
    ======================================== */
-/* Code group container */
 .vp-code-group {
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
@@ -282,7 +230,6 @@
   margin: 16px 0;
 }
 
-/* Code group tabs container */
 .vp-code-group .tabs {
   background: var(--vp-c-bg-alt);
   border-bottom: 1px solid var(--vp-c-divider);
@@ -291,12 +238,10 @@
   gap: 2px;
 }
 
-/* Hide radio inputs */
 .vp-code-group .tabs input {
   display: none;
 }
 
-/* Tab label styling */
 .vp-code-group .tabs label {
   display: inline-block;
   padding: 6px 12px;
@@ -310,35 +255,26 @@
   letter-spacing: 0.5px;
 }
 
-/* Tab label hover state */
 .vp-code-group .tabs label:hover {
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg-soft);
 }
 
-/* Active/selected tab styling */
 .vp-code-group .tabs input:checked + label {
   color: var(--vp-c-brand-1);
   background: var(--vp-c-bg);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ========================================
-   CODE BLOCKS
-   ======================================== */
-/* Standalone code blocks */
 div[class*="language-"] {
   border-radius: 0 0 8px 8px;
   margin: 0;
   border: none;
 }
 
-/* Code blocks inside code groups */
 .vp-code-group div[class*="language-"] {
   border-radius: 0;
-  margin: 0;
-  border: none;
 }
 
 /* ========================================
@@ -360,17 +296,9 @@ div[class*="language-"] {
   border-left-color: var(--vp-c-brand-1);
 }
 
-.custom-block:hover::before {
-  opacity: 1;
-}
-
 .custom-block.warning {
   background: rgba(255, 193, 7, 0.05);
   border-left-color: #ffc107;
-}
-
-.custom-block.warning::before {
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
 }
 
 .custom-block-title {
