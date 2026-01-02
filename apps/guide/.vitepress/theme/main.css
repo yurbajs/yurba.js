@@ -4,19 +4,39 @@
  */
 
 /* ========================================
-   BRAND COLORS
+   BRAND COLORS & DESIGN TOKENS
    ======================================== */
 :root {
   /* Primary brand colors */
   --yurba-primary: #41d1ff;
   --yurba-secondary: #bd34fe;
   --yurba-gradient: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  --yurba-gradient-hover: linear-gradient(120deg, #c945fe 30%, #4dd9ff);
   
   /* VitePress brand color overrides */
   --vp-c-brand-1: #41d1ff;
   --vp-c-brand-2: #39b8f3;
   --vp-c-brand-3: #46c1ff;
   --vp-c-brand-soft: rgba(0, 191, 255, 0.14);
+  
+  /* Spacing system */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-brand: 0 4px 16px rgba(65, 209, 255, 0.25);
+
+  --dark-main-color: #191919;
+  
+  /* Easing functions */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* ========================================
@@ -67,6 +87,46 @@
   --vp-button-brand-active-border: transparent;
   --vp-button-brand-active-text: var(--vp-c-white);
   --vp-button-brand-active-bg: var(--vp-c-brand-1);
+}
+
+.VPButton {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 12px 24px;
+  transition: all 0.3s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+  border: none;
+  cursor: pointer;
+}
+
+.VPButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.VPButton.brand {
+  background: var(--yurba-gradient);
+  box-shadow: var(--shadow-brand);
+}
+
+.VPButton.brand:hover {
+  background: var(--yurba-gradient-hover);
+  box-shadow: 0 6px 24px rgba(65, 209, 255, 0.35);
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+.vp-doc .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--vp-c-brand-1);
+  color: white;
+  margin-left: 0.5rem;
+  vertical-align: middle;
 }
 
 /* ========================================
@@ -133,7 +193,7 @@
    ======================================== */
 /* Dark mode curtain */
 .dark .curtain {
-  background: #191919;
+  background: #0F1419;
   color: #FFFFFF;
 }
 
@@ -145,25 +205,28 @@
 /* ========================================
    CUSTOM SCROLLBAR
    ======================================== */
-/* Scrollbar width */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
-/* Scrollbar track (background) */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Scrollbar thumb (draggable part) */
 ::-webkit-scrollbar-thumb {
   background: var(--vp-c-brand-1);
-  border-radius: 3px;
+  border-radius: 4px;
+  transition: background 0.2s var(--ease-smooth);
 }
 
-/* Scrollbar thumb on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--vp-c-brand-2);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-brand-1) transparent;
 }
 
 /* ========================================
@@ -281,32 +344,59 @@ div[class*="language-"] {
 /* ========================================
    CUSTOM BLOCKS (TIP, WARNING, etc.)
    ======================================== */
-/* Base custom block styling */
 .custom-block {
-  border-radius: 8px;
-  border-left: 4px solid var(--vp-c-brand-1);
+  border-radius: 12px;
+  border-left: 4px solid;
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-lg) 0;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Tip block specific styling */
 .custom-block.tip {
+  background: rgba(65, 209, 255, 0.05);
   border-left-color: var(--vp-c-brand-1);
+}
+
+.custom-block:hover::before {
+  opacity: 1;
+}
+
+.custom-block.warning {
+  background: rgba(255, 193, 7, 0.05);
+  border-left-color: #ffc107;
+}
+
+.custom-block.warning::before {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+.custom-block-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ========================================
    SEARCH
    ======================================== */
-/* Search button styling */
 .DocSearch-Button {
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.2s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Search button hover state */
 .DocSearch-Button:hover {
   background: var(--vp-c-bg-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-/* Hide breadcrumb paths in search results */
 .DocSearch-Hit-path {
   display: none !important;
 }
@@ -441,17 +531,49 @@ div[class*="language-"] {
 /* ========================================
    TABLES
    ======================================== */
-/* Table container styling */
 .vp-doc table {
-  border-radius: 8px;
+  width: 100%;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--vp-c-divider);
+  box-shadow: var(--shadow-sm);
+  margin: var(--space-lg) 0;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-/* Table header styling */
 .vp-doc table th {
   background: var(--vp-c-bg-soft);
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--vp-c-text-1);
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 2px solid var(--vp-c-divider);
+}
+
+.vp-doc table td {
+  padding: var(--space-md);
+  border-top: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc table tbody tr {
+  transition: background 0.2s var(--ease-smooth);
+}
+
+.vp-doc table tbody tr:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.dark .vp-doc table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 /* ========================================
@@ -588,4 +710,138 @@ div[class*="language-"] {
 
 .dark .VPFeatures .VPFeature img[src*="yurba-developers"] {
   filter: none !important;
+}
+
+/* ========================================
+   FEATURE CARDS - INTERACTIVE
+   ======================================== */
+.VPFeatures .VPFeature {
+  border-radius: 12px;
+  padding: var(--space-lg);
+  transition: all 0.3s var(--ease-smooth);
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+}
+
+.VPFeatures .VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--vp-c-brand-1);
+}
+
+.VPFeatures .VPFeature .icon {
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+.VPFeatures .VPFeature:hover .icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ========================================
+   LISTS - ENHANCED STYLING
+   ======================================== */
+.vp-doc ul,
+.vp-doc ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.vp-doc li {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+.vp-doc ul li::marker {
+  color: var(--vp-c-brand-1);
+}
+
+/* ========================================
+   SOCIAL ICONS - HOVER EFFECTS
+   ======================================== */
+.VPSocialLink {
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.VPSocialLink:hover {
+  transform: translateY(-2px);
+}
+
+.VPSocialLink svg {
+  transition: all 0.2s var(--ease-smooth);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vp-doc > * {
+  animation: fadeIn 0.5s var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   CURTAIN OVERLAY
+   ======================================== */
+.curtain {
+  backdrop-filter: blur(8px);
+  transition: background 0.3s var(--ease-smooth);
+}
+
+.dark .curtain {
+  background: #191919;
+}
+
+:root:not(.dark) .curtain {
+  background: rgba(248, 250, 252, 0.95);
+}
+
+/* ========================================
+   ANIMATIONS - KEYFRAMES
+   ======================================== */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+.vp-doc img {
+  content-visibility: auto;
+}
+
+.vp-doc pre {
+  contain: layout style paint;
+}
+
+.VPButton,
+.VPFeature,
+.custom-block,
+.VPSocialLink {
+  will-change: transform;
 }
