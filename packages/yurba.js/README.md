@@ -34,17 +34,17 @@ bun add yurba.js
 ```js
 import { Client } from "yurba.js";
 
-const client = new Client('TOKEN');
+const client = new Client({ prefix: '!' });
 
-client.registerCommand('hi', { name: 'string' }, (message, args) => {
-    message.reply(`Hello, ${args.name}!`);
+client.commands.register('hi', { name: 'string' }, (msg, args) => {
+    msg.reply(`Hello, ${args.name}!`);
 });
 
 client.on('ready', () => {
     console.log('Ready!');
 });
 
-client.init();
+client.init('TOKEN');
 ```
 
 </details>
@@ -55,9 +55,9 @@ client.init();
 ```js
 const { Client } = require("yurba.js");
 
-const client = new Client('TOKEN');
+const client = new Client({ prefix: '!' });
 
-client.registerCommand('hi', { name: 'string' }, (message, args) => {
+client.comands.register('hi', { name: 'string' }, (message, args) => {
     message.reply(`Hello, ${args.name}!`);
 });
 
@@ -65,7 +65,7 @@ client.on('ready', () => {
     console.log('Ready!');
 });
 
-client.init();
+client.init('TOKEN');
 ```
 
 </details>
