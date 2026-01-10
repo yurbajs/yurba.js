@@ -24,7 +24,7 @@
     "invalidLink": false,
     "notDocumented": false
   },
-  "plugin": ["typedoc-plugin-markdown", ".typedoc-vitepress-theme"],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "hidePageHeader": true,
   "entryFileName": "index.md",
   "sidebar": {
