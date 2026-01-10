@@ -96,9 +96,12 @@ importers:
       typedoc:
         specifier: ^0.28.7
         version: 0.28.7(typescript@5.8.3)
+      typedoc-plugin-markdown:
+        specifier: ^4.9.0
+        version: 4.9.0(typedoc@0.28.7(typescript@5.8.3))
       typedoc-vitepress-theme:
         specifier: ^1.1.2
-        version: 1.1.2(typedoc-plugin-markdown@4.8.1(typedoc@0.28.7(typescript@5.8.3)))
+        version: 1.1.2(typedoc-plugin-markdown@4.9.0(typedoc@0.28.7(typescript@5.8.3)))
       vitepress:
         specifier: ^1.0.0
         version: 1.6.3(@algolia/client-search@5.33.0)(@types/node@22.16.4)(axios@1.10.0)(postcss@8.5.6)(search-insights@2.17.3)(terser@5.43.1)(typescript@5.8.3)
@@ -4481,6 +4484,12 @@ packages:
 
   typedoc-plugin-markdown@4.8.1:
     resolution: {integrity: sha512-ug7fc4j0SiJxSwBGLncpSo8tLvrT9VONvPUQqQDTKPxCoFQBADLli832RGPtj6sfSVJebNSrHZQRUdEryYH/7g==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      typedoc: 0.28.x
+
+  typedoc-plugin-markdown@4.9.0:
+    resolution: {integrity: sha512-9Uu4WR9L7ZBgAl60N/h+jqmPxxvnC9nQAlnnO/OujtG2ubjnKTVUFY1XDhcMY+pCqlX3N2HsQM2QTYZIU9tJuw==}
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.28.x
@@ -9796,6 +9805,10 @@ snapshots:
     dependencies:
       typedoc: 0.28.7(typescript@5.8.3)
 
+  typedoc-plugin-markdown@4.9.0(typedoc@0.28.7(typescript@5.8.3)):
+    dependencies:
+      typedoc: 0.28.7(typescript@5.8.3)
+
   typedoc-plugin-md@0.7.1(typedoc@0.28.7(typescript@5.8.3)):
     dependencies:
       typedoc-plugin-markdown: 4.8.1(typedoc@0.28.7(typescript@5.8.3))
@@ -9807,9 +9820,9 @@ snapshots:
       fs-extra: 11.1.1
       typedoc: 0.28.7(typescript@5.8.3)
 
-  typedoc-vitepress-theme@1.1.2(typedoc-plugin-markdown@4.8.1(typedoc@0.28.7(typescript@5.8.3))):
+  typedoc-vitepress-theme@1.1.2(typedoc-plugin-markdown@4.9.0(typedoc@0.28.7(typescript@5.8.3))):
     dependencies:
-      typedoc-plugin-markdown: 4.8.1(typedoc@0.28.7(typescript@5.8.3))
+      typedoc-plugin-markdown: 4.9.0(typedoc@0.28.7(typescript@5.8.3))
 
   typedoc@0.28.7(typescript@5.8.3):
     dependencies:
