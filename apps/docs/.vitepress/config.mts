@@ -1,8 +1,9 @@
 import { defineConfig } from 'vitepress';
+import { apiLinksPlugin } from './md/apiLinks';
 
 let typedocSidebar = [];
 try {
-  typedocSidebar = require('../l/typedoc-sidebar.json');
+  typedocSidebar = require('../dist/typedoc-sidebar.json');
 } catch (e) {
   console.warn('typedoc-sidebar.json not found. Run "pnpm run predocs" first.');
 }
@@ -11,7 +12,6 @@ export default defineConfig({
   title: 'Yurba.js',
   description: 'The powerful library for creating bots and integrating with the Yurba API',
   base: '/',
-  vite: {},
   head: [
     ['link', { rel: 'icon', href: '/logo.svg' }],
     ['link', { rel: 'apple-touch-icon', href: '/logo.svg' }],
@@ -30,15 +30,22 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: 'https://yurba.js.org/banner.svg' }],
     ['link', { rel: 'canonical', href: 'https://yurba.js.org' }]
   ],
+
+  srcDir: './dist/',
+  rewrites: {
+    'dist/:path*': './:path*',
+  },
+
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
+
     
     nav: [
-      { text: 'Documentation', link: '/l/' },
-      { text: 'Guide', link: 'https://yurba.js.org' }
+      { text: 'Documentation', link: '/' },
+      { text: 'Guide', link: 'https://yurba.js.org' },
     ],
     sidebar: {
-      '/l/': [
+      '/': [
         {
           text: 'Documentation',
           items: typedocSidebar,
@@ -51,6 +58,9 @@ export default defineConfig({
     ],
     search: {
       provider: 'local'
+    },
+    outline: {
+      level: [2, 3]
     }
   },
   markdown: {
@@ -58,6 +68,7 @@ export default defineConfig({
       light: 'github-light',
       dark: 'github-dark'
     },
-    lineNumbers: true
+    lineNumbers: true,
+
   }
 });
