@@ -463,15 +463,11 @@ div[class*="language-"] {
   transition: filter 0.3s ease !important;
 }
 
-:root:not(.dark) .VPFeature img:not([src*="yurba-developers"]) {
-  filter: brightness(0) invert(1) !important;
-}
-
 .dark .VPFeature img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-.VPFeature:hover img:not([src*="yurba-developers"]) {
+.dark .VPFeature:hover img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
 }
 

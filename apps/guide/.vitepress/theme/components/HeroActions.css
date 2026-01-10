@@ -68,7 +68,17 @@
   box-shadow: 0 4px 12px rgba(65, 209, 255, 0.1);
 }
 
-img[src*="yurba.svg"] {
+.dark img[src*="yurba.svg"] {
+  filter: brightness(0) invert(1);
+}
+
+img[src*="npm.svg"],
+img[src*="github-mark.svg"] {
+  filter: none;
+}
+
+.dark img[src*="npm.svg"],
+.dark img[src*="github-mark.svg"] {
   filter: brightness(0) invert(1);
 }
 
