@@ -217,34 +217,69 @@ function getKindString(kind: number): string {
 }
 
 async function showPreview(name: string, x: number, y: number, anchorX: number, anchorY: number) {
-  // Перевірити чи вже є tooltip для цього елемента (запобігання зацикленню)
+  // Запобігання зацикленню
   const existing = tooltips.value.find(t => t.symbolName === name)
   if (existing) return
   
   const id = ++tooltipIdCounter
   const tooltipWidth = 400
-  const tooltipHeight = 150 // приблизна висота
   const gap = 20
   const viewportWidth = window.innerWidth
   
-  let side: 'right' | 'left' = 'right'
   let posX = x + gap
   let posY = y
+  let side: 'right' | 'left' = 'right'
   
-  // Перевірити чи є місце праворуч
-  if (posX + tooltipWidth > viewportWidth - 20) {
-    side = 'left'
-    posX = x - tooltipWidth - gap
-    if (posX < 20) posX = 20
+  // Функція перевірки чи позиція вільна
+  const isPositionFree = (testX: number, testY: number): boolean => {
+    for (const t of tooltips.value) {
+      const xOverlap = testX < t.position.x + tooltipWidth + 10 && testX + tooltipWidth + 10 > t.position.x
+      const yOverlap = testY < t.position.y + 200 && testY + 200 > t.position.y
+      if (xOverlap && yOverlap) return false
+    }
+    return true
   }
   
-  // Перевірити перекриття з існуючими tooltips і зсунути вниз якщо потрібно
-  for (const existing of tooltips.value) {
-    const xOverlap = Math.abs(posX - existing.position.x) < tooltipWidth
-    const yOverlap = Math.abs(posY - existing.position.y) < tooltipHeight
-    
-    if (xOverlap && yOverlap) {
-      posY = existing.position.y + tooltipHeight + 10
+  // Спробувати праворуч
+  const rightX = x + gap
+  const canFitRight = rightX + tooltipWidth < viewportWidth - 20
+  
+  // Спробувати ліворуч
+  const leftX = x - tooltipWidth - gap
+  const canFitLeft = leftX > 20
+  
+  // Вибрати найкращу позицію
+  if (canFitRight && isPositionFree(rightX, posY)) {
+    posX = rightX
+    side = 'right'
+  } else if (canFitLeft && isPositionFree(leftX, posY)) {
+    posX = leftX
+    side = 'left'
+  } else if (canFitRight) {
+    // Праворуч є місце але зайнято - шукаємо вільне місце вниз
+    posX = rightX
+    side = 'right'
+    let attempts = 0
+    while (!isPositionFree(posX, posY) && attempts < 20) {
+      posY += 50
+      attempts++
+    }
+  } else if (canFitLeft) {
+    // Ліворуч є місце але зайнято - шукаємо вільне місце вниз
+    posX = leftX
+    side = 'left'
+    let attempts = 0
+    while (!isPositionFree(posX, posY) && attempts < 20) {
+      posY += 50
+      attempts++
+    }
+  } else {
+    // Немає місця ні праворуч ні ліворуч - розташовуємо де є місце
+    posX = Math.max(20, Math.min(rightX, viewportWidth - tooltipWidth - 20))
+    let attempts = 0
+    while (!isPositionFree(posX, posY) && attempts < 20) {
+      posY += 50
+      attempts++
     }
   }
   
