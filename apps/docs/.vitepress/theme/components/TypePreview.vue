@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vitepress'
 
-const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean }>>([])
+const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean, autoHideTimer?: any }>>([])
 const docsIndex = new Map<string, any>()
 let docsLoaded = false
 let hoverTimer: any = null
@@ -218,7 +218,8 @@ function getKindString(kind: number): string {
 
 async function showPreview(name: string, x: number, y: number) {
   const id = ++tooltipIdCounter
-  tooltips.value.push({ id, content: '', position: { x, y }, loading: true })
+  const newTooltip = { id, content: '', position: { x, y }, loading: true, autoHideTimer: undefined }
+  tooltips.value.push(newTooltip)
 
   if (!docsLoaded) {
     await fetchDocs()
@@ -235,6 +236,11 @@ async function showPreview(name: string, x: number, y: number) {
     tooltip.content = `<div class="preview-error">Symbol "${name}" not found in index</div>`
   }
   tooltip.loading = false
+  
+  // Автоматично ховати через 3 секунди
+  tooltip.autoHideTimer = setTimeout(() => {
+    tooltips.value = tooltips.value.filter(t => t.id !== id)
+  }, 3000)
 }
 
 async function handleMouseOver(e: MouseEvent) {
@@ -294,11 +300,23 @@ function handleMouseOut(e: MouseEvent) {
 
 function handleTooltipEnter() {
   clearTimeout(hideTimer)
+  // Скасувати автоматичне ховання коли курсор на tooltip
+  tooltips.value.forEach(t => {
+    if (t.autoHideTimer) {
+      clearTimeout(t.autoHideTimer)
+      t.autoHideTimer = undefined
+    }
+  })
 }
 
 function handleTooltipLeave() {
   clearTimeout(hideTimer)
-  hideTimer = setTimeout(() => { tooltips.value = [] }, 200)
+  hideTimer = setTimeout(() => { 
+    tooltips.value.forEach(t => {
+      if (t.autoHideTimer) clearTimeout(t.autoHideTimer)
+    })
+    tooltips.value = [] 
+  }, 200)
 }
 
 onMounted(() => {
