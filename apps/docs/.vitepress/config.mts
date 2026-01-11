@@ -3,9 +3,34 @@ import { apiLinksPlugin } from './md/apiLinks';
 
 let typedocSidebar = [];
 try {
-  typedocSidebar = require('../dist/typedoc-sidebar.json');
+  const rawSidebar = require('../dist/typedoc-sidebar.json');
+  const packageOrder = ['yurba.js', '@yurbajs/rest', '@yurbajs/ws', '@yurbajs/types'];
+
+  // Create a dictionary for sidebars based on paths
+  typedocSidebar = {};
+
+  rawSidebar.forEach(pkg => {
+    // Determine the path key. Assuming links start with /<package_name>/
+    // We can use the link of the package entry itself if it exists, or derive it.
+    // Based on the JSON, the top level items have a link like /@yurbajs/rest/
+    if (pkg.link) {
+      // Ensure the key ends with / to match directory
+      const key = pkg.link.endsWith('/') ? pkg.link : pkg.link + '/';
+      // The items for this sidebar are the children of the package entry
+      // We also want to include the package entry itself as a header or just its children?
+      // Usually, if we are in /@yurbajs/rest/, we want to see the items OF that package.
+      // The top level item in rawSidebar IS the package.
+      // So we can set the sidebar for that path to be the items of that package.
+      typedocSidebar[key] = pkg.items || [];
+
+      // Add default sidebar for root
+      if (pkg.text === 'yurba.js') {
+        typedocSidebar['/'] = pkg.items || [];
+      }
+    }
+  });
 } catch (e) {
-  console.warn('typedoc-sidebar.json not found. Run "pnpm run predocs" first.');
+  console.warn('typedoc-sidebar.json not found or invalid. Run "pnpm run predocs" first.', e);
 }
 
 export default defineConfig({
@@ -38,7 +63,7 @@ export default defineConfig({
   vite: {
     publicDir: '../public',
   },
- 
+
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
 
@@ -46,14 +71,7 @@ export default defineConfig({
       { text: 'Documentation', link: '/' },
       { text: 'Guide', link: 'https://yurba.js.org' },
     ],
-    sidebar: {
-      '/': [
-        {
-          text: 'Documentation',
-          items: typedocSidebar,
-        },
-      ],
-    },
+    sidebar: typedocSidebar,
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yurbajs/yurba.js' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' }

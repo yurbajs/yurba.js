@@ -55,6 +55,6 @@ function processDirectory(dirPath) {
   }
 }
 
-const docsPath = process.argv[2] || './apps/docs/l';
+const docsPath = process.argv[2] || './apps/docs/dist';
 processDirectory(docsPath);
 console.log('Done!');
