@@ -36,19 +36,34 @@ async function fetchDocs() {
 
 function buildIndex(node: DocNode, parentPath: string[] = []) {
   if (node.name) {
-    if (!docsIndex.has(node.name)) {
-      docsIndex.set(node.name, node)
-    }
+    const nodeWithPath = { ...node, _package: parentPath[0] || '' }
+    docsIndex.set(node.name, nodeWithPath)
     
     if (parentPath.length > 0) {
        const fullPath = [...parentPath, node.name].join('.')
-       docsIndex.set(fullPath, node)
+       docsIndex.set(fullPath, nodeWithPath)
     }
+  }
 
-    if (node.children) {
-      const currentPath = [...parentPath, node.name]
-      node.children.forEach(child => buildIndex(child, currentPath))
-    }
+  if (node.children) {
+    const currentPath = node.name ? [...parentPath, node.name] : parentPath
+    node.children.forEach(child => buildIndex(child, currentPath))
+  }
+}
+
+function getTypeUrl(name: string, node: any): string {
+  const base = import.meta.env.BASE_URL
+  const pkg = node._package || ''
+  const pkgPath = pkg ? `${pkg}/` : ''
+  
+  switch (node.kind) {
+    case 128: return `${base}${pkgPath}classes/${name}.html`
+    case 256: return `${base}${pkgPath}interfaces/${name}.html`
+    case 4194304:
+    case 2097152: return `${base}${pkgPath}type-aliases/${name}.html`
+    case 8: return `${base}${pkgPath}enumerations/${name}.html`
+    case 32: return `${base}${pkgPath}variables/${name}.html`
+    default: return '#'
   }
 }
 
@@ -57,8 +72,21 @@ function renderType(type: any): string {
   if (type.type === 'intrinsic') return `<span class="k">` + type.name + `</span>`
   if (type.type === 'reference') {
     const name = type.name
+    const pkg = type.package || ''
     if (name && docsIndex.has(name)) {
-      return `<a href="#" class="type-link" data-type="${name}"><span class="t">${name}</span></a>`
+      const node = docsIndex.get(name)
+      const pkgPath = pkg ? `${pkg}/` : node._package ? `${node._package}/` : ''
+      const base = import.meta.env.BASE_URL
+      let url = '#'
+      switch (node.kind) {
+        case 128: url = `${base}${pkgPath}classes/${name}.html`; break
+        case 256: url = `${base}${pkgPath}interfaces/${name}.html`; break
+        case 4194304:
+        case 2097152: url = `${base}${pkgPath}type-aliases/${name}.html`; break
+        case 8: url = `${base}${pkgPath}enumerations/${name}.html`; break
+        case 32: url = `${base}${pkgPath}variables/${name}.html`; break
+      }
+      return `<a href="${url}" class="type-link" data-type="${name}"><span class="t">${name}</span></a>`
     }
     return `<span class="t">${name || 'unknown'}</span>`
   }
@@ -85,7 +113,8 @@ function renderNode(node: DocNode): string {
     
     displayProps.forEach(child => {
       html += `<div class="preview-line">`
-      html += `  <span class="pn">${child.name}</span>`
+      const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
+      html += `  <span class="pn">${child.name}${optional}</span>`
       
       if (child.kind === 2048 && child.signatures) {
          const sig = child.signatures[0]
@@ -93,7 +122,7 @@ function renderNode(node: DocNode): string {
          const ret = renderType(sig.type)
          html += `(<span class="params">${params}</span>): <span class="t">${ret}</span>`
       } else {
-         html += `: <span class="t">${renderType(child.type)}</span>`
+         html += `: ${renderType(child.type)}`
       }
       
       html += `</div>`
@@ -106,14 +135,74 @@ function renderNode(node: DocNode): string {
     html += `<span class="p">}</span>`
     html += `</div>`
   } 
-  else if (node.kind === 4194304 && node.type) {
+  else if (node.kind === 4194304 || node.kind === 2097152) {
      html += `<div class="preview-body">`
-     html += `<span class="k">type</span> <span class="n">${node.name}</span> = <span class="t">${renderType(node.type)}</span>`
+     if (node.children) {
+       html += `<span class="p">{</span>`
+       const props = node.children.filter((c: any) => c.kind === 1024)
+       const displayProps = props.slice(0, 8)
+       displayProps.forEach((child: any) => {
+         html += `<div class="preview-line">`
+         const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
+         html += `  <span class="pn">${child.name}${optional}</span>`
+         html += `: ${renderType(child.type)}`
+         html += `</div>`
+       })
+       if (props.length > 8) {
+         html += `<div class="preview-line comment">... and ${props.length - 8} more</div>`
+       }
+       html += `<span class="p">}</span>`
+     } else if (node.type && node.type.type === 'reflection' && node.type.declaration && node.type.declaration.children) {
+       html += `<span class="p">{</span>`
+       const props = node.type.declaration.children.filter((c: any) => c.kind === 1024)
+       const displayProps = props.slice(0, 8)
+       displayProps.forEach((child: any) => {
+         html += `<div class="preview-line">`
+         const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
+         html += `  <span class="pn">${child.name}${optional}</span>`
+         html += `: ${renderType(child.type)}`
+         html += `</div>`
+       })
+       if (props.length > 8) {
+         html += `<div class="preview-line comment">... and ${props.length - 8} more</div>`
+       }
+       html += `<span class="p">}</span>`
+     } else if (node.type) {
+       html += `<span class="k">type</span> <span class="n">${node.name}</span> = <span class="t">${renderType(node.type)}</span>`
+     }
      html += `</div>`
   }
   else if (node.kind === 32 && node.type) {
      html += `<div class="preview-body">`
      html += `<span class="k">const</span> <span class="n">${node.name}</span>: <span class="t">${renderType(node.type)}</span>`
+     html += `</div>`
+  }
+  else if (node.kind === 8 && node.children) {
+     html += `<div class="preview-body">`
+     html += `<span class="p">{</span>`
+     const members = node.children.slice(0, 8)
+     members.forEach(child => {
+       html += `<div class="preview-line">`
+       html += `  <span class="pn">${child.name}</span>`
+       if (child.type && child.type.type === 'literal') {
+         html += ` = <span class="k">${JSON.stringify(child.type.value)}</span>`
+       }
+       html += `</div>`
+     })
+     if (node.children.length > 8) {
+       html += `<div class="preview-line comment">... and ${node.children.length - 8} more</div>`
+     }
+     html += `<span class="p">}</span>`
+     html += `</div>`
+  }
+  else if (node.type) {
+     html += `<div class="preview-body">`
+     html += `<span class="t">${renderType(node.type)}</span>`
+     html += `</div>`
+  }
+  else {
+     html += `<div class="preview-body">`
+     html += `<div class="preview-line comment">No additional information available</div>`
      html += `</div>`
   }
   
@@ -144,9 +233,10 @@ async function showPreview(name: string, x: number, y: number) {
 
   const node = docsIndex.get(name)
   if (node) {
+    console.log('Found node:', name, 'kind:', node.kind, 'type:', node.type, 'children:', node.children)
     tooltip.content = renderNode(node)
   } else {
-    tooltip.content = `<div class="preview-error">Definition not found for ${name}</div>`
+    tooltip.content = `<div class="preview-error">Symbol "${name}" not found in index</div>`
   }
   tooltip.loading = false
 }
@@ -167,7 +257,13 @@ async function handleMouseOver(e: MouseEvent) {
     isInsideTooltip = true
   } else {
     if (!href || href.startsWith('http') || href.startsWith('#')) return
-    if (!href.includes('/classes/') && !href.includes('/interfaces/') && !href.includes('/type-aliases/') && !href.includes('/variables/')) return
+    
+    // Check if it's an API documentation link
+    const isApiLink = href.includes('/classes/') || href.includes('/interfaces/') || 
+                      href.includes('/type-aliases/') || href.includes('/variables/') || 
+                      href.includes('/enumerations/')
+    
+    if (!isApiLink) return
     
     const match = href.match(/\/([^/]+)\.html$/)
     if (!match) return
@@ -193,13 +289,15 @@ async function handleMouseOver(e: MouseEvent) {
     }
   }
 
-  hoverTimer = setTimeout(() => showPreview(name!, x, y), 300)
+  hoverTimer = setTimeout(() => showPreview(name!, x, y), 200)
 }
 
 function handleMouseOut(e: MouseEvent) {
+  const target = e.target as HTMLElement
   const relatedTarget = e.relatedTarget as HTMLElement
   
-  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a')) {
+  // Don't hide if moving to tooltip or another link
+  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a.type-link') || relatedTarget?.closest('a[href*="/classes/"]') || relatedTarget?.closest('a[href*="/interfaces/"]') || relatedTarget?.closest('a[href*="/type-aliases/"]')) {
     return
   }
   
@@ -212,11 +310,14 @@ function handleMouseOut(e: MouseEvent) {
 
 function handleTooltipEnter() {
   if (hideTimer) clearTimeout(hideTimer)
+  if (hoverTimer) clearTimeout(hoverTimer)
 }
 
 function handleTooltipLeave(e: MouseEvent) {
   const relatedTarget = e.relatedTarget as HTMLElement
-  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a')) {
+  
+  // Don't hide if moving to another tooltip or link
+  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a.type-link') || relatedTarget?.closest('a[href*="/classes/"]') || relatedTarget?.closest('a[href*="/interfaces/"]') || relatedTarget?.closest('a[href*="/type-aliases/"]')) {
     return
   }
   
@@ -314,8 +415,14 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.type-link:hover .t {
+.type-link .t {
+  color: var(--vp-c-brand-1);
   text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.type-link:hover .t {
+  text-decoration-style: solid;
 }
 
 .k { color: var(--vp-c-brand); }
@@ -324,6 +431,7 @@ onUnmounted(() => {
 .p { color: var(--vp-c-text-2); }
 .pn { color: var(--vp-c-text-1); }
 .params { color: var(--vp-c-text-2); }
+.optional { color: var(--vp-c-text-3); font-weight: normal; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
