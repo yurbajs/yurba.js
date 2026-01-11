@@ -32,7 +32,7 @@ bun add @yurbajs/rest
 ```js
 import { REST } from '@yurbajs/rest';
 
-const rest = new REST('y.your_token_here');
+const rest = new REST().setToken('yToken');
 
 try {
   // Get current user info

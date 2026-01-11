@@ -1,136 +1,95 @@
-/* Custom styles for better documentation appearance */
+:root {
+  --vp-c-brand-1: #5854ff;
+  --vp-c-brand-2: #4340e6;
+  --vp-c-brand-3: #3633cc;
+  --vp-c-brand-soft: rgba(88, 84, 255, 0.12);
+  
+  /* Light theme improvements */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f6f6f7;
+  --vp-c-bg-mute: #ebebec;
+  --vp-c-divider: #e2e2e3;
+  --vp-c-text-1: #1a1a1a;
+  --vp-c-text-2: #4d4d4d;
+  --vp-c-text-3: #6b6b6b;
+}
 
-/* Code blocks styling */
+.dark {
+  --vp-c-brand-1: #8a85ff;
+  --vp-c-brand-2: #6b66ff;
+  --vp-c-brand-3: #b6b4ff;
+  --vp-c-brand-soft: rgba(138, 133, 255, 0.16);
+  
+  /* Dark theme improvements */
+  --vp-c-bg: #1a1a1a;
+  --vp-c-bg-soft: #242424;
+  --vp-c-bg-mute: #2e2e2e;
+  --vp-c-divider: #3c3c3c;
+  --vp-c-text-1: #f0f0f0;
+  --vp-c-text-2: #c9c9c9;
+  --vp-c-text-3: #a0a0a0;
+}
+
+/* Modern code blocks */
 .vp-code-group .tabs {
   border-radius: 8px 8px 0 0;
 }
 
-.vp-code-group .blocks {
-  border-radius: 0 0 8px 8px;
-}
-
-/* API documentation improvements */
-.vp-doc h1 {
-  border-bottom: 2px solid var(--vp-c-divider);
-  padding-bottom: 0.5rem;
-}
-
-.vp-doc h2 {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--vp-c-divider-light);
-}
-
-/* Table styling */
-.vp-doc table {
+div[class*='language-'] {
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.vp-doc th {
-  background-color: var(--vp-c-bg-soft);
-  font-weight: 600;
+/* Enhanced sidebar */
+.VPSidebar {
+  backdrop-filter: blur(8px);
 }
 
-/* Code inline styling */
-.vp-doc :not(pre) > code {
-  background-color: var(--vp-code-bg);
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-/* Method signatures */
-.vp-doc .method-signature {
+/* Modern cards for API docs */
+.api-card {
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
-}
-
-/* Parameters styling */
-.vp-doc .parameters {
-  background: var(--vp-c-bg-alt);
-  border-left: 4px solid var(--vp-c-brand);
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 0 8px 8px 0;
-}
-
-/* Examples styling */
-.vp-doc .example {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 1rem 0;
-}
-
-.vp-doc .example-header {
-  background: var(--vp-c-bg-soft);
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--vp-c-divider);
-}
-
-/* Badge styling */
-.vp-doc .badge {
-  display: inline-block;
-  padding: 0.2em 0.6em;
-  font-size: 0.75em;
-  font-weight: 600;
   border-radius: 12px;
-  margin-left: 0.5em;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
 }
 
-.vp-doc .badge.since {
-  background: var(--vp-c-green-soft);
-  color: var(--vp-c-green-darker);
+.api-card:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 8px 25px rgba(24, 20, 255, 0.15);
 }
 
-.vp-doc .badge.deprecated {
-  background: var(--vp-c-red-soft);
-  color: var(--vp-c-red-darker);
+/* Better typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
 }
 
-/* Navigation improvements */
-.VPSidebar .group .items {
-  padding-left: 1rem;
-}
-
-.VPSidebar .group .items .item {
-  border-radius: 4px;
-  margin: 2px 0;
-}
-
-/* Hero section improvements */
-.VPHero .image {
-  max-width: 400px;
-}
-
-/* Feature cards */
-.VPFeatures .item {
-  border-radius: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.VPFeatures .item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-/* Search improvements */
+/* Enhanced search */
 .DocSearch-Button {
   border-radius: 8px;
 }
 
-/* Mobile improvements */
-@media (max-width: 768px) {
-  .vp-doc .method-signature,
-  .vp-doc .parameters {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    border-radius: 0;
-  }
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-3);
+}
+
+/* Sidebar Scrollbar specific */
+.VPSidebar::-webkit-scrollbar {
+  width: 4px;
 }

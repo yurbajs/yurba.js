@@ -4,8 +4,9 @@
   "entryPoints": [
     "../../packages/*"
   ],
-  "out": "./l",
-  "json": "./docs.json",
+  "out": "./dist",
+  "docsRoot": "dist",
+  "json": "./public/docs.json",
   "theme": "default",
   "includeVersion": true,
   "excludePrivate": true,
@@ -14,7 +15,6 @@
   "hideGenerator": true,
   "readme": "../../README.md",
   "categorizeByGroup": true,
-  "sort": ["source-order"],
   "gitRevision": "main",
   "sourceLinkTemplate": "https://github.com/yurbajs/yurba.js/blob/main/{path}#L{line}",
   "cleanOutputDir": false,
@@ -27,10 +27,9 @@
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "hidePageHeader": true,
   "entryFileName": "index.md",
-  "docsRoot": "./",
   "sidebar": {
     "autoConfiguration": true,
-    "format": "vitepress",
+    "format": "vitepress", 
     "pretty": true,
     "collapsed": true
   },
@@ -47,12 +46,11 @@
     "external": true
   },
   "searchInComments": true,
-  "disableSources": false,
+  "disableSources": true,
   "excludeNotDocumentedKinds": [
       "Module",
       "Namespace",
       "Enum",
-      // "EnumMember", // Not enabled by default
       "Variable",
       "Function",
       "Class",

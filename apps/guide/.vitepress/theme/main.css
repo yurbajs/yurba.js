@@ -1,47 +1,38 @@
 /**
  * Yurba.js Clean Theme
- * Простий та сучасний стиль для світлої та темної теми
+ * Modern and clean styling for light and dark themes
  */
 
-/* ===== БРЕНДОВІ КОЛЬОРИ ===== */
+/* Design tokens & variables */
 :root {
   --yurba-primary: #41d1ff;
   --yurba-secondary: #bd34fe;
   --yurba-gradient: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
-  
-  /* VitePress переопределення */
+  --yurba-gradient-hover: linear-gradient(120deg, #c945fe 30%, #4dd9ff);
   --vp-c-brand-1: #41d1ff;
   --vp-c-brand-2: #39b8f3;
   --vp-c-brand-3: #46c1ff;
   --vp-c-brand-soft: rgba(0, 191, 255, 0.14);
-}
-
-/* ===== ГОЛОВНА СТОРІНКА ===== */
-:root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: var(--yurba-gradient);
-  
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #bd34fe 50%,
-    #47caff 50%
-  );
-  --vp-home-hero-image-filter: blur(44px);
-}
-
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
-  }
-}
-
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(68px);
-  }
-}
-
-:root {
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-brand: 0 4px 16px rgba(65, 209, 255, 0.25);
+  --dark-main-color: #191919;
+  --light-bg: #F8F9FA;
+  --light-bg-soft: #F1F3F4;
+  --dark-bg: #161618;
+  --dark-bg-alt: #262626;
+  --white: #FFF;
+  --github-dark: #24292f;
+  --warning-color: #ffc107;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --vp-layout-max-width: 1600px;
   --vp-button-brand-border: transparent;
   --vp-button-brand-text: var(--vp-c-white);
   --vp-button-brand-bg: var(--vp-c-brand-3);
@@ -51,31 +42,81 @@
   --vp-button-brand-active-border: transparent;
   --vp-button-brand-active-text: var(--vp-c-white);
   --vp-button-brand-active-bg: var(--vp-c-brand-1);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: var(--yurba-gradient);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+  --vp-home-hero-image-filter: blur(44px);
 }
 
-/*           ------------------------           */ 
+@media (min-width: 640px) {
+  :root { --vp-home-hero-image-filter: blur(56px); }
+}
+
+@media (min-width: 960px) {
+  :root { --vp-home-hero-image-filter: blur(68px); }
+}
+
+.VPButton {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 12px 24px;
+  transition: all 0.3s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+  border: none;
+  cursor: pointer;
+}
+
+.VPButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.VPButton.brand {
+  background: var(--yurba-gradient);
+  box-shadow: var(--shadow-brand);
+}
+
+.VPButton.brand:hover {
+  background: var(--yurba-gradient-hover);
+  box-shadow: 0 6px 24px rgba(65, 209, 255, 0.35);
+}
+
+/* Badges */
+.vp-doc .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--vp-c-brand-1);
+  color: white;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Navigation */
 .VPNavBar .title {
   font-weight: 700;
 }
 
-/* ===== LOGO TEXT COLOR ===== */
 .dark .VPNavBar .title {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
-/*           ------------------------1           */ 
+/* Sidebar */
+.dark .VPSidebar {
+  background: var(--dark-main-color);
+}
 
-/* ===== МОБІЛЬНЕ МЕНЮ ===== */
 @media (max-width: 768px) {
   .VPSidebar {
     transition: transform 0.25s ease;
     position: fixed;
     z-index: 100;
-    background: #F8F9FA;
+    background: var(--light-bg);
     height: 100vh;
     width: 260px;
     padding: 32px 20px;
-    box-shadow: none;
   }
   
   .VPSidebar.open {
@@ -86,34 +127,17 @@
     z-index: 200;
   }
   
-  .dark .VPSidebar {
-    background: #191919;
-    box-shadow: none;
-  }
-  
   .dark .VPSidebar.open {
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* ===== DESKTOP SIDEBAR ===== */
-.dark .VPSidebar {
-  background: #191919;
-}
 
-/* ===== CURTAIN ===== */
-.dark .curtain {
-  background: #191919;
-  color: #FFFFFF;
-}
 
-:root:not(.dark) .curtain {
-  background: #F8F9FA;
-}
-
-/* ===== SCROLLBAR ===== */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -122,18 +146,20 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--vp-c-brand-1);
-  border-radius: 3px;
+  border-radius: 4px;
+  transition: background 0.2s var(--ease-smooth);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--vp-c-brand-2);
 }
 
-/*           ------------------------           */ 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-brand-1) transparent;
+}
 
-
-/* ===== ПОКРАЩИТИ LAYOUT ===== */
-.VPDoc .container {
+/* Layout */.VPDoc .container {
   max-width: none;
 }
 
@@ -141,8 +167,13 @@
   max-width: 1000px;
 }
 
+.VPDoc.has-aside .content,
+.VPDoc.has-aside .content-container,
+.VPDoc.has-aside .vp-doc {
+  max-width: 1600px !important;
+}
 
-/* ===== ПОКРАЩИТИ CODE GROUPS ===== */
+/* Code groups */
 .vp-code-group {
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
@@ -172,7 +203,6 @@
   background: transparent;
   border-radius: 4px;
   transition: all 0.15s ease;
-
   letter-spacing: 0.5px;
 }
 
@@ -185,10 +215,9 @@
   color: var(--vp-c-brand-1);
   background: var(--vp-c-bg);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ===== ПОКРАЩИТИ БЛОКИ КОДУ ===== */
 div[class*="language-"] {
   border-radius: 0 0 8px 8px;
   margin: 0;
@@ -197,57 +226,81 @@ div[class*="language-"] {
 
 .vp-code-group div[class*="language-"] {
   border-radius: 0;
-  margin: 0;
-  border: none;
 }
 
-/* ===== CUSTOM BLOCKS ===== */
+/* Custom blocks */
 .custom-block {
-  border-radius: 8px;
-  border-left: 4px solid var(--vp-c-brand-1);
+  border-radius: 12px;
+  border-left: 4px solid;
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-lg) 0;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
 .custom-block.tip {
+  background: rgba(65, 209, 255, 0.05);
   border-left-color: var(--vp-c-brand-1);
 }
 
-/* ===== ПОШУК ===== */
+.custom-block.warning {
+  background: rgba(255, 193, 7, 0.05);
+  border-left-color: var(--warning-color);
+}
+
+.custom-block-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Search */
 .DocSearch-Button {
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.2s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
 }
 
 .DocSearch-Button:hover {
   background: var(--vp-c-bg-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-/* ===== АДАПТИВНІСТЬ ===== */
+.DocSearch-Hit-path {
+  display: none !important;
+}
+
+/* Responsive */
 @media (max-width: 1279px) {
   .VPDoc .content {
     max-width: 100%;
     padding: 0 32px;
   }
+
+  .VPDoc.has-aside .content {
+    max-width: 1600px !important;
+  }
 }
 
 @media (max-width: 960px) {
-  .VPDoc .container {
-    padding: 0 24px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 24px;
   }
 }
 
 @media (max-width: 640px) {
-  .VPDoc .container {
-    padding: 0 16px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 16px;
   }
-  
+
   .vp-code-group {
     margin: 16px -16px;
     border-radius: 0;
@@ -255,42 +308,35 @@ div[class*="language-"] {
 }
 
 @media (max-width: 480px) {
-  .VPDoc .container {
-    padding: 0 12px;
-  }
-  
+  .VPDoc .container,
   .VPDoc .content {
     padding: 0 12px;
   }
 }
 
-/* ===== СВІТЛА ТЕМА СПЕЦИФІКА ===== */
+/* Light theme */
 :root:not(.dark) {
-  --vp-c-bg: #FFFFFF;
-  --vp-c-bg-alt: #F8F9FA;
-  --vp-c-bg-soft: #F1F3F4;
-  --vp-c-bg-elv: #FFFFFF;
+  --vp-c-bg: var(--white);
+  --vp-c-bg-alt: var(--light-bg);
+  --vp-c-bg-soft: var(--light-bg-soft);
+  --vp-c-bg-elv: var(--white);
 }
 
-/* ===== LIGHT SIDEBAR ===== */
 :root:not(.dark) .VPSidebar {
-  background: #F8F9FA;
+  background: var(--light-bg);
 }
 
-/* ===== ТЕМНА ТЕМА СПЕЦИФІКА ===== */
+/* Dark theme */
 .dark {
-  --vp-c-bg: #161618;
-  --vp-c-bg-alt: #262626;
-  --vp-c-bg-soft: #262626;
-  --vp-c-bg-elv: #161618;
+  --vp-c-bg: var(--dark-bg);
+  --vp-c-bg-alt: var(--dark-bg-alt);
+  --vp-c-bg-soft: var(--dark-bg-alt);
+  --vp-c-bg-elv: var(--dark-bg);
 }
 
-/* ===== ПЛАВНІ ПЕРЕХОДИ ===== */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
 
-/* ===== ПОКРАЩЕННЯ ТИПОГРАФІЇ ===== */
+
+/* Typography */
 .vp-doc h1 {
   color: var(--vp-c-brand-1);
   font-weight: 800;
@@ -308,160 +354,226 @@ div[class*="language-"] {
   font-weight: 600;
 }
 
-/* ===== ПОСИЛАННЯ ===== */
+/* Links */
 .vp-doc a {
   color: var(--vp-c-brand-1);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
 }
 
 .vp-doc a:hover {
   border-bottom-color: var(--vp-c-brand-1);
 }
 
-/* ===== ТАБЛИЦІ ===== */
+/* Tables */
 .vp-doc table {
-  border-radius: 8px;
+  width: 100%;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--vp-c-divider);
+  box-shadow: var(--shadow-sm);
+  margin: var(--space-lg) 0;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .vp-doc table th {
   background: var(--vp-c-bg-soft);
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--vp-c-text-1);
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 2px solid var(--vp-c-divider);
 }
 
-/* ===== СОЦІАЛЬНІ ІКОНКИ ===== */
-/* GitHub іконка - автоматична зміна кольору */
+.vp-doc table td {
+  padding: var(--space-md);
+  border-top: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc table tbody tr {
+  transition: background 0.2s var(--ease-smooth);
+}
+
+.vp-doc table tbody tr:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.dark .vp-doc table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Social icons - GitHub */
 .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-.VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
+.VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+.vpi-social-github {
   transition: color 0.2s ease !important;
 }
 
-/* Світла тема - темна іконка */
 :root:not(.dark) .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
-  color: #24292f !important;
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+:root:not(.dark) .vpi-social-github {
+  color: var(--github-dark) !important;
 }
 
-/* Темна тема - біла іконка */
 .dark .VPSocialLink[aria-label*="GitHub"] .vpi-social-github,
-.dark .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github {
-  color: #ffffff !important;
+.dark .VPSocialLink[aria-label*="GitHub Repository"] .vpi-social-github,
+.dark .vpi-social-github {
+  color: var(--white) !important;
 }
 
-/* Hover ефекти */
 .VPSocialLink[aria-label*="GitHub"]:hover .vpi-social-github,
 .VPSocialLink[aria-label*="GitHub Repository"]:hover .vpi-social-github {
   color: var(--vp-c-brand-1) !important;
 }
 
-/* Альтернативний підхід через filter для SVG іконок */
 .VPSocialLink[aria-label*="GitHub"] svg,
-.VPSocialLink[aria-label*="GitHub Repository"] svg {
+.VPSocialLink[aria-label*="GitHub Repository"] svg,
+.VPSocialLinks .VPSocialLink:first-child svg {
   transition: filter 0.2s ease !important;
 }
 
-/* Світла тема */
 :root:not(.dark) .VPSocialLink[aria-label*="GitHub"] svg,
-:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] svg {
+:root:not(.dark) .VPSocialLink[aria-label*="GitHub Repository"] svg,
+:root:not(.dark) .VPSocialLinks .VPSocialLink:first-child svg {
   filter: brightness(0) saturate(100%) !important;
 }
 
-/* Темна тема */
 .dark .VPSocialLink[aria-label*="GitHub"] svg,
-.dark .VPSocialLink[aria-label*="GitHub Repository"] svg {
+.dark .VPSocialLink[aria-label*="GitHub Repository"] svg,
+.dark .VPSocialLinks .VPSocialLink:first-child svg {
   filter: brightness(0) saturate(100%) invert(1) !important;
 }
 
-/* Hover ефект */
 .VPSocialLink[aria-label*="GitHub"]:hover svg,
 .VPSocialLink[aria-label*="GitHub Repository"]:hover svg {
   filter: brightness(0) saturate(100%) invert(41%) sepia(100%) saturate(1000%) hue-rotate(180deg) !important;
 }
 
-/* Додатковий селектор для всіх GitHub іконок */
-.vpi-social-github {
-  transition: color 0.2s ease !important;
-}
-
-:root:not(.dark) .vpi-social-github {
-  color: #24292f !important;
-}
-
-.dark .vpi-social-github {
-  color: #ffffff !important;
-}
-
-/* Форсуємо правильний колір при завантаженні */
-.VPSocialLinks .VPSocialLink:first-child svg {
-  transition: filter 0.2s ease !important;
-}
-
-:root:not(.dark) .VPSocialLinks .VPSocialLink:first-child svg {
-  filter: brightness(0) saturate(100%) !important;
-}
-
-.dark .VPSocialLinks .VPSocialLink:first-child svg {
-  filter: brightness(0) saturate(100%) invert(1) !important;
-}
-
-/* ===== ІКОНКИ FEATURES ===== */
-.VPFeatures .VPFeature .icon img,
-.VPFeatures .VPFeature .VPImage img,
-.VPFeature .icon img,
+/* Feature icons */
 .VPFeature img {
   transition: filter 0.3s ease !important;
 }
 
-/* Світла тема - білі іконки */
-:root:not(.dark) .VPFeatures .VPFeature .icon img,
-:root:not(.dark) .VPFeatures .VPFeature .VPImage img,
-:root:not(.dark) .VPFeature .icon img,
-:root:not(.dark) .VPFeature img {
-  filter: brightness(0) invert(1) !important;
-}
-
-/* Темна тема - градієнт */
-.dark .VPFeatures .VPFeature .icon img,
-.dark .VPFeatures .VPFeature .VPImage img,
-.dark .VPFeature .icon img,
-.dark .VPFeature img {
+.dark .VPFeature img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
 }
 
-/* Hover ефект */
-.VPFeatures .VPFeature:hover .icon img,
-.VPFeatures .VPFeature:hover .VPImage img,
-.VPFeature:hover .icon img,
-.VPFeature:hover img {
+.dark .VPFeature:hover img:not([src*="yurba-developers"]) {
   filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(200deg) brightness(1.5) !important;
 }
 
-/* Прибираємо тільки breadcrumbs, залишаємо заголовки */
-.DocSearch-Hit-path {
-  display: none !important;
+/* Feature cards */
+.VPFeatures .VPFeature {
+  border-radius: 12px;
+  padding: var(--space-lg);
+  transition: all 0.3s var(--ease-smooth);
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
 }
 
-/* Тільки для features PNG іконок */
-.VPFeatures .VPFeature img[src$=".png"] {
-  transition: filter 0.3s ease !important;
+.VPFeatures .VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--vp-c-brand-1);
 }
 
-:root:not(.dark) .VPFeatures .VPFeature img[src$=".png"] {
-  filter: brightness(0) !important;
+.VPFeatures .VPFeature .icon {
+  transition: transform 0.3s var(--ease-bounce);
 }
 
-.dark .VPFeatures .VPFeature img[src$=".png"] {
-  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(180deg) brightness(1.2) !important;
+.VPFeatures .VPFeature:hover .icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
-/* Виключення для першої іконки */
-:root:not(.dark) .VPFeatures .VPFeature img[src*="yurba-developers"] {
-  filter: none !important;
+/* Lists */
+.vp-doc ul,
+.vp-doc ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
 }
 
-.dark .VPFeatures .VPFeature img[src*="yurba-developers"] {
-  filter: none !important;
+.vp-doc li {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+.vp-doc ul li::marker {
+  color: var(--vp-c-brand-1);
+}
+
+/* Social hover */
+.VPSocialLink {
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.VPSocialLink:hover {
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vp-doc > * {
+  animation: fadeIn 0.5s var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.curtain {
+  backdrop-filter: blur(8px);
+  transition: background 0.3s var(--ease-smooth);
+}
+
+.dark .curtain {
+  background: var(--dark-main-color);
+}
+
+:root:not(.dark) .curtain {
+  background: rgba(248, 250, 252, 0.95);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Performance */
+.vp-doc img {
+  content-visibility: auto;
+}
+
+.vp-doc pre {
+  contain: layout style paint;
 }
