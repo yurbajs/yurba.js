@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vitepress'
 
-const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean, autoHideTimer?: any, anchorX: number, anchorY: number, side: 'right' | 'left' }>>([])
+const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean, autoHideTimer?: any, anchorX: number, anchorY: number, side: 'right' | 'left', symbolName: string }>>([])
 const docsIndex = new Map<string, any>()
 let docsLoaded = false
 let hoverTimer: any = null
@@ -217,12 +217,13 @@ function getKindString(kind: number): string {
 }
 
 async function showPreview(name: string, x: number, y: number, anchorX: number, anchorY: number) {
-  // Перевірити чи вже є tooltip для цього елемента
-  const existing = tooltips.value.find(t => t.content.includes(`<span class="n">${name}</span>`))
+  // Перевірити чи вже є tooltip для цього елемента (запобігання зацикленню)
+  const existing = tooltips.value.find(t => t.symbolName === name)
   if (existing) return
   
   const id = ++tooltipIdCounter
   const tooltipWidth = 400
+  const tooltipHeight = 150 // приблизна висота
   const gap = 20
   const viewportWidth = window.innerWidth
   
@@ -230,10 +231,21 @@ async function showPreview(name: string, x: number, y: number, anchorX: number, 
   let posX = x + gap
   let posY = y
   
+  // Перевірити чи є місце праворуч
   if (posX + tooltipWidth > viewportWidth - 20) {
     side = 'left'
     posX = x - tooltipWidth - gap
     if (posX < 20) posX = 20
+  }
+  
+  // Перевірити перекриття з існуючими tooltips і зсунути вниз якщо потрібно
+  for (const existing of tooltips.value) {
+    const xOverlap = Math.abs(posX - existing.position.x) < tooltipWidth
+    const yOverlap = Math.abs(posY - existing.position.y) < tooltipHeight
+    
+    if (xOverlap && yOverlap) {
+      posY = existing.position.y + tooltipHeight + 10
+    }
   }
   
   const newTooltip = { 
@@ -244,7 +256,8 @@ async function showPreview(name: string, x: number, y: number, anchorX: number, 
     autoHideTimer: undefined,
     anchorX,
     anchorY,
-    side
+    side,
+    symbolName: name
   }
   tooltips.value.push(newTooltip)
 
