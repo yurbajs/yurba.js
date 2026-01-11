@@ -6,7 +6,7 @@
   ],
   "out": "./dist",
   "docsRoot": "dist",
-  "json": "./dist/docs.json",
+  "json": "./public/docs.json",
   "theme": "default",
   "includeVersion": true,
   "excludePrivate": true,
