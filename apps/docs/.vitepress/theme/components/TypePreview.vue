@@ -37,7 +37,15 @@ async function fetchDocs() {
 function buildIndex(node: DocNode, parentPath: string[] = []) {
   if (node.name) {
     const nodeWithPath = { ...node, _package: parentPath[0] || '' }
-    docsIndex.set(node.name, nodeWithPath)
+    
+    // Пріоритет: класи, інтерфейси, типи мають вищий пріоритет ніж властивості
+    const existing = docsIndex.get(node.name)
+    const isTopLevel = node.kind === 128 || node.kind === 256 || node.kind === 4194304 || node.kind === 2097152 || node.kind === 8
+    const existingIsTopLevel = existing && (existing.kind === 128 || existing.kind === 256 || existing.kind === 4194304 || existing.kind === 2097152 || existing.kind === 8)
+    
+    if (!existing || (isTopLevel && !existingIsTopLevel)) {
+      docsIndex.set(node.name, nodeWithPath)
+    }
     
     if (parentPath.length > 0) {
        const fullPath = [...parentPath, node.name].join('.')
@@ -255,7 +263,10 @@ async function handleMouseOver(e: MouseEvent) {
   const target = (e.target as HTMLElement).closest('a')
   if (!target) return
 
-  if (!target.closest('.vp-doc')) return
+  const inSidebar = target.closest('.VPSidebar')
+  const inAside = target.closest('.VPAside')
+  
+  if (inSidebar || inAside) return
 
   let href = target.getAttribute('href')
   let name: string | null = null
@@ -266,9 +277,17 @@ async function handleMouseOver(e: MouseEvent) {
   } else {
     if (!href || href.startsWith('http') || href.startsWith('#')) return
     
-    const match = href.match(/\/(classes|interfaces|type-aliases|variables|enumerations)\/([^/]+)\.html/)
+    const currentPath = window.location.pathname
+    const isApiPage = currentPath.includes('/classes/') || currentPath.includes('/interfaces/') || 
+                      currentPath.includes('/type-aliases/') || currentPath.includes('/variables/') || 
+                      currentPath.includes('/enumerations/')
+    
+    if (!isApiPage) return
+    
+    const match = href.match(/([^/]+)\.html$/)
     if (!match) return
-    name = match[2]
+    
+    name = match[1]
   }
 
   if (!name) return
