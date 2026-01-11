@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vitepress'
 
-const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean, autoHideTimer?: any }>>([])
+const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean, autoHideTimer?: any, anchorX: number, anchorY: number, side: 'right' | 'left' }>>([])
 const docsIndex = new Map<string, any>()
 let docsLoaded = false
 let hoverTimer: any = null
@@ -216,9 +216,36 @@ function getKindString(kind: number): string {
   }
 }
 
-async function showPreview(name: string, x: number, y: number) {
+async function showPreview(name: string, x: number, y: number, anchorX: number, anchorY: number) {
+  // Перевірити чи вже є tooltip для цього елемента
+  const existing = tooltips.value.find(t => t.content.includes(`<span class="n">${name}</span>`))
+  if (existing) return
+  
   const id = ++tooltipIdCounter
-  const newTooltip = { id, content: '', position: { x, y }, loading: true, autoHideTimer: undefined }
+  const tooltipWidth = 400
+  const gap = 20
+  const viewportWidth = window.innerWidth
+  
+  let side: 'right' | 'left' = 'right'
+  let posX = x + gap
+  let posY = y
+  
+  if (posX + tooltipWidth > viewportWidth - 20) {
+    side = 'left'
+    posX = x - tooltipWidth - gap
+    if (posX < 20) posX = 20
+  }
+  
+  const newTooltip = { 
+    id, 
+    content: '', 
+    position: { x: posX, y: posY }, 
+    loading: true, 
+    autoHideTimer: undefined,
+    anchorX,
+    anchorY,
+    side
+  }
   tooltips.value.push(newTooltip)
 
   if (!docsLoaded) {
@@ -230,14 +257,12 @@ async function showPreview(name: string, x: number, y: number) {
 
   const node = docsIndex.get(name)
   if (node) {
-    console.log('Found node:', name, 'kind:', node.kind, 'type:', node.type, 'children:', node.children)
     tooltip.content = renderNode(node)
   } else {
     tooltip.content = `<div class="preview-error">Symbol "${name}" not found in index</div>`
   }
   tooltip.loading = false
   
-  // Автоматично ховати через 3 секунди
   tooltip.autoHideTimer = setTimeout(() => {
     tooltips.value = tooltips.value.filter(t => t.id !== id)
   }, 3000)
@@ -280,10 +305,23 @@ async function handleMouseOver(e: MouseEvent) {
   clearTimeout(hideTimer)
 
   const rect = target.getBoundingClientRect()
-  const x = rect.left + window.scrollX
-  const y = rect.bottom + window.scrollY + 10
+  const anchorX = rect.left + rect.width / 2 + window.scrollX
+  const anchorY = rect.top + rect.height / 2 + window.scrollY
+  
+  // Якщо це посилання всередині tooltip, використовуємо позицію tooltip
+  const insideTooltip = target.closest('.type-preview-tooltip')
+  let x, y
+  
+  if (insideTooltip) {
+    const tooltipRect = insideTooltip.getBoundingClientRect()
+    x = tooltipRect.right + window.scrollX
+    y = tooltipRect.top + window.scrollY
+  } else {
+    x = rect.right + window.scrollX
+    y = rect.top + window.scrollY
+  }
 
-  hoverTimer = setTimeout(() => showPreview(name!, x, y), 300)
+  hoverTimer = setTimeout(() => showPreview(name!, x, y, anchorX, anchorY), 300)
 }
 
 function handleMouseOut(e: MouseEvent) {
@@ -319,6 +357,25 @@ function handleTooltipLeave() {
   }, 200)
 }
 
+function getConnectionPath(tooltip: any): string {
+  const startX = tooltip.anchorX
+  const startY = tooltip.anchorY
+  const endX = tooltip.side === 'right' ? tooltip.position.x : tooltip.position.x + 500
+  const endY = tooltip.position.y + 30
+  
+  const dx = endX - startX
+  const dy = endY - startY
+  const dist = Math.sqrt(dx * dx + dy * dy)
+  
+  const controlDist = Math.min(dist * 0.4, 100)
+  const controlX1 = startX + (tooltip.side === 'right' ? controlDist : -controlDist)
+  const controlY1 = startY
+  const controlX2 = endX - (tooltip.side === 'right' ? controlDist : -controlDist)
+  const controlY2 = endY
+  
+  return `M ${startX} ${startY} C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${endX} ${endY}`
+}
+
 onMounted(() => {
   document.addEventListener('mouseover', handleMouseOver)
   document.addEventListener('mouseout', handleMouseOut)
@@ -336,6 +393,7 @@ onUnmounted(() => {
       v-for="tooltip in tooltips"
       :key="tooltip.id"
       class="type-preview-tooltip"
+      :class="{ 'slide-in-right': tooltip.side === 'right', 'slide-in-left': tooltip.side === 'left' }"
       :style="{ top: `${tooltip.position.y}px`, left: `${tooltip.position.x}px` }"
       @mouseenter="handleTooltipEnter"
       @mouseleave="handleTooltipLeave"
@@ -357,12 +415,45 @@ onUnmounted(() => {
   border-radius: 8px;
   box-shadow: var(--vp-shadow-3);
   padding: 12px;
-  max-width: 450px;
+  max-width: 400px;
   max-height: 400px;
   overflow: auto;
   pointer-events: auto;
   font-family: var(--vp-font-family-mono);
   font-size: 13px;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide-in-right {
+  animation-name: slideInRight;
+}
+
+.slide-in-left {
+  animation-name: slideInLeft;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .preview-header {
