@@ -249,16 +249,14 @@ async function handleMouseOver(e: MouseEvent) {
 
   let href = target.getAttribute('href')
   let name: string | null = null
-  let isInsideTooltip = false
+  let isInsideTooltip = !!target.closest('.type-preview-tooltip')
 
   if (target.classList.contains('type-link')) {
     e.preventDefault()
     name = target.getAttribute('data-type')
-    isInsideTooltip = true
   } else {
     if (!href || href.startsWith('http') || href.startsWith('#')) return
     
-    // Check if it's an API documentation link
     const isApiLink = href.includes('/classes/') || href.includes('/interfaces/') || 
                       href.includes('/type-aliases/') || href.includes('/variables/') || 
                       href.includes('/enumerations/')
@@ -272,14 +270,13 @@ async function handleMouseOver(e: MouseEvent) {
 
   if (!name) return
 
-  if (hoverTimer) clearTimeout(hoverTimer)
-  if (hideTimer) clearTimeout(hideTimer)
+  clearTimeout(hoverTimer)
+  clearTimeout(hideTimer)
 
   const rect = target.getBoundingClientRect()
   let x = rect.left + window.scrollX
   let y = rect.bottom + window.scrollY + 10
 
-  // If hovering inside tooltip, position next to the current tooltip element
   if (isInsideTooltip) {
     const tooltipEl = target.closest('.type-preview-tooltip') as HTMLElement
     if (tooltipEl) {
@@ -289,41 +286,28 @@ async function handleMouseOver(e: MouseEvent) {
     }
   }
 
-  hoverTimer = setTimeout(() => showPreview(name!, x, y), 200)
+  hoverTimer = setTimeout(() => showPreview(name!, x, y), 300)
 }
 
 function handleMouseOut(e: MouseEvent) {
-  const target = e.target as HTMLElement
   const relatedTarget = e.relatedTarget as HTMLElement
   
-  // Don't hide if moving to tooltip or another link
   if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a.type-link') || relatedTarget?.closest('a[href*="/classes/"]') || relatedTarget?.closest('a[href*="/interfaces/"]') || relatedTarget?.closest('a[href*="/type-aliases/"]')) {
     return
   }
   
-  if (hoverTimer) clearTimeout(hoverTimer)
-  
-  hideTimer = setTimeout(() => {
-    tooltips.value = []
-  }, 300)
+  clearTimeout(hoverTimer)
+  clearTimeout(hideTimer)
+  hideTimer = setTimeout(() => { tooltips.value = [] }, 200)
 }
 
 function handleTooltipEnter() {
-  if (hideTimer) clearTimeout(hideTimer)
-  if (hoverTimer) clearTimeout(hoverTimer)
+  clearTimeout(hideTimer)
 }
 
-function handleTooltipLeave(e: MouseEvent) {
-  const relatedTarget = e.relatedTarget as HTMLElement
-  
-  // Don't hide if moving to another tooltip or link
-  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a.type-link') || relatedTarget?.closest('a[href*="/classes/"]') || relatedTarget?.closest('a[href*="/interfaces/"]') || relatedTarget?.closest('a[href*="/type-aliases/"]')) {
-    return
-  }
-  
-  hideTimer = setTimeout(() => {
-    tooltips.value = []
-  }, 300)
+function handleTooltipLeave() {
+  clearTimeout(hideTimer)
+  hideTimer = setTimeout(() => { tooltips.value = [] }, 200)
 }
 
 onMounted(() => {
