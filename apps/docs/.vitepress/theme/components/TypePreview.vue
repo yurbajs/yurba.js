@@ -315,13 +315,13 @@ async function handleMouseOver(e: MouseEvent) {
   if (insideTooltip) {
     const tooltipRect = insideTooltip.getBoundingClientRect()
     x = tooltipRect.right + window.scrollX
-    y = tooltipRect.top + window.scrollY
+    y = rect.top + window.scrollY
   } else {
     x = rect.right + window.scrollX
     y = rect.top + window.scrollY
   }
 
-  hoverTimer = setTimeout(() => showPreview(name!, x, y, anchorX, anchorY), 300)
+  hoverTimer = setTimeout(() => showPreview(name!, x, y, anchorX, anchorY), 200)
 }
 
 function handleMouseOut(e: MouseEvent) {
