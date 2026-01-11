@@ -78,7 +78,7 @@ onUnmounted(() => {
 
 <style scoped>
 .sidebar-select-container {
-  padding: 16px 20px 0;
+  padding: 16px 0 0;
   position: relative;
   margin-bottom: 8px;
 }
@@ -120,8 +120,8 @@ onUnmounted(() => {
 .dropdown-menu {
   position: absolute;
   top: calc(100% - 4px);
-  left: 24px;
-  right: 24px;
+  left: 0;
+  right: 0;
   background-color: var(--vp-c-bg);
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
