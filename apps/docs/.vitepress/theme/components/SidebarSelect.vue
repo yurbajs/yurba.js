@@ -155,12 +155,12 @@ onUnmounted(() => {
 /* Transitions */
 .dropdown-enter-active,
 .dropdown-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  transform: translateY(-8px) scale(0.98);
+  transform: translateY(-8px) scale(0.96);
 }
 </style>
