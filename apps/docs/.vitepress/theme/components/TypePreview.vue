@@ -118,10 +118,8 @@ function renderNode(node: DocNode): string {
     
     const props = node.children.filter(c => c.kind === 1024)
     const methods = node.children.filter(c => c.kind === 2048)
-    const displayProps = props.slice(0, 5)
-    const displayMethods = methods.slice(0, 5)
     
-    displayProps.forEach(child => {
+    props.forEach(child => {
       html += `<div class="preview-line">`
       const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
       html += `  <span class="pn">${child.name}${optional}</span>`
@@ -129,11 +127,7 @@ function renderNode(node: DocNode): string {
       html += `</div>`
     })
     
-    if (props.length > 5) {
-       html += `<div class="preview-line comment">... ${props.length - 5} more properties</div>`
-    }
-    
-    displayMethods.forEach(child => {
+    methods.forEach(child => {
       html += `<div class="preview-line">`
       if (child.signatures) {
          const sig = child.signatures[0]
@@ -144,10 +138,6 @@ function renderNode(node: DocNode): string {
       html += `</div>`
     })
     
-    if (methods.length > 5) {
-       html += `<div class="preview-line comment">... ${methods.length - 5} more methods</div>`
-    }
-    
     html += `<span class="p">}</span>`
     html += `</div>`
   } 
@@ -156,32 +146,24 @@ function renderNode(node: DocNode): string {
      if (node.children) {
        html += `<span class="p">{</span>`
        const props = node.children.filter((c: any) => c.kind === 1024)
-       const displayProps = props.slice(0, 8)
-       displayProps.forEach((child: any) => {
+       props.forEach((child: any) => {
          html += `<div class="preview-line">`
          const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
          html += `  <span class="pn">${child.name}${optional}</span>`
          html += `: ${renderType(child.type)}`
          html += `</div>`
        })
-       if (props.length > 8) {
-         html += `<div class="preview-line comment">... and ${props.length - 8} more</div>`
-       }
        html += `<span class="p">}</span>`
      } else if (node.type && node.type.type === 'reflection' && node.type.declaration && node.type.declaration.children) {
        html += `<span class="p">{</span>`
        const props = node.type.declaration.children.filter((c: any) => c.kind === 1024)
-       const displayProps = props.slice(0, 8)
-       displayProps.forEach((child: any) => {
+       props.forEach((child: any) => {
          html += `<div class="preview-line">`
          const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
          html += `  <span class="pn">${child.name}${optional}</span>`
          html += `: ${renderType(child.type)}`
          html += `</div>`
        })
-       if (props.length > 8) {
-         html += `<div class="preview-line comment">... and ${props.length - 8} more</div>`
-       }
        html += `<span class="p">}</span>`
      } else if (node.type) {
        html += `<span class="k">type</span> <span class="n">${node.name}</span> = <span class="t">${renderType(node.type)}</span>`
@@ -196,8 +178,7 @@ function renderNode(node: DocNode): string {
   else if (node.kind === 8 && node.children) {
      html += `<div class="preview-body">`
      html += `<span class="p">{</span>`
-     const members = node.children.slice(0, 8)
-     members.forEach(child => {
+     node.children.forEach(child => {
        html += `<div class="preview-line">`
        html += `  <span class="pn">${child.name}</span>`
        if (child.type && child.type.type === 'literal') {
@@ -205,9 +186,6 @@ function renderNode(node: DocNode): string {
        }
        html += `</div>`
      })
-     if (node.children.length > 8) {
-       html += `<div class="preview-line comment">... and ${node.children.length - 8} more</div>`
-     }
      html += `<span class="p">}</span>`
      html += `</div>`
   }
