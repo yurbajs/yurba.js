@@ -2,17 +2,15 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vitepress'
 
-const visible = ref(false)
-const content = ref('')
-const position = ref({ x: 0, y: 0 })
-const loading = ref(false)
+const tooltips = ref<Array<{ id: number, content: string, position: { x: number, y: number }, loading: boolean }>>([])
 const docsIndex = new Map<string, any>()
 let docsLoaded = false
 let hoverTimer: any = null
+let hideTimer: any = null
+let tooltipIdCounter = 0
 
 const route = useRoute()
 
-// Types for our index
 interface DocNode {
   id: number
   name: string
@@ -27,7 +25,7 @@ interface DocNode {
 async function fetchDocs() {
   if (docsLoaded) return
   try {
-    const res = await fetch('/docs.json')
+    const res = await fetch(`${import.meta.env.BASE_URL}docs.json`)
     const data = await res.json()
     buildIndex(data)
     docsLoaded = true
@@ -38,16 +36,10 @@ async function fetchDocs() {
 
 function buildIndex(node: DocNode, parentPath: string[] = []) {
   if (node.name) {
-    // Index by name (simple lookup)
-    // We might have collisions, but usually for unique exports it's fine
-    // or we can use the full path if needed.
-    // For now, let's index by name as it's what's in the URL mostly.
     if (!docsIndex.has(node.name)) {
       docsIndex.set(node.name, node)
     }
     
-    // Also index by "Package.Name" if we can infer package
-    // The top level children of root are packages
     if (parentPath.length > 0) {
        const fullPath = [...parentPath, node.name].join('.')
        docsIndex.set(fullPath, node)
@@ -63,11 +55,20 @@ function buildIndex(node: DocNode, parentPath: string[] = []) {
 function renderType(type: any): string {
   if (!type) return 'any'
   if (type.type === 'intrinsic') return `<span class="k">` + type.name + `</span>`
-  if (type.type === 'reference') return `<span class="t">` + type.name + `</span>`
+  if (type.type === 'reference') {
+    const name = type.name
+    if (name && docsIndex.has(name)) {
+      return `<a href="#" class="type-link" data-type="${name}"><span class="t">${name}</span></a>`
+    }
+    return `<span class="t">${name || 'unknown'}</span>`
+  }
   if (type.type === 'union') return type.types.map(renderType).join(' | ')
   if (type.type === 'array') return renderType(type.elementType) + '[]'
   if (type.type === 'reflection' && type.declaration) {
-      return '{ ... }' // Simplified for inline object types
+      return '{ ... }'
+  }
+  if (type.type === 'literal' && type.value !== undefined) {
+    return `<span class="k">${JSON.stringify(type.value)}</span>`
   }
   return type.name || 'any'
 }
@@ -75,27 +76,23 @@ function renderType(type: any): string {
 function renderNode(node: DocNode): string {
   let html = `<div class="preview-header"><span class="k">${getKindString(node.kind)}</span> <span class="n">${node.name}</span></div>`
   
-  // Interface / Class Properties
-  if (node.children && (node.kind === 256 || node.kind === 128)) { // Interface or Class
+  if (node.children && (node.kind === 256 || node.kind === 128)) {
     html += `<div class="preview-body">`
     html += `<span class="p">{</span>`
     
-    // Filter relevant children (properties, methods)
-    const props = node.children.filter(c => c.kind === 1024 || c.kind === 2048) // Property or Method
-    
-    // Limit to 5 items to keep preview small
+    const props = node.children.filter(c => c.kind === 1024 || c.kind === 2048)
     const displayProps = props.slice(0, 8)
     
     displayProps.forEach(child => {
       html += `<div class="preview-line">`
       html += `  <span class="pn">${child.name}</span>`
       
-      if (child.kind === 2048 && child.signatures) { // Method
+      if (child.kind === 2048 && child.signatures) {
          const sig = child.signatures[0]
          const params = sig.parameters?.map((p: any) => `${p.name}: ${renderType(p.type)}`).join(', ') || ''
          const ret = renderType(sig.type)
          html += `(<span class="params">${params}</span>): <span class="t">${ret}</span>`
-      } else { // Property
+      } else {
          html += `: <span class="t">${renderType(child.type)}</span>`
       }
       
@@ -109,10 +106,14 @@ function renderNode(node: DocNode): string {
     html += `<span class="p">}</span>`
     html += `</div>`
   } 
-  // Type Alias
   else if (node.kind === 4194304 && node.type) {
      html += `<div class="preview-body">`
      html += `<span class="k">type</span> <span class="n">${node.name}</span> = <span class="t">${renderType(node.type)}</span>`
+     html += `</div>`
+  }
+  else if (node.kind === 32 && node.type) {
+     html += `<div class="preview-body">`
+     html += `<span class="k">const</span> <span class="n">${node.name}</span>: <span class="t">${renderType(node.type)}</span>`
      html += `</div>`
   }
   
@@ -130,57 +131,98 @@ function getKindString(kind: number): string {
   }
 }
 
+async function showPreview(name: string, x: number, y: number) {
+  const id = ++tooltipIdCounter
+  tooltips.value.push({ id, content: '', position: { x, y }, loading: true })
+
+  if (!docsLoaded) {
+    await fetchDocs()
+  }
+  
+  const tooltip = tooltips.value.find(t => t.id === id)
+  if (!tooltip) return
+
+  const node = docsIndex.get(name)
+  if (node) {
+    tooltip.content = renderNode(node)
+  } else {
+    tooltip.content = `<div class="preview-error">Definition not found for ${name}</div>`
+  }
+  tooltip.loading = false
+}
+
 async function handleMouseOver(e: MouseEvent) {
   const target = (e.target as HTMLElement).closest('a')
   if (!target) return
 
-  // Restrict to main content area only
-  if (!target.closest('.vp-doc')) return
+  if (!target.closest('.vp-doc') && !target.closest('.type-preview-tooltip')) return
 
-  const href = target.getAttribute('href')
-  if (!href || href.startsWith('http') || href.startsWith('#')) return
+  let href = target.getAttribute('href')
+  let name: string | null = null
+  let isInsideTooltip = false
 
-  // Check if it looks like an API link
-  if (!href.includes('/classes/') && !href.includes('/interfaces/') && !href.includes('/type-aliases/') && !href.includes('/variables/')) return
-
-  // Extract name from URL
-  // e.g. /@yurbajs/rest/classes/PostResource.html -> PostResource
-  const match = href.match(/\/([^/]+)\.html$/)
-  if (!match) return
-  const name = match[1]
-
-  // Clear any existing timer
-  if (hoverTimer) clearTimeout(hoverTimer)
-
-  // Set position
-  const rect = target.getBoundingClientRect()
-  position.value = { 
-    x: rect.left + window.scrollX, 
-    y: rect.bottom + window.scrollY + 10 
+  if (target.classList.contains('type-link')) {
+    e.preventDefault()
+    name = target.getAttribute('data-type')
+    isInsideTooltip = true
+  } else {
+    if (!href || href.startsWith('http') || href.startsWith('#')) return
+    if (!href.includes('/classes/') && !href.includes('/interfaces/') && !href.includes('/type-aliases/') && !href.includes('/variables/')) return
+    
+    const match = href.match(/\/([^/]+)\.html$/)
+    if (!match) return
+    name = match[1]
   }
 
-  hoverTimer = setTimeout(async () => {
-    visible.value = true
-    loading.value = true
-    content.value = ''
+  if (!name) return
 
-    if (!docsLoaded) {
-      await fetchDocs()
+  if (hoverTimer) clearTimeout(hoverTimer)
+  if (hideTimer) clearTimeout(hideTimer)
+
+  const rect = target.getBoundingClientRect()
+  let x = rect.left + window.scrollX
+  let y = rect.bottom + window.scrollY + 10
+
+  // If hovering inside tooltip, position next to the current tooltip element
+  if (isInsideTooltip) {
+    const tooltipEl = target.closest('.type-preview-tooltip') as HTMLElement
+    if (tooltipEl) {
+      const tooltipRect = tooltipEl.getBoundingClientRect()
+      x = tooltipRect.right + window.scrollX + 10
+      y = rect.top + window.scrollY
     }
-    
-    const node = docsIndex.get(name)
-    if (node) {
-      content.value = renderNode(node)
-    } else {
-      content.value = `<div class="preview-error">Definition not found for ${name}</div>`
-    }
-    loading.value = false
+  }
+
+  hoverTimer = setTimeout(() => showPreview(name!, x, y), 300)
+}
+
+function handleMouseOut(e: MouseEvent) {
+  const relatedTarget = e.relatedTarget as HTMLElement
+  
+  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a')) {
+    return
+  }
+  
+  if (hoverTimer) clearTimeout(hoverTimer)
+  
+  hideTimer = setTimeout(() => {
+    tooltips.value = []
   }, 300)
 }
 
-function handleMouseOut() {
-  if (hoverTimer) clearTimeout(hoverTimer)
-  visible.value = false
+function handleTooltipEnter() {
+  if (hideTimer) clearTimeout(hideTimer)
+}
+
+function handleTooltipLeave(e: MouseEvent) {
+  const relatedTarget = e.relatedTarget as HTMLElement
+  if (relatedTarget?.closest('.type-preview-tooltip') || relatedTarget?.closest('a')) {
+    return
+  }
+  
+  hideTimer = setTimeout(() => {
+    tooltips.value = []
+  }, 300)
 }
 
 onMounted(() => {
@@ -197,14 +239,17 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <div 
-      v-if="visible" 
+      v-for="tooltip in tooltips"
+      :key="tooltip.id"
       class="type-preview-tooltip"
-      :style="{ top: `${position.y}px`, left: `${position.x}px` }"
+      :style="{ top: `${tooltip.position.y}px`, left: `${tooltip.position.x}px` }"
+      @mouseenter="handleTooltipEnter"
+      @mouseleave="handleTooltipLeave"
     >
-      <div v-if="loading" class="preview-loading">
+      <div v-if="tooltip.loading" class="preview-loading">
         <div class="spinner"></div>
       </div>
-      <div v-else class="preview-content" v-html="content"></div>
+      <div v-else class="preview-content" v-html="tooltip.content"></div>
     </div>
   </Teleport>
 </template>
@@ -221,7 +266,7 @@ onUnmounted(() => {
   max-width: 450px;
   max-height: 400px;
   overflow: auto;
-  pointer-events: none;
+  pointer-events: auto;
   font-family: var(--vp-font-family-mono);
   font-size: 13px;
 }
@@ -264,12 +309,20 @@ onUnmounted(() => {
   animation: spin 0.6s linear infinite;
 }
 
-/* Syntax Highlighting Colors */
-.k { color: var(--vp-c-brand); } /* Keyword */
-.n { color: var(--vp-c-text-1); } /* Name */
-.t { color: var(--vp-c-brand-1); } /* Type */
-.p { color: var(--vp-c-text-2); } /* Punctuation */
-.pn { color: var(--vp-c-text-1); } /* Property Name */
+.type-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.type-link:hover .t {
+  text-decoration: underline;
+}
+
+.k { color: var(--vp-c-brand); }
+.n { color: var(--vp-c-text-1); }
+.t { color: var(--vp-c-brand-1); }
+.p { color: var(--vp-c-text-2); }
+.pn { color: var(--vp-c-text-1); }
 .params { color: var(--vp-c-text-2); }
 
 @keyframes spin {
