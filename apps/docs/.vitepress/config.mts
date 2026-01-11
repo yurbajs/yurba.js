@@ -35,11 +35,13 @@ export default defineConfig({
   rewrites: {
     'dist/:path*': './:path*',
   },
-
+  vite: {
+    publicDir: '../public',
+  },
+ 
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
 
-    
     nav: [
       { text: 'Documentation', link: '/' },
       { text: 'Guide', link: 'https://yurba.js.org' },
@@ -69,6 +71,5 @@ export default defineConfig({
       dark: 'github-dark'
     },
     lineNumbers: true,
-
   }
 });

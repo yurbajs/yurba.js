@@ -29,7 +29,7 @@
   "entryFileName": "index.md",
   "sidebar": {
     "autoConfiguration": true,
-    "format": "vitepress",
+    "format": "vitepress", 
     "pretty": true,
     "collapsed": true
   },
@@ -51,7 +51,6 @@
       "Module",
       "Namespace",
       "Enum",
-      // "EnumMember", // Not enabled by default
       "Variable",
       "Function",
       "Class",
