@@ -108,28 +108,36 @@ function renderNode(node: DocNode): string {
     html += `<div class="preview-body">`
     html += `<span class="p">{</span>`
     
-    const props = node.children.filter(c => c.kind === 1024 || c.kind === 2048)
-    const displayProps = props.slice(0, 8)
+    const props = node.children.filter(c => c.kind === 1024)
+    const methods = node.children.filter(c => c.kind === 2048)
+    const displayProps = props.slice(0, 5)
+    const displayMethods = methods.slice(0, 5)
     
     displayProps.forEach(child => {
       html += `<div class="preview-line">`
       const optional = child.flags?.isOptional ? '<span class="optional">?</span>' : ''
       html += `  <span class="pn">${child.name}${optional}</span>`
-      
-      if (child.kind === 2048 && child.signatures) {
-         const sig = child.signatures[0]
-         const params = sig.parameters?.map((p: any) => `${p.name}: ${renderType(p.type)}`).join(', ') || ''
-         const ret = renderType(sig.type)
-         html += `(<span class="params">${params}</span>): <span class="t">${ret}</span>`
-      } else {
-         html += `: ${renderType(child.type)}`
-      }
-      
+      html += `: ${renderType(child.type)}`
       html += `</div>`
     })
     
-    if (props.length > 8) {
-       html += `<div class="preview-line comment">... and ${props.length - 8} more</div>`
+    if (props.length > 5) {
+       html += `<div class="preview-line comment">... ${props.length - 5} more properties</div>`
+    }
+    
+    displayMethods.forEach(child => {
+      html += `<div class="preview-line">`
+      if (child.signatures) {
+         const sig = child.signatures[0]
+         const params = sig.parameters?.map((p: any) => `${p.name}: ${renderType(p.type)}`).join(', ') || ''
+         const ret = renderType(sig.type)
+         html += `  <span class="pn">${child.name}</span>(<span class="params">${params}</span>): ${ret}`
+      }
+      html += `</div>`
+    })
+    
+    if (methods.length > 5) {
+       html += `<div class="preview-line comment">... ${methods.length - 5} more methods</div>`
     }
     
     html += `<span class="p">}</span>`
@@ -213,7 +221,9 @@ function getKindString(kind: number): string {
   switch (kind) {
     case 128: return 'class'
     case 256: return 'interface'
-    case 4194304: return 'type'
+    case 4194304:
+    case 2097152: return 'type'
+    case 8: return 'enum'
     case 64: return 'function'
     case 32: return 'variable'
     default: return 'symbol'
@@ -245,11 +255,10 @@ async function handleMouseOver(e: MouseEvent) {
   const target = (e.target as HTMLElement).closest('a')
   if (!target) return
 
-  if (!target.closest('.vp-doc') && !target.closest('.type-preview-tooltip')) return
+  if (!target.closest('.vp-doc')) return
 
   let href = target.getAttribute('href')
   let name: string | null = null
-  let isInsideTooltip = !!target.closest('.type-preview-tooltip')
 
   if (target.classList.contains('type-link')) {
     e.preventDefault()
@@ -257,15 +266,9 @@ async function handleMouseOver(e: MouseEvent) {
   } else {
     if (!href || href.startsWith('http') || href.startsWith('#')) return
     
-    const isApiLink = href.includes('/classes/') || href.includes('/interfaces/') || 
-                      href.includes('/type-aliases/') || href.includes('/variables/') || 
-                      href.includes('/enumerations/')
-    
-    if (!isApiLink) return
-    
-    const match = href.match(/\/([^/]+)\.html$/)
+    const match = href.match(/\/(classes|interfaces|type-aliases|variables|enumerations)\/([^/]+)\.html/)
     if (!match) return
-    name = match[1]
+    name = match[2]
   }
 
   if (!name) return
@@ -274,17 +277,8 @@ async function handleMouseOver(e: MouseEvent) {
   clearTimeout(hideTimer)
 
   const rect = target.getBoundingClientRect()
-  let x = rect.left + window.scrollX
-  let y = rect.bottom + window.scrollY + 10
-
-  if (isInsideTooltip) {
-    const tooltipEl = target.closest('.type-preview-tooltip') as HTMLElement
-    if (tooltipEl) {
-      const tooltipRect = tooltipEl.getBoundingClientRect()
-      x = tooltipRect.right + window.scrollX + 10
-      y = rect.top + window.scrollY
-    }
-  }
+  const x = rect.left + window.scrollX
+  const y = rect.bottom + window.scrollY + 10
 
   hoverTimer = setTimeout(() => showPreview(name!, x, y), 300)
 }
