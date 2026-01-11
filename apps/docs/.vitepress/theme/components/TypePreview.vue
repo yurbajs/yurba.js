@@ -218,69 +218,46 @@ function getKindString(kind: number): string {
 
 async function showPreview(name: string, x: number, y: number, anchorX: number, anchorY: number) {
   // Запобігання зацикленню
-  const existing = tooltips.value.find(t => t.symbolName === name)
-  if (existing) return
+  if (tooltips.value.find(t => t.symbolName === name)) return
   
   const id = ++tooltipIdCounter
   const tooltipWidth = 400
   const gap = 20
-  const viewportWidth = window.innerWidth
   
+  // Визначити позицію
   let posX = x + gap
   let posY = y
   let side: 'right' | 'left' = 'right'
   
-  // Функція перевірки чи позиція вільна
-  const isPositionFree = (testX: number, testY: number): boolean => {
-    for (const t of tooltips.value) {
-      const xOverlap = testX < t.position.x + tooltipWidth + 10 && testX + tooltipWidth + 10 > t.position.x
-      const yOverlap = testY < t.position.y + 200 && testY + 200 > t.position.y
-      if (xOverlap && yOverlap) return false
-    }
-    return true
+  // Перевірити чи вміщається праворуч
+  if (posX + tooltipWidth > window.innerWidth - 20) {
+    posX = x - tooltipWidth - gap
+    side = 'left'
+    if (posX < 20) posX = 20
   }
   
-  // Спробувати праворуч
-  const rightX = x + gap
-  const canFitRight = rightX + tooltipWidth < viewportWidth - 20
-  
-  // Спробувати ліворуч
-  const leftX = x - tooltipWidth - gap
-  const canFitLeft = leftX > 20
-  
-  // Вибрати найкращу позицію
-  if (canFitRight && isPositionFree(rightX, posY)) {
-    posX = rightX
-    side = 'right'
-  } else if (canFitLeft && isPositionFree(leftX, posY)) {
-    posX = leftX
-    side = 'left'
-  } else if (canFitRight) {
-    // Праворуч є місце але зайнято - шукаємо вільне місце вниз
-    posX = rightX
-    side = 'right'
-    let attempts = 0
-    while (!isPositionFree(posX, posY) && attempts < 20) {
-      posY += 50
-      attempts++
+  // Перевірити перекриття і знайти вільне місце
+  for (let attempt = 0; attempt < 30; attempt++) {
+    let hasOverlap = false
+    
+    for (const existing of tooltips.value) {
+      // Правильна перевірка перекриття прямокутників
+      const overlap = (
+        posX < existing.position.x + tooltipWidth &&
+        posX + tooltipWidth > existing.position.x &&
+        posY < existing.position.y + 200 &&
+        posY + 200 > existing.position.y
+      )
+      
+      if (overlap) {
+        hasOverlap = true
+        posY = existing.position.y + 210 // Зсунути вниз під існуючий tooltip
+        break // Вийти з циклу і перевірити знову
+      }
     }
-  } else if (canFitLeft) {
-    // Ліворуч є місце але зайнято - шукаємо вільне місце вниз
-    posX = leftX
-    side = 'left'
-    let attempts = 0
-    while (!isPositionFree(posX, posY) && attempts < 20) {
-      posY += 50
-      attempts++
-    }
-  } else {
-    // Немає місця ні праворуч ні ліворуч - розташовуємо де є місце
-    posX = Math.max(20, Math.min(rightX, viewportWidth - tooltipWidth - 20))
-    let attempts = 0
-    while (!isPositionFree(posX, posY) && attempts < 20) {
-      posY += 50
-      attempts++
-    }
+    
+    // Якщо немає перекриття - позиція знайдена
+    if (!hasOverlap) break
   }
   
   const newTooltip = { 
@@ -296,9 +273,7 @@ async function showPreview(name: string, x: number, y: number, anchorX: number, 
   }
   tooltips.value.push(newTooltip)
 
-  if (!docsLoaded) {
-    await fetchDocs()
-  }
+  if (!docsLoaded) await fetchDocs()
   
   const tooltip = tooltips.value.find(t => t.id === id)
   if (!tooltip) return
