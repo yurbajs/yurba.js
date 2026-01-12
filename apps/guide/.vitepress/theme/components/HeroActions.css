@@ -77,7 +77,6 @@ img[src*="github-mark.svg"] {
   filter: none;
 }
 
-.dark img[src*="npm.svg"],
 .dark img[src*="github-mark.svg"] {
   filter: brightness(0) invert(1);
 }
