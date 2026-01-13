@@ -30,6 +30,7 @@
     "./typedoc-plugins.js"
   ],
   "hidePageHeader": true,
+  "hideBreadcrumbs": true,
   "entryFileName": "index.md",
   "sidebar": {
     "autoConfiguration": true,

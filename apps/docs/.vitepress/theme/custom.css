@@ -3,7 +3,7 @@
   --vp-c-brand-2: #4340e6;
   --vp-c-brand-3: #3633cc;
   --vp-c-brand-soft: rgba(88, 84, 255, 0.12);
-  
+
   /* Light theme improvements */
   --vp-c-bg: #ffffff;
   --vp-c-bg-soft: #f6f6f7;
@@ -19,7 +19,7 @@
   --vp-c-brand-2: #6b66ff;
   --vp-c-brand-3: #b6b4ff;
   --vp-c-brand-soft: rgba(138, 133, 255, 0.16);
-  
+
   /* Dark theme improvements */
   --vp-c-bg: #1a1a1a;
   --vp-c-bg-soft: #242424;
@@ -61,7 +61,12 @@ div[class*='language-'] {
 }
 
 /* Better typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
 }
 
@@ -92,4 +97,18 @@ h1, h2, h3, h4, h5, h6 {
 /* Sidebar Scrollbar specific */
 .VPSidebar::-webkit-scrollbar {
   width: 4px;
+}
+
+/* Fix badges alignment */
+.vp-doc div[align="center"] p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+}
+
+.vp-doc div[align="center"] p img {
+  margin: 0 !important;
+  display: inline-block !important;
 }

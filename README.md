@@ -7,35 +7,17 @@
   </p>
   <br />
   <p align="center">
-    <a href="https://github.com/yurbajs/yurba.js/stargazers">
-      <img src="https://img.shields.io/github/stars/yurbajs/yurba.js?colorA=363a4f&colorB=b7bdf8&style=for-the-badge" alt="GitHub stars"/>
-    </a>
-    <a href="https://github.com/yurbajs/yurba.js/issues">
-      <img src="https://img.shields.io/github/issues/yurbajs/yurba.js?colorA=363a4f&colorB=f5a97f&style=for-the-badge" alt="GitHub issues"/>
-    </a>
-    <a href="https://github.com/yurbajs/yurba.js/contributors">
-      <img src="https://img.shields.io/github/contributors/yurbajs/yurba.js?colorA=363a4f&colorB=a6da95&style=for-the-badge" alt="GitHub contributors"/>
-    </a>
+    <a href="https://github.com/yurbajs/yurba.js/stargazers"><img src="https://img.shields.io/github/stars/yurbajs/yurba.js?colorA=363a4f&colorB=b7bdf8&style=for-the-badge" alt="GitHub stars"/></a>  ˖
+    <a href="https://github.com/yurbajs/yurba.js/issues"><img src="https://img.shields.io/github/issues/yurbajs/yurba.js?colorA=363a4f&colorB=f5a97f&style=for-the-badge" alt="GitHub issues"/></a>  ˖
+    <a href="https://github.com/yurbajs/yurba.js/contributors"><img src="https://img.shields.io/github/contributors/yurbajs/yurba.js?colorA=363a4f&colorB=a6da95&style=for-the-badge" alt="GitHub contributors"/></a>
   </p>
   <p>
-    <a href="https://www.npmjs.com/package/yurba.js">
-      <img src="https://img.shields.io/npm/v/yurba.js.svg?colorA=363a4f&colorB=a6da95&style=flat-square" alt="npm version"/>
-    </a>
-    <a href="https://www.npmjs.com/package/yurba.js">
-      <img src="https://img.shields.io/npm/dt/yurba.js.svg?colorA=363a4f&colorB=a6da95&style=flat-square" alt="npm downloads"/>
-    </a>
-    <a href="https://github.com/yurbajs/yurba.js/actions/workflows/checks.yml">
-      <img alt="GitHub branch check runs" src="https://img.shields.io/github/check-runs/yurbajs/yurba.js/main?style=flat-square&labelColor=%23363a4f">
-    </a>
-    <a href="https://codecov.io/github/yurbajs/yurba.js">
-      <img alt="Codecov" src="https://img.shields.io/codecov/c/github/yurbajs/yurba.js?style=flat-square&labelColor=%23363a4f">
-    </a>
-    <a href="https://github.com/yurbajs/yurba.js/commits/main">
-      <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/yurbajs/yurba.js?style=flat-square&labelColor=%23363a4f">
-    </a>
-    <a href="https://www.npmjs.com/package/yurba.js">
-      <img alt="NPM Last Update" src="https://img.shields.io/npm/last-update/yurba.js?style=flat-square&labelColor=%23363a4f">
-    </a>
+    <a href="https://www.npmjs.com/package/yurba.js"><img src="https://img.shields.io/npm/v/yurba.js.svg?colorA=363a4f&colorB=a6da95&style=flat-square" alt="npm version"/></a>
+    <a href="https://www.npmjs.com/package/yurba.js"><img src="https://img.shields.io/npm/dt/yurba.js.svg?colorA=363a4f&colorB=a6da95&style=flat-square" alt="npm downloads"/></a>
+    <a href="https://github.com/yurbajs/yurba.js/actions/workflows/checks.yml"><img alt="GitHub branch check runs" src="https://img.shields.io/github/check-runs/yurbajs/yurba.js/main?style=flat-square&labelColor=%23363a4f"></a>
+    <a href="https://codecov.io/github/yurbajs/yurba.js"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/yurbajs/yurba.js?style=flat-square&labelColor=%23363a4f"></a>
+    <a href="https://github.com/yurbajs/yurba.js/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/yurbajs/yurba.js?style=flat-square&labelColor=%23363a4f"></a>
+    <a href="https://www.npmjs.com/package/yurba.js"><img alt="NPM Last Update" src="https://img.shields.io/npm/last-update/yurba.js?style=flat-square&labelColor=%23363a4f"></a>
   </p>
 </div>
 
