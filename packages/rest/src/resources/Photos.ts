@@ -1,7 +1,6 @@
 import { REST } from '../index';
 import { Photo, DeletePhotoResponse } from '@yurbajs/types';
-import { readFileSync } from 'fs';
-import { extname } from 'path';
+import { prepareFile } from '../utils/file';
 
 export class PhotosResource {
   /**
@@ -72,37 +71,18 @@ export class PhotosResource {
    * const photo = await rest.photos.upload(buffer, 'My photo', 'public', 'image.png');
    * ```
    */
-  async upload(input: string | Buffer, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
-    if (!input) throw new Error('Invalid input');
+  async upload(input: string | Buffer | Blob, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
     if (caption.length > 1000) throw new Error('Caption too long');
     
-    let buffer: Buffer;
-    let ext: string;
-    
-    if (typeof input === 'string') {
-      buffer = readFileSync(input);
-      ext = extname(input).toLowerCase();
-    } else {
-      buffer = input;
-      ext = filename ? extname(filename).toLowerCase() : '.png';
-    }
-    
-    const mimeTypes: Record<string, string> = {
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.png': 'image/png',
-      '.webp': 'image/webp',
-      '.gif': 'image/gif',
-      '.bmp': 'image/bmp',
-      '.tiff': 'image/tiff',
-      '.svg': 'image/svg+xml'
-    };
-    
-    const mimeType = mimeTypes[ext] || 'image/jpeg';
+    const prepared = await prepareFile(input, filename);
     const formData = new FormData();
-    const blob = new Blob([new Uint8Array(buffer)], { type: mimeType });
     
-    formData.append('photo', blob, filename || `photo-${Date.now()}${ext}`);
+    // Set proper MIME type for photo
+    const photoBlob = prepared.mimeType 
+      ? new Blob([prepared.data], { type: prepared.mimeType })
+      : prepared.data;
+    
+    formData.append('photo', photoBlob, prepared.filename);
     formData.append('caption', caption);
     formData.append('mode', mode);
 
