@@ -7,6 +7,7 @@ import { Client } from '../client/Client';
  * @category Managers
  */
 export default class UserClientManager {
+  /** @ignore */
   private client: Client;
   private _user?: User;
   private _lastFetch: number = 0;

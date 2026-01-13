@@ -21,6 +21,7 @@ export default class CommandManager {
       argsSchema: CommandArgsSchema;
     }
   >;
+  /** @ignore */
   protected client;
   private aliases: Map<string, string> = new Map();
   private cooldowns: Map<string, Map<number, number>> = new Map(); // * Cooldowns declared but never used
@@ -86,6 +87,7 @@ export default class CommandManager {
   }
 
   /**
+   * @internal
    * Main method for handling commands
    * @param message Message object
    * @param enhanceMessage Function to enhance message

@@ -4,6 +4,7 @@ import { Base } from './Base';
 
 /**
  * Represents a dialog member on Yurba
+ * @category Structures
  */
 export class DialogMember extends Base {
   /**

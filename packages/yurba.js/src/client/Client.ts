@@ -1,6 +1,10 @@
 import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
+
+const Version = pkg.version; 
+const Author = pkg.author; 
+
 import {
   MessageModel,
   WebSocketError,
@@ -138,7 +142,7 @@ class Client extends EventEmitter {
     this.maxReconnectAttempts = options.maxReconnectAttempts ?? 5;
     this.intents = options.intents ?? [];
 
-    this.api = new REST();
+    this.api = new REST({'headers': {'X-Client': `Yurba.js@${Version}`}});
 
     this.middlewareManager = new MiddlewareManager();
     this.messageManager = new MessageManager(this);
@@ -707,8 +711,5 @@ class Client extends EventEmitter {
   }
 
 }
-
-const Version = pkg.version; // * Consider using named imports instead of namespace import
-const Author = pkg.author; // * Consider using named imports instead of namespace import
 
 export { Client, Version, Author };
