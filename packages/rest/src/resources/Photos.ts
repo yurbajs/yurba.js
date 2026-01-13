@@ -3,13 +3,13 @@ import { Photo, DeletePhotoResponse } from '@yurbajs/types';
 import { prepareFile } from '../utils/file';
 
 /**
- * @category Resourses
+ * @category Resources
  */
 export class PhotosResource {
   /**
    * @ignore
    */
-  constructor(private client: REST) {}
+  constructor(private client: REST) { }
 
   /**
    * Photos Core
@@ -35,7 +35,7 @@ export class PhotosResource {
     const params = new URLSearchParams();
     if (page !== undefined) params.append('page', page.toString());
     if (mode === 'private') params.append('mode', 'private');
-    
+
     const query = params.toString();
     return this.client.get<Photo[]>(`/photos${query ? `?${query}` : ''}`);
   }
@@ -76,15 +76,15 @@ export class PhotosResource {
    */
   async upload(input: string | Buffer | Blob, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
     if (caption.length > 1000) throw new Error('Caption too long');
-    
+
     const prepared = await prepareFile(input, filename);
     const formData = new FormData();
-    
+
     // Set proper MIME type for photo
-    const photoBlob = prepared.mimeType 
+    const photoBlob = prepared.mimeType
       ? new Blob([prepared.data], { type: prepared.mimeType })
       : prepared.data;
-    
+
     formData.append('photo', photoBlob, prepared.filename);
     formData.append('caption', caption);
     formData.append('mode', mode);

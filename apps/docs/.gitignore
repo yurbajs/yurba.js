@@ -1,3 +1,4 @@
 dist
 .temp
 public/docs.json
+navigation.json

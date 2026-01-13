@@ -1,10 +1,61 @@
 const { ReflectionKind } = require('typedoc');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * @param {import('typedoc').Application} app
  */
 exports.load = function (app) {
+    // Post-process sidebar after it's generated
+    app.renderer.on('endRender', () => {
+        const outDir = app.renderer.outputDirectory || path.resolve(process.cwd(), app.options.getValue('out'));
+        const sidebarPath = path.resolve(outDir, 'typedoc-sidebar.json');
+        if (fs.existsSync(sidebarPath)) {
+            try {
+                let sidebar = JSON.parse(fs.readFileSync(sidebarPath, 'utf-8'));
 
+                const fixItems = (items) => {
+                    if (!items) return items;
+
+                    let newItems = [];
+                    items.forEach(item => {
+                        if (item.text === 'None' || item.text === 'Other') {
+                            if (item.items) {
+                                // Flatten children of "None" or "Other"
+                                newItems.push(...item.items);
+                            }
+                        } else {
+                            // Recursively fix children
+                            if (item.items) {
+                                item.items = fixItems(item.items);
+                            }
+                            newItems.push(item);
+                        }
+                    });
+
+                    // Sort: items without sub-items (flattened classes) first, then by text
+                    newItems.sort((a, b) => {
+                        const aHasSubItems = a.items && a.items.length > 0;
+                        const bHasSubItems = b.items && b.items.length > 0;
+
+                        if (aHasSubItems && !bHasSubItems) return 1;
+                        if (!aHasSubItems && bHasSubItems) return -1;
+
+                        return a.text.localeCompare(b.text);
+                    });
+
+                    return newItems;
+                };
+
+                // Apply fix to the entire sidebar
+                const fixedSidebar = fixItems(sidebar);
+
+                fs.writeFileSync(sidebarPath, JSON.stringify(fixedSidebar, null, 2));
+            } catch (err) {
+                console.error('Error post-processing sidebar:', err);
+            }
+        }
+    });
 
     app.renderer.on('beginRender', () => {
         const theme = app.renderer.theme;
@@ -13,7 +64,7 @@ exports.load = function (app) {
             theme.getRenderContext = function (page) {
                 const context = originalGetRenderContext.call(this, page);
 
-                // 1. Override the reflection template
+                // Override the reflection template
                 const originalReflectionTemplate = context.templates.reflection;
                 context.templates.reflection = function (page) {
                     let md = originalReflectionTemplate.call(context, page);
@@ -49,7 +100,7 @@ exports.load = function (app) {
                     return tag;
                 };
 
-                // 2. Override the memberContainer partial
+                // Override the memberContainer partial
                 const originalMemberContainer = context.partials.memberContainer;
                 context.partials.memberContainer = function (model, options) {
                     let md = originalMemberContainer.call(context, model, options);
@@ -85,7 +136,7 @@ exports.load = function (app) {
                     return md;
                 };
 
-                // 3. Override the comment partial to hide @rest tag
+                // Override the comment partial to hide @rest tag
                 const originalComment = context.partials.comment;
                 context.partials.comment = function (comment, options) {
                     if (comment && comment.blockTags) {
@@ -104,7 +155,7 @@ exports.load = function (app) {
                     return originalComment.call(context, comment, options);
                 };
 
-                // 4. Override the hierarchy partial to skip the "Extends" section at the bottom
+                // Override the hierarchy partial to skip the "Extends" section at the bottom
                 const originalHierarchy = context.partials.hierarchy;
                 context.partials.hierarchy = function (model, options) {
                     if (model && !model.isTarget && model.next) {
