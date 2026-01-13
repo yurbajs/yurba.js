@@ -112,3 +112,72 @@ h6 {
   margin: 0 !important;
   display: inline-block !important;
 }
+
+/* API Info and Badges */
+.api-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 20px 0;
+  font-family: var(--vp-font-family-mono);
+}
+
+.api-badge {
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.api-badge-post {
+  color: #198754;
+  background: #062014;
+  border: 1px solid #198754;
+}
+
+.api-badge-delete {
+  color: #DC3545;
+  background: #350D11;
+  border: 1px solid #DC3545;
+}
+
+.api-badge-get {
+  color: #0D6EFD;
+  background: #031A3D;
+  border: 1px solid #0D6EFD;
+}
+
+.api-badge-patch {
+  color: #FFC107;
+  background: #3D2E02;
+  border: 1px solid #FFC107;
+}
+
+.api-path {
+  color: var(--vp-c-text-2);
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+.api-link-icon img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+
+.api-link-icon:hover img {
+  transform: scale(1.1);
+}
+
+.api-link-icon.no-link {
+  cursor: not-allowed;
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.dark .api-link-icon img {
+  filter: invert(1) brightness(2);
+}
