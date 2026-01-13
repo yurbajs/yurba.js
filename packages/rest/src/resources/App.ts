@@ -7,6 +7,9 @@ import {
   ShortUserModel
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class AppResource {
   /**
    * @ignore

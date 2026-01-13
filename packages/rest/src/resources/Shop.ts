@@ -1,6 +1,9 @@
 import { REST } from '../index';
 import { Shop, Item } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class ShopResource {
   /**
    * @ignore

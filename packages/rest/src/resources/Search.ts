@@ -1,6 +1,9 @@
 import { REST } from '../index';
 import { DialogModel, FindDialogPayload, UserModel, FindUserPayload, Track } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class SearchResource {
   /**
    * @ignore

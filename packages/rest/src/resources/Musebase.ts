@@ -9,6 +9,9 @@ import {
   DeleteTrackResponse,
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class MusebaseResource {
   /**
    * @ignore

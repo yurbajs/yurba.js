@@ -2,10 +2,12 @@ import { REST } from '../index';
 import { Photo, DeletePhotoResponse } from '@yurbajs/types';
 import { prepareFile } from '../utils/file';
 
+/**
+ * @category Resourses
+ */
 export class PhotosResource {
   /**
    * @ignore
-   * @category Resourses
    */
   constructor(private client: REST) {}
 

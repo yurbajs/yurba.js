@@ -14,6 +14,7 @@ import { BatchRequest } from './BatchRequest';
 
 /**
  * Main REST client with lazy-loaded API resources
+ * @categoryDescription Main client for interacting with Yurba API
  */
 export class REST extends BaseClient {
   private _users?: UserResource;

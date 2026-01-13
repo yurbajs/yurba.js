@@ -1,6 +1,9 @@
 import { REST } from '../index';
 import { UserModel, RelationshipsResult, FindUserPayload, Gift, BaseOkay } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class UserResource {
   /**
    * @ignore

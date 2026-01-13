@@ -13,6 +13,9 @@ import {
   responseMute
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class DialogResource {
   /**
    * @ignore

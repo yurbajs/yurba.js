@@ -1,6 +1,7 @@
 /**
  * Universal file handling utility
  * Works in Node.js, Browser, and Edge Runtime
+ * @category Utilities
  */
 
 export interface FileInput {

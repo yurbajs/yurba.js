@@ -2,6 +2,9 @@ import { REST } from '../index';
 import { Video, response } from '@yurbajs/types';
 import { readFileSync } from 'fs';
 
+/**
+ * @category Resources
+ */
 export class VideoResource {
   /**
    * @ignore

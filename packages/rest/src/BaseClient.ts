@@ -28,6 +28,7 @@ export interface RateLimitConfig {
 
 /**
  * Optimized REST client for Yurba.one API
+ * @category Core
  */
 export class BaseClient extends EventEmitter {
   private readonly baseURL: string;

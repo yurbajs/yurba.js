@@ -1,6 +1,9 @@
 import { REST } from '../index';
 import { CreatePostPayload, GetPostPayload, PostModel, DeletePostResponse, Comment, BaseDelete } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class PostResource {
   /**
    * @ignore

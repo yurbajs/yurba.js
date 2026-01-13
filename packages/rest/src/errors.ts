@@ -1,5 +1,6 @@
 /**
  * API Error class with enhanced error handling
+ * @category Errors
  */
 export class ApiError extends Error {
   public readonly status: number;
@@ -49,6 +50,7 @@ export class ApiError extends Error {
 
 /**
  * Rate limiter for API requests
+ * @category Utilities
  */
 export class RateLimiter {
   private requests: number[] = [];
@@ -93,6 +95,7 @@ export class RateLimiter {
 
 /**
  * Error handler utility functions
+ * @category Errors
  */
 export const ErrorHandler = {
   /**

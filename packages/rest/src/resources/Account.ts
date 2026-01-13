@@ -6,6 +6,9 @@ import {
   SettingsPayload
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class AccountResource {
   /**
    * @ignore

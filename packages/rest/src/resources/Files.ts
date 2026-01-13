@@ -2,6 +2,9 @@ import { REST } from '../index';
 import { File, BaseDelete } from '@yurbajs/types';
 import { prepareFile } from '../utils/file';
 
+/**
+ * @category Resources
+ */
 export class FilesResource {
   /**
    * @ignore

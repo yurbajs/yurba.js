@@ -1,5 +1,6 @@
 /**
  * Batch request handler for parallel API calls
+ * @category Utilities
  */
 export class BatchRequest {
   private requests = new Map<string, Promise<any>>();
