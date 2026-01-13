@@ -19,8 +19,5 @@ export {
 };
 
 export * from './structures';
-export * from '@yurbajs/rest';
-export * from '@yurbajs/ws';
-export * from '@yurbajs/types';
 
 export default Client;

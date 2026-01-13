@@ -5,6 +5,7 @@ import DialogMemberManager from '../managers/DialogMember';
 
 /**
  * Represents a dialog on Yurba
+ * @category Structures
  */
 export class Dialog extends Base {
   /**

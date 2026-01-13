@@ -2,6 +2,7 @@
 import { Client } from '../client/Client';
 
 export abstract class Base {
+  /** @ignore */
   public readonly client: Client;
 
   constructor(client: Client) {

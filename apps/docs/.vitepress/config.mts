@@ -62,6 +62,9 @@ export default defineConfig({
   },
   vite: {
     publicDir: '../public',
+    build: {
+      chunkSizeWarningLimit: 1000,
+    },
   },
 
   themeConfig: {
@@ -72,6 +75,10 @@ export default defineConfig({
       { text: 'Guide', link: 'https://yurba.js.org' },
     ],
     sidebar: typedocSidebar,
+    docFooter: {
+      prev: false,
+      next: false
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yurbajs/yurba.js' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' }

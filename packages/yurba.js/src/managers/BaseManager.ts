@@ -4,6 +4,7 @@ import { Client } from '../client/Client';
  * Manages the API methods of a data model.
  */
 export default abstract class BaseManager {
+  /** @ignore */
   protected client!: Client;
 
 

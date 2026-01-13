@@ -19,6 +19,7 @@ const log = CDLog('WSM');
 /**
  * WebSocket connection manager
  * @extends EventEmitter
+ * @category Core
  */
 export default class WSM extends EventEmitter implements IWebSocketManager {
   private ws: ReconnectingWebSocket | null = null;

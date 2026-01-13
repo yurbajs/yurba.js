@@ -6,8 +6,10 @@ const log = CDLog('MessageManager');
 
 /**
  * Message manager for client
+ * @category Core
  */
 export default class MessageManager implements IMessageManager {
+  /** @ignore */
   private client: Client;
 
   /**

@@ -1,6 +1,10 @@
 import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
+
+const Version = pkg.version; 
+const Author = pkg.author; 
+
 import {
   MessageModel,
   WebSocketError,
@@ -112,6 +116,7 @@ class Client extends EventEmitter {
   // Other
   private _dialogs?: DialogModel[];
   private isReady: boolean = false;
+  private readyTimestamp: number | null = null;
 
 
   /**
@@ -138,7 +143,7 @@ class Client extends EventEmitter {
     this.maxReconnectAttempts = options.maxReconnectAttempts ?? 5;
     this.intents = options.intents ?? [];
 
-    this.api = new REST();
+    this.api = new REST({'headers': {'X-Client': `Yurba.js@${Version}`}});
 
     this.middlewareManager = new MiddlewareManager();
     this.messageManager = new MessageManager(this);
@@ -172,6 +177,24 @@ class Client extends EventEmitter {
    */
   get user(): UserModel | null {
     return this.userClient.get();
+  }
+
+  /**
+   * Timestamp when the client became ready
+   * @type {Date | null}
+   * @readonly
+   */
+  get readyAt(): Date | null {
+    return this.readyTimestamp ? new Date(this.readyTimestamp) : null;
+  }
+
+  /**
+   * Duration in milliseconds since the client became ready
+   * @type {number | null}
+   * @readonly
+   */
+  get uptime(): number | null {
+    return this.readyTimestamp ? Date.now() - this.readyTimestamp : null;
   }
 
   /**
@@ -211,11 +234,13 @@ class Client extends EventEmitter {
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {
       this.isReady = false;
+      this.readyTimestamp = null;
       this.handleReconnect();
     });
 
     this.wsm.on('error', () => {
       this.isReady = false;
+      this.readyTimestamp = null;
       this.handleReconnect();
     });
 
@@ -230,6 +255,7 @@ class Client extends EventEmitter {
 
       this.wsm.once('ready', () => {
         this.isReady = true;
+        this.readyTimestamp = Date.now();
         this.reconnectAttempts = 0;
         this.emit('ready');
       });
@@ -707,8 +733,5 @@ class Client extends EventEmitter {
   }
 
 }
-
-const Version = pkg.version; // * Consider using named imports instead of namespace import
-const Author = pkg.author; // * Consider using named imports instead of namespace import
 
 export { Client, Version, Author };

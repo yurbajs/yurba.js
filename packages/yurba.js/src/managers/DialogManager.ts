@@ -8,6 +8,7 @@ const log = CDLog('DialogManager');
 /**
  * Manages API methods for dialogs and stores their cache
  * @extends {CachedManager}
+ * @category Managers
  */
 export default class DialogManager extends CachedManager<number, Dialog> {
   /**
