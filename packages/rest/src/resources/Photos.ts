@@ -43,7 +43,7 @@ export class PhotosResource {
 
   /**
    * Gets a photo by identifier
-   * @rest GET /photos/{photo_id} *
+   * @rest GET /photos/{photo_id} get_photo
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
@@ -61,7 +61,7 @@ export class PhotosResource {
 
   /**
    * Uploads a photo
-   * @rest POST /photos/upload *
+   * @rest POST /photos/upload upload_photo
    * @group Photos Core
    * @param input - Path to photo file or Buffer
    * @param caption - Photo caption
@@ -97,7 +97,7 @@ export class PhotosResource {
 
   /**
    * Deletes a photo
-   * @rest DELETE /photos/{photo_id} *
+   * @rest DELETE /photos/{photo_id} delete_photo
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0

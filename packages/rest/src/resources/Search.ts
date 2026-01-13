@@ -110,7 +110,7 @@ export class SearchResource {
 
   /**
    * Finds tracks
-   * @rest GET /musebase/find/{mask} *
+   * @rest GET /musebase/find/{mask} find_tracks
    * @group Search
    * @param query - Song name or artist
    * @param page - Page number (optional)

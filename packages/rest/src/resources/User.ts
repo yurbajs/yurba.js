@@ -17,7 +17,7 @@ export class UserResource {
 
   /**
    * Gets current user information
-   * @rest GET /get_me *
+   * @rest GET /get_me get_me
    * @group Users Core
    * @since 1.0.0
    * @returns {Promise<User>} {@link User} Current user
@@ -32,7 +32,7 @@ export class UserResource {
 
   /**
    * Gets user by identifier
-   * @rest GET /user/{user_tag} *
+   * @rest GET /user/{user_tag} get_user
    * @group Users Core
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
@@ -58,7 +58,7 @@ export class UserResource {
 
   /**
    * Gets current user's friends
-   * @rest GET /user/{user_tag}/friends *
+   * @rest GET /user/{user_tag}/friends get_friends
    * @group User Friends
    * @param page - Page number (default 0)
    * @since 1.0.0
@@ -79,7 +79,7 @@ export class UserResource {
 
   /**
    * Gets user friends
-   * @rest GET /user/{user_tag}/friends *
+   * @rest GET /user/{user_tag}/friends get_friends
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @param page - Page number
@@ -148,7 +148,7 @@ export class UserResource {
 
   /**
    * Subscribe to user
-   * @rest PATCH /user/{user_tag}/subscribe *
+   * @rest PATCH /user/{user_tag}/subscribe subscribe
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
@@ -168,7 +168,7 @@ export class UserResource {
 
   /**
    * Gets user relationships
-   * @rest GET /user/{user_tag}/relationships *
+   * @rest GET /user/{user_tag}/relationships get_relationships
    * @group User Friends
    * @param user - User ({tag}/{id}/u{id})
    * @since 1.0.0
@@ -189,7 +189,7 @@ export class UserResource {
 
   /**
    * Gets incoming friend requests
-   * @rest GET /incoming_requests *
+   * @rest GET /incoming_requests incoming_requests
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
@@ -208,7 +208,7 @@ export class UserResource {
 
   /**
    * Gets outgoing friend requests
-   * @rest GET /outcoming_requests *
+   * @rest GET /outcoming_requests outcoming_requests
    * @group User Friends
    * @param page - Page number
    * @since 1.0.0
@@ -227,7 +227,7 @@ export class UserResource {
 
   /**
    * Ignores incoming friend request
-   * @rest DELETE /incoming_requests/{user_id} *
+   * @rest DELETE /incoming_requests/{user_id} ignore_incoming
    * @group User Friends
    * @param userId - User identifier
    * @since 1.0.0

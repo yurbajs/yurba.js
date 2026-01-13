@@ -22,7 +22,7 @@ export class AccountResource {
 
   /**
    * Login to account
-   * @rest POST /login *
+   * @rest POST /login login
    * @group Auth Core
    * @param email - User email
    * @param password - User password
@@ -41,7 +41,7 @@ export class AccountResource {
 
   /**
    * Register new account
-   * @rest POST /register *
+   * @rest POST /register register
    * @group Auth Core
    * @param name - User name
    * @param email - User email
@@ -62,7 +62,7 @@ export class AccountResource {
 
   /**
    * Confirm account registration
-   * @rest POST /confirm *
+   * @rest POST /confirm confirm
    * @group Auth Core
    * @param code - Confirmation code
    * @param hCaptchaResponse - hCaptcha response
@@ -81,7 +81,7 @@ export class AccountResource {
 
   /**
    * Reset password
-   * @rest POST /reset *
+   * @rest POST /reset reset
    * @group Auth Core
    * @param email - User email
    * @since 1.0.0
@@ -117,7 +117,7 @@ export class AccountResource {
 
   /**
    * Get user tokens
-   * @rest GET /tokens *
+   * @rest GET /tokens tokens
    * @group Auth Core
    * @since 1.0.0
    * @returns {Promise<Token[]>} User tokens
@@ -132,7 +132,7 @@ export class AccountResource {
 
   /**
    * Logout from account
-   * @rest DELETE /logout *
+   * @rest DELETE /logout logout
    * @group Auth Core
    * @since 1.0.0
    * @returns {Promise<BaseOkay>} Logout response

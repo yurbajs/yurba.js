@@ -25,7 +25,7 @@ export class MusebaseResource {
 
   /**
    * Gets a track by identifier
-   * @rest GET /musebase/{track_id} *
+   * @rest GET /musebase/{track_id} get_track
    * @group Tracks
    * @param trackId - Track identifier
    * @since 1.0.0
@@ -71,7 +71,7 @@ export class MusebaseResource {
 
   /**
    * Gets a playlist by identifier
-   * @rest GET /musebase/playlists/{playlist_id} *
+   * @rest GET /musebase/playlists/{playlist_id} get_playlist
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @since 1.0.0
@@ -89,7 +89,7 @@ export class MusebaseResource {
 
   /**
    * Gets user playlists by tag
-   * @rest GET /user/{user_tag}/playlists *
+   * @rest GET /user/{user_tag}/playlists get_playlists
    * @group Playlists
    * @param tag - User tag
    * @since 1.0.0
@@ -188,7 +188,7 @@ export class MusebaseResource {
 
   /**
    * Find tracks
-   * @rest GET /musebase/find/{mask} *
+   * @rest GET /musebase/find/{mask} find_tracks
    * @group Tracks
    * @param query - Song name or artist
    * @param page - Page number (optional)
