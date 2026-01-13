@@ -13,6 +13,9 @@ import {
   responseMute
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class DialogResource {
   /**
    * @ignore
@@ -26,6 +29,7 @@ export class DialogResource {
 
   /**
    * Gets a dialog by identifier
+   * @rest GET /dialogs/{dialog_id} get_dialog
    * @group Dialog Core
    * @param id - Dialog identifier
    * @param code - Invitation code (optional)
@@ -44,6 +48,7 @@ export class DialogResource {
 
   /**
    * Gets all dialogs where the client is a member
+   * @rest GET /dialogs get_dialogs
    * @group Dialog Core
    * @since 0.1.10
    * @returns {Promise<DialogModel[]>} Array of {@link DialogModel} objects
@@ -59,6 +64,7 @@ export class DialogResource {
 
   /**
    * Creates a new dialog
+   * @rest POST /dialogs create_dialog
    * @group Dialog Core
    * @param payload - {@link CreateDialogPayload} Dialog creation data
    * @returns {Promise<CreateDialogResponse>} {@link CreateDialogResponse} Created dialog response
@@ -84,6 +90,7 @@ export class DialogResource {
 
   /**
    * Creates a private dialog with a user
+   * @rest POST /dialogs/private/{user_id} create_private_dialog
    * @group Dialog Core
    * @param userId - User identifier to create private dialog with
    * @returns {Promise<DialogModel>} {@link DialogModel} Created private dialog
@@ -104,6 +111,7 @@ export class DialogResource {
 
   /**
    * Join to dialog
+   * @rest POST /dialogs/{dialog_id}/join/{user_id}
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @since 1.0.0
@@ -123,6 +131,7 @@ export class DialogResource {
 
   /**
    * Leave dialog
+   * @rest DELETE /dialogs/{dialog_id}/leave/{user_id}
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @since 1.0.0
@@ -142,6 +151,7 @@ export class DialogResource {
 
   /**
    * Mute/unmute dialog
+   * @rest PATCH /dialogs/{dialog_id}/mute mute_dialog
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @since 1.0.0
@@ -181,6 +191,7 @@ export class DialogResource {
 
   /**
    * Update dialog
+   * @rest PATCH /dialogs/{dialog_id}
    * @group Dialog Core
    * @param dialogId - Dialog identifier
    * @param payload - {@link UpdateDialogPayload} Dialog data
@@ -208,6 +219,7 @@ export class DialogResource {
 
   /**
    * Get dialog members
+   * @rest GET /dialogs/{dialog_id}/members
    * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param page - Page number (default 0)
@@ -230,6 +242,7 @@ export class DialogResource {
 
   /**
    * Add user to dialog
+   * @rest POST /dialogs/{dialog_id}/join/{user_id}
    * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
@@ -248,6 +261,7 @@ export class DialogResource {
 
   /**
    * Remove user from dialog
+   * @rest DELETE /dialogs/{dialog_id}/leave/{user_id}
    * @group Dialog Members
    * @param dialogId - Dialog identifier
    * @param userId - User identifier
@@ -271,6 +285,7 @@ export class DialogResource {
 
   /**
    * Get message (by id)
+   * @rest GET /dialogs/messages/{message_id} get_message
    * @group Dialog Messages
    * @param dialogId - Dialog ID
    * @since 1.0.0
@@ -288,6 +303,7 @@ export class DialogResource {
 
   /**
    * Get messages from dialog
+   * @rest GET /dialogs/{dialog_id}/messages get_messages
    * @group Dialog Messages
    * @param dialogId - Dialog identifier
    * @param lastId - Last message ID for pagination (optional)
@@ -306,6 +322,7 @@ export class DialogResource {
 
   /**
    * Send message to dialog
+   * @rest POST /dialogs/{dialog_id}/messages
    * @group Dialog Messages
    * @param dialogId - Dialog identifier
    * @param payload - {@link SendMessagePayload} Message data
@@ -374,6 +391,7 @@ export class DialogResource {
 
   /**
    * Delete message
+   * @rest DELETE /dialogs/messages/{message_id} delete_message
    * @group Dialog Messages
    * @param messageId - Message identifier
    * @since 0.1.10

@@ -6,6 +6,9 @@ import {
   SettingsPayload
 } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class AccountResource {
   /**
    * @ignore
@@ -19,6 +22,7 @@ export class AccountResource {
 
   /**
    * Login to account
+   * @rest POST /login login
    * @group Auth Core
    * @param email - User email
    * @param password - User password
@@ -37,6 +41,7 @@ export class AccountResource {
 
   /**
    * Register new account
+   * @rest POST /register register
    * @group Auth Core
    * @param name - User name
    * @param email - User email
@@ -57,6 +62,7 @@ export class AccountResource {
 
   /**
    * Confirm account registration
+   * @rest POST /confirm confirm
    * @group Auth Core
    * @param code - Confirmation code
    * @param hCaptchaResponse - hCaptcha response
@@ -75,6 +81,7 @@ export class AccountResource {
 
   /**
    * Reset password
+   * @rest POST /reset reset
    * @group Auth Core
    * @param email - User email
    * @since 1.0.0
@@ -92,6 +99,7 @@ export class AccountResource {
 
   /**
    * Activate promo code
+   * @rest GET /promo/{promo} https://docs.yurba.one/reference/get_promo-promo
    * @group Auth Core
    * @param promo - Promo code
    * @since 1.0.0
@@ -109,6 +117,7 @@ export class AccountResource {
 
   /**
    * Get user tokens
+   * @rest GET /tokens tokens
    * @group Auth Core
    * @since 1.0.0
    * @returns {Promise<Token[]>} User tokens
@@ -123,6 +132,7 @@ export class AccountResource {
 
   /**
    * Logout from account
+   * @rest DELETE /logout logout
    * @group Auth Core
    * @since 1.0.0
    * @returns {Promise<BaseOkay>} Logout response
@@ -137,6 +147,7 @@ export class AccountResource {
 
   /**
    * Update profile settings
+   * @rest PATCH /settings/profile https://docs.yurba.one/reference/patch_settings-profile
    * @group Profile
    * @param settings - Profile settings to update
    * @since 1.0.0

@@ -1,5 +1,6 @@
 /**
  * User cache interface
+ * @category Cache
  */
 export interface CachedUser {
   readonly id: number;
@@ -12,11 +13,12 @@ export interface CachedUser {
 
 /**
  * User cache implementation with TTL support
+ * @category Cache
  */
 class UserCache {
   private readonly cache = new Map<string, CachedUser>();
   private readonly TTL = 5 * 60 * 1000; // 5 minutes
-  private cleanupTimer?: NodeJS.Timeout;
+  private cleanupTimer?: ReturnType<typeof setInterval>;
 
   constructor() {
     this.startCleanupTimer();

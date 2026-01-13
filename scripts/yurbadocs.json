@@ -1,0 +1,73 @@
+{
+  "base_url": "https://docs.yurba.one",
+  "accounts": {
+    "get_me": { "method": "GET", "path": "/get_me" },
+    "tokens": { "method": "GET", "path": "/tokens" },
+    "login": { "method": "POST", "path": "/login" },
+    "logout": { "method": "DELETE", "path": "/logout" },
+    "register": { "method": "POST", "path": "/register" },
+    "confirm": { "method": "POST", "path": "/confirm" },
+    "reset": { "method": "POST", "path": "/reset" },
+    "reset_password": { "method": "POST", "path": "/reset_password" },
+    "incoming_requests": { "method": "GET", "path": "/incoming_requests" },
+    "outcoming_requests": { "method": "GET", "path": "/outcoming_requests" }
+  },
+  "apps": {
+    "get_apps": { "method": "GET", "path": "/apps" },
+    "create_app": { "method": "POST", "path": "/apps" },
+    "get_app": { "method": "GET", "path": "/apps/{public_key}" },
+    "get_app_token": { "method": "GET", "path": "/apps/{public_key}/token" },
+    "create_app_token": { "method": "POST", "path": "/apps/{public_key}/token" },
+    "get_app_tokens": { "method": "GET", "path": "/apps/tokens" },
+    "delete_app_token": { "method": "DELETE", "path": "/apps/tokens/{token}" },
+    "delete_app": { "method": "DELETE", "path": "/apps/{app_id}" },
+    "app_get_user": { "method": "GET", "path": "/apps/user/{token}" }
+  },
+  "users": {
+    "get_user": { "method": "GET", "path": "/user/{user_tag}" },
+    "get_friends": { "method": "GET", "path": "/user/{user_tag}/friends" },
+    "get_playlists": { "method": "GET", "path": "/user/{user_tag}/playlists" },
+    "get_photos": { "method": "GET", "path": "/user/{user_tag}/photos" },
+    "get_posts": { "method": "GET", "path": "/user/{user_tag}/posts" },
+    "create_post": { "method": "POST", "path": "/user/{user_tag}/post" }
+  },
+  "relationships": {
+    "get_relationships": { "method": "GET", "path": "/user/{user_tag}/relationships" },
+    "subscribe": { "method": "PATCH", "path": "/user/{user_tag}/subscribe" },
+    "ignore_incoming": { "method": "DELETE", "path": "/incoming_requests/{user_id}" }
+  },
+  "dialogs": {
+    "get_dialogs": { "method": "GET", "path": "/dialogs" },
+    "create_dialog": { "method": "POST", "path": "/dialogs" },
+    "create_private_dialog": { "method": "POST", "path": "/dialogs/private/{user_id}" },
+    "get_dialog": { "method": "GET", "path": "/dialogs/{dialog_id}" },
+    "get_messages": { "method": "GET", "path": "/dialogs/{dialog_id}/messages" },
+    "get_message": { "method": "GET", "path": "/dialogs/messages/{message_id}" },
+    "delete_message": { "method": "DELETE", "path": "/dialogs/messages/{message_id}" },
+    "mute_dialog": { "method": "PATCH", "path": "/dialogs/{dialog_id}/mute" }
+  },
+  "tracks": {
+    "get_track": { "method": "GET", "path": "/musebase/{track_id}" },
+    "find_tracks": { "method": "GET", "path": "/musebase/find/{mask}" },
+    "upload_track": { "method": "POST", "path": "/musebase/upload" },
+    "get_playlist": { "method": "GET", "path": "/musebase/playlists/{playlist_id}" }
+  },
+  "photos": {
+    "get_photo": { "method": "GET", "path": "/photos/{photo_id}" },
+    "upload_photo": { "method": "POST", "path": "/photos/upload" },
+    "delete_photo": { "method": "DELETE", "path": "/photos/{photo_id}" }
+  },
+  "posts": {
+    "get_post": { "method": "GET", "path": "/posts/{post_id}" },
+    "delete_post": { "method": "DELETE", "path": "/posts/{post_id}" },
+    "edit_post": { "method": "PATCH", "path": "/posts/{post_id}" },
+    "like_post": { "method": "PATCH", "path": "/posts/{post_id}/like" },
+    "get_comments": { "method": "GET", "path": "/posts/{post_id}/comments" },
+    "upload_comment": { "method": "POST", "path": "/posts/{post_id}/comment" }
+  },
+  "comments": {
+    "get_comment": { "method": "GET", "path": "/comments/{comment_id}" },
+    "delete_comment": { "method": "DELETE", "path": "/comments/{comment_id}" },
+    "like_comment": { "method": "PATCH", "path": "/comments/{comment_id}/like" }
+  }
+}

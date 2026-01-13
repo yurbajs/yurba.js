@@ -1,6 +1,9 @@
 import { REST } from '../index';
 import { Shop, Item } from '@yurbajs/types';
 
+/**
+ * @category Resources
+ */
 export class ShopResource {
   /**
    * @ignore
@@ -14,6 +17,7 @@ export class ShopResource {
 
   /**
    * Gets shop categories and items
+   * @rest GET /shop
    * @group Shop
    * @since 1.0.0
    * @returns {Promise<Shop[]>} Array of {@link Shop} objects
@@ -28,6 +32,7 @@ export class ShopResource {
 
   /**
    * Gets user inventory
+   * @rest GET /shop/inventory
    * @group Shop
    * @since 1.0.0
    * @returns {Promise<Item[]>} Array of {@link Item} objects

@@ -3,7 +3,7 @@
   --vp-c-brand-2: #4340e6;
   --vp-c-brand-3: #3633cc;
   --vp-c-brand-soft: rgba(88, 84, 255, 0.12);
-  
+
   /* Light theme improvements */
   --vp-c-bg: #ffffff;
   --vp-c-bg-soft: #f6f6f7;
@@ -19,7 +19,7 @@
   --vp-c-brand-2: #6b66ff;
   --vp-c-brand-3: #b6b4ff;
   --vp-c-brand-soft: rgba(138, 133, 255, 0.16);
-  
+
   /* Dark theme improvements */
   --vp-c-bg: #1a1a1a;
   --vp-c-bg-soft: #242424;
@@ -61,7 +61,12 @@ div[class*='language-'] {
 }
 
 /* Better typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
 }
 
@@ -92,4 +97,121 @@ h1, h2, h3, h4, h5, h6 {
 /* Sidebar Scrollbar specific */
 .VPSidebar::-webkit-scrollbar {
   width: 4px;
+}
+
+/* Fix badges alignment */
+.vp-doc div[align="center"] p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+}
+
+.vp-doc div[align="center"] p img {
+  margin: 0 !important;
+  display: inline-block !important;
+}
+
+/* API Info and Badges */
+.api-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 20px 0;
+  font-family: var(--vp-font-family-mono);
+}
+
+.api-badge {
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.api-badge-post {
+  color: #198754;
+  background: #d1f4e0;
+  border: 1px solid #198754;
+}
+
+.api-badge-delete {
+  color: #DC3545;
+  background: #f8d7da;
+  border: 1px solid #DC3545;
+}
+
+.api-badge-get {
+  color: #0D6EFD;
+  background: #cfe2ff;
+  border: 1px solid #0D6EFD;
+}
+
+.api-badge-patch {
+  color: #FFC107;
+  background: #fff3cd;
+  border: 1px solid #FFC107;
+}
+
+.dark .api-badge-post {
+  color: #198754;
+  background: #062014;
+}
+
+.dark .api-badge-delete {
+  color: #DC3545;
+  background: #350D11;
+}
+
+.dark .api-badge-get {
+  color: #0D6EFD;
+  background: #031A3D;
+}
+
+.dark .api-badge-patch {
+  color: #FFC107;
+  background: #3D2E02;
+}
+
+.api-path {
+  color: var(--vp-c-text-2);
+  font-size: 0.95em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.api-path:hover {
+  background-color: var(--vp-c-bg-soft);
+  color: var(--vp-c-brand-1);
+}
+
+.api-path.copied {
+  color: #198754 !important;
+  font-weight: 700;
+}
+
+.api-link-icon img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+
+.api-link-icon:hover img {
+  transform: scale(1.1);
+}
+
+.api-link-icon.no-link {
+  cursor: not-allowed;
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.dark .api-link-icon img {
+  filter: invert(1) brightness(2);
 }

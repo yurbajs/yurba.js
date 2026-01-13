@@ -1,13 +1,15 @@
 import { REST } from '../index';
 import { Photo, DeletePhotoResponse } from '@yurbajs/types';
-import { readFileSync } from 'fs';
-import { extname } from 'path';
+import { prepareFile } from '../utils/file';
 
+/**
+ * @category Resources
+ */
 export class PhotosResource {
   /**
    * @ignore
    */
-  constructor(private client: REST) {}
+  constructor(private client: REST) { }
 
   /**
    * Photos Core
@@ -16,6 +18,7 @@ export class PhotosResource {
 
   /**
    * Gets all photos (up to 12 per page)
+   * @rest GET /photos
    * @group Photos Core
    * @param page - Page number (optional)
    * @param mode - Set to 'private' for private photos (optional)
@@ -33,13 +36,14 @@ export class PhotosResource {
     const params = new URLSearchParams();
     if (page !== undefined) params.append('page', page.toString());
     if (mode === 'private') params.append('mode', 'private');
-    
+
     const query = params.toString();
     return this.client.get<Photo[]>(`/photos${query ? `?${query}` : ''}`);
   }
 
   /**
    * Gets a photo by identifier
+   * @rest GET /photos/{photo_id} get_photo
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
@@ -57,6 +61,7 @@ export class PhotosResource {
 
   /**
    * Uploads a photo
+   * @rest POST /photos/upload upload_photo
    * @group Photos Core
    * @param input - Path to photo file or Buffer
    * @param caption - Photo caption
@@ -72,37 +77,18 @@ export class PhotosResource {
    * const photo = await rest.photos.upload(buffer, 'My photo', 'public', 'image.png');
    * ```
    */
-  async upload(input: string | Buffer, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
-    if (!input) throw new Error('Invalid input');
+  async upload(input: string | Buffer | Blob, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
     if (caption.length > 1000) throw new Error('Caption too long');
-    
-    let buffer: Buffer;
-    let ext: string;
-    
-    if (typeof input === 'string') {
-      buffer = readFileSync(input);
-      ext = extname(input).toLowerCase();
-    } else {
-      buffer = input;
-      ext = filename ? extname(filename).toLowerCase() : '.png';
-    }
-    
-    const mimeTypes: Record<string, string> = {
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.png': 'image/png',
-      '.webp': 'image/webp',
-      '.gif': 'image/gif',
-      '.bmp': 'image/bmp',
-      '.tiff': 'image/tiff',
-      '.svg': 'image/svg+xml'
-    };
-    
-    const mimeType = mimeTypes[ext] || 'image/jpeg';
+
+    const prepared = await prepareFile(input, filename);
     const formData = new FormData();
-    const blob = new Blob([new Uint8Array(buffer)], { type: mimeType });
-    
-    formData.append('photo', blob, filename || `photo-${Date.now()}${ext}`);
+
+    // Set proper MIME type for photo
+    const photoBlob = prepared.mimeType
+      ? new Blob([prepared.data], { type: prepared.mimeType })
+      : prepared.data;
+
+    formData.append('photo', photoBlob, prepared.filename);
     formData.append('caption', caption);
     formData.append('mode', mode);
 
@@ -111,6 +97,7 @@ export class PhotosResource {
 
   /**
    * Deletes a photo
+   * @rest DELETE /photos/{photo_id} delete_photo
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0

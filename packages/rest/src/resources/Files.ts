@@ -1,7 +1,10 @@
 import { REST } from '../index';
 import { File, BaseDelete } from '@yurbajs/types';
-import { readFileSync } from 'fs';
+import { prepareFile } from '../utils/file';
 
+/**
+ * @category Resources
+ */
 export class FilesResource {
   /**
    * @ignore
@@ -15,6 +18,7 @@ export class FilesResource {
 
   /**
    * Gets a file by identifier
+   * @rest GET /files/{file_id}
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0
@@ -32,6 +36,7 @@ export class FilesResource {
 
   /**
    * Gets all files
+   * @rest GET /files
    * @group Files Core
    * @param page - Page number (optional)
    * @since 1.0.0
@@ -53,44 +58,42 @@ export class FilesResource {
   }
 
   /**
-   * Uploads a file
+   * Uploads a file from Blob, File, Buffer, or file path (Node.js only)
+   * @rest POST /files
    * @group Files Core
-   * @param input - Path to file or Buffer
-   * @param filename - Custom filename (optional)
+   * @param file - File, Blob, Buffer, or file path (string)
+   * @param filename - Custom filename (required for Buffer/Blob, optional for path)
    * @since 1.0.0
    * @returns {Promise<File>} {@link File} Uploaded file
    * @throws {Error} If input is invalid
    * @example
    * ```javascript
-   * const file = await rest.files.upload('/path/to/file.txt');
-   * // or with Buffer
-   * const file = await rest.files.upload(buffer, 'document.pdf');
+   * // Browser: Upload File from input
+   * const fileInput = document.querySelector('input[type="file"]');
+   * const file = await rest.files.upload(fileInput.files[0]);
+   * 
+   * // Browser: Upload Blob
+   * const blob = new Blob(['content'], { type: 'text/plain' });
+   * const file = await rest.files.upload(blob, 'document.txt');
+   * 
+   * // Node.js: Upload Buffer
+   * const buffer = Buffer.from('content');
+   * const file = await rest.files.upload(buffer, 'document.txt');
+   * 
+   * // Node.js: Upload from file path
+   * const file = await rest.files.upload('./document.pdf');
    * ```
    */
-  async upload(input: string | Buffer, filename?: string): Promise<File> {
-    if (!input) throw new Error('Invalid input');
-    
-    let buffer: Buffer;
-    let name: string;
-    
-    if (typeof input === 'string') {
-      buffer = readFileSync(input);
-      name = filename || input.split('/').pop() || 'file';
-    } else {
-      buffer = input;
-      name = filename || 'file';
-    }
-    
+  async upload(file: Blob | Buffer | string, filename?: string): Promise<File> {
+    const prepared = await prepareFile(file, filename);
     const formData = new FormData();
-    const blob = new Blob([new Uint8Array(buffer)]);
-    
-    formData.append('file', blob, name);
-
+    formData.append('file', prepared.data, prepared.filename);
     return this.client.uploadFile<File>('/files', formData);
   }
 
   /**
    * Deletes a file
+   * @rest DELETE /files/{file_id}
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0
