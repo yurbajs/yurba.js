@@ -24,12 +24,16 @@
     "invalidLink": false,
     "notDocumented": false
   },
-  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-vitepress-theme",
+    "./typedoc-plugins.js"
+  ],
   "hidePageHeader": true,
   "entryFileName": "index.md",
   "sidebar": {
     "autoConfiguration": true,
-    "format": "vitepress", 
+    "format": "vitepress",
     "pretty": true,
     "collapsed": true
   },
@@ -48,23 +52,23 @@
   "searchInComments": true,
   "disableSources": true,
   "excludeNotDocumentedKinds": [
-      "Module",
-      "Namespace",
-      "Enum",
-      "Variable",
-      "Function",
-      "Class",
-      "Interface",
-      "Constructor",
-      "Property",
-      "Method",
-      "CallSignature",
-      "IndexSignature",
-      "ConstructorSignature",
-      "Accessor",
-      "GetSignature",
-      "SetSignature",
-      "TypeAlias",
-      "Reference"
+    "Module",
+    "Namespace",
+    "Enum",
+    "Variable",
+    "Function",
+    "Class",
+    "Interface",
+    "Constructor",
+    "Property",
+    "Method",
+    "CallSignature",
+    "IndexSignature",
+    "ConstructorSignature",
+    "Accessor",
+    "GetSignature",
+    "SetSignature",
+    "TypeAlias",
+    "Reference"
   ]
 }
