@@ -5,6 +5,7 @@ import { prepareFile } from '../utils/file';
 export class PhotosResource {
   /**
    * @ignore
+   * @category Resourses
    */
   constructor(private client: REST) {}
 

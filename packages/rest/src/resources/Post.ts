@@ -5,7 +5,7 @@ export class PostResource {
   /**
    * @ignore
    */
-  constructor(private client: REST) {}
+  constructor(private client: REST) { }
 
   /**
    * Posts Core
@@ -14,6 +14,7 @@ export class PostResource {
 
   /**
    * Gets posts from user
+   * @rest GET /user/{user}/posts api/posts#get-posts
    * @group Posts Core
    * @param user - User ({tag}/{id}/u{id}/@me)
    * @param payload - {@link GetPostPayload} Get posts parameters
@@ -39,6 +40,7 @@ export class PostResource {
 
   /**
    * Creates a new post
+   * @rest POST /user/{user}/post api/posts#create-post
    * @group Posts Core
    * @param user - User ({tag}/{id}/u{id}/@me)
    * @param payload - {@link CreatePostPayload} Post data
@@ -89,6 +91,7 @@ export class PostResource {
 
   /**
    * Deletes a post
+   * @rest DELETE /posts/{postId}
    * @group Posts Core
    * @param postId - Post identifier
    * @since 1.0.0
@@ -106,6 +109,7 @@ export class PostResource {
 
   /**
    * Edits a post
+   * @rest PATCH /posts/{postId}
    * @group Posts Core
    * @param postId - Post identifier
    * @param data - {@link CreatePostPayload} Updated post data
@@ -132,6 +136,7 @@ export class PostResource {
 
   /**
    * Gets comments from post
+   * @rest GET /posts/{postId}/comments
    * @group Post Comments
    * @param postId - Post identifier
    * @param lastId - Last comment ID for pagination
@@ -151,6 +156,7 @@ export class PostResource {
 
   /**
    * Adds comment to post
+   * @rest POST /posts/{postId}/comment api/posts#add-comment
    * @group Post Comments
    * @param postId - Post identifier
    * @param content - Comment content
@@ -172,6 +178,7 @@ export class PostResource {
 
   /**
    * Deletes a comment
+   * @rest DELETE /comments/{commentId}
    * @group Post Comments
    * @param commentId - Comment identifier
    * @since 1.0.0
