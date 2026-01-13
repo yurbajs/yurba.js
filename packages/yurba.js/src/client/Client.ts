@@ -70,7 +70,6 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  *
  * @public
  * @extends EventEmitter
- * @category Client
  */
 class Client extends EventEmitter {
   // Options
