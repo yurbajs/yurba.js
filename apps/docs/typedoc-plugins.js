@@ -171,6 +171,59 @@ exports.load = function (app) {
                     return originalHierarchy.call(context, model, options);
                 };
 
+                // Override parameter rendering to use tables
+                const originalParameter = context.partials.parameter;
+                context.partials.parameter = function (item, options) {
+                    // Let TypeDoc handle the initial rendering
+                    return originalParameter.call(context, item, options);
+                };
+
+                // Override typeParametersList to use table format
+                const originalTypeParametersList = context.partials.typeParametersList;
+                context.partials.typeParametersList = function (model, options) {
+                    if (!model || model.length === 0) return '';
+
+                    let md = '\n| Name | Type | Default | Description |\n';
+                    md += '|------|------|---------|-------------|\n';
+
+                    model.forEach(param => {
+                        const name = `\`${param.name}\``;
+                        const type = param.type ? context.partials.someType(param.type) : '`any`';
+                        const defaultVal = param.default ? `\`${param.default}\`` : '*required*';
+                        let desc = '';
+                        if (param.comment?.summary) {
+                            desc = param.comment.summary.map(p => p.text || '').join('').trim();
+                        }
+
+                        md += `| ${name} | ${type} | ${defaultVal} | ${desc} |\n`;
+                    });
+
+                    return md + '\n';
+                };
+
+                // Override parametersList to use table format
+                const originalParametersList = context.partials.parametersList;
+                context.partials.parametersList = function (model, options) {
+                    if (!model || model.length === 0) return '';
+
+                    let md = '\n| Name | Type | Default | Description |\n';
+                    md += '|------|------|---------|-------------|\n';
+
+                    model.forEach(param => {
+                        const name = `\`${param.name}\``;
+                        const type = param.type ? context.partials.someType(param.type) : '`any`';
+                        const defaultVal = param.defaultValue ? `\`${param.defaultValue}\`` : '*required*';
+                        let desc = '';
+                        if (param.comment?.summary) {
+                            desc = param.comment.summary.map(p => p.text || '').join('').trim();
+                        }
+
+                        md += `| ${name} | ${type} | ${defaultVal} | ${desc} |\n`;
+                    });
+
+                    return md + '\n';
+                };
+
                 return context;
             };
         }

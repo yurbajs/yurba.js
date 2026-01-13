@@ -158,19 +158,43 @@ export class PostResource {
   }
 
   /**
-   * Adds comment to post
+   * Adds a new comment to an existing post. Comments can include text content 
+   * and optional photo attachments.
+   * 
    * @rest POST /posts/{post_id}/comment upload_comment
    * @group Post Comments
    * @param postId - Post identifier
-   * @param content - Comment content
-   * @param photos - Photo IDs array
+   * @param content - Comment content (max 1000 characters)
+   * @param photos - Array of photo IDs to attach to the comment
    * @since 1.0.0
-   * @returns {Promise<Comment>} Created comment
+   * @returns {Promise<Comment>} The newly created comment object
    * @throws {Error} If parameters are invalid
+   * 
    * @example
+   * **Basic Comment**
    * ```javascript
-   * await rest.posts.addComment(123, "Nice post!");
-   * await rest.posts.addComment(123, "With photo", [456]);
+   * const comment = await rest.posts.addComment(123, "Nice post!");
+   * console.log(comment.id); // 789
+   * ```
+   * 
+   * @example
+   * **Comment with Photo**
+   * ```javascript
+   * const commentWithPhoto = await rest.posts.addComment(
+   *   123, 
+   *   "Check this out!", 
+   *   [456, 789]
+   * );
+   * ```
+   * 
+   * @example
+   * **Error Handling**
+   * ```javascript
+   * try {
+   *   await rest.posts.addComment(123, "");
+   * } catch (error) {
+   *   console.error(error.message); // "Invalid content"
+   * }
    * ```
    */
   async addComment(postId: number, content: string, photos: number[] = []): Promise<Comment> {
