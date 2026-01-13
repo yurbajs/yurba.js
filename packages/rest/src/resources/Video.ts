@@ -18,6 +18,7 @@ export class VideoResource {
 
   /**
    * Gets a video by identifier
+   * @rest GET /video/{video_id}
    * @group Video Core
    * @param videoId - Video identifier
    * @since 1.0.0
@@ -35,6 +36,7 @@ export class VideoResource {
 
   /**
    * Gets all videos
+   * @rest GET /video
    * @group Video Core
    * @param page - Page number (optional)
    * @since 1.0.0
@@ -57,6 +59,7 @@ export class VideoResource {
 
   /**
    * Uploads a video
+   * @rest POST /video
    * @group Video Core
    * @param input - Path to video file or Buffer
    * @param filename - Custom filename (optional)
@@ -94,6 +97,7 @@ export class VideoResource {
 
   /**
    * Deletes a video
+   * @rest DELETE /video/{video_id}
    * @group Video Core
    * @param videoId - Video identifier
    * @since 1.0.0

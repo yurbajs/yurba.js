@@ -23,6 +23,7 @@ export class AppResource {
 
   /**
    * Gets all apps
+   * @rest GET /apps *
    * @group Apps Core
    * @since 1.0.0
    * @returns {Promise<App[]>} Array of {@link App} objects
@@ -38,6 +39,7 @@ export class AppResource {
 
   /**
    * Creates a new app
+   * @rest POST /apps *
    * @group Apps Core
    * @param payload - {@link CreateAppPayload} App creation data
    * @returns {Promise<App>} {@link App} Created app
@@ -59,6 +61,7 @@ export class AppResource {
 
   /**
    * Gets an app by public key
+   * @rest GET /apps/{public_key} *
    * @group Apps Core
    * @param publicKey - App public key
    * @since 1.0.0
@@ -76,6 +79,7 @@ export class AppResource {
 
   /**
    * Deletes an app
+   * @rest DELETE /apps/{app_id} *
    * @group Apps Core
    * @param appId - App identifier
    * @since 1.0.0
@@ -98,6 +102,7 @@ export class AppResource {
 
   /**
    * Gets app token
+   * @rest GET /apps/{public_key}/token *
    * @group App Tokens
    * @param publicKey - App public key
    * @since 1.0.0
@@ -115,6 +120,7 @@ export class AppResource {
 
   /**
    * Creates app token
+   * @rest POST /apps/{public_key}/token *
    * @group App Tokens
    * @param publicKey - App public key
    * @param redirectUrl - Redirect URL
@@ -134,6 +140,7 @@ export class AppResource {
 
   /**
    * Gets app tokens
+   * @rest GET /apps/tokens *
    * @group App Tokens
    * @param publicKey - App public key
    * @since 1.0.0
@@ -151,6 +158,7 @@ export class AppResource {
 
   /**
    * Deletes app token
+   * @rest DELETE /apps/tokens/{token} *
    * @group App Tokens
    * @param token - App token
    * @since 1.0.0
@@ -168,6 +176,7 @@ export class AppResource {
 
   /**
    * Gets user by app token
+   * @rest GET /apps/user/{token} *
    * @group App Tokens
    * @param token - App token
    * @param secretKey - App secret key

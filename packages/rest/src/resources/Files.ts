@@ -18,6 +18,7 @@ export class FilesResource {
 
   /**
    * Gets a file by identifier
+   * @rest GET /files/{file_id}
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0
@@ -35,6 +36,7 @@ export class FilesResource {
 
   /**
    * Gets all files
+   * @rest GET /files
    * @group Files Core
    * @param page - Page number (optional)
    * @since 1.0.0
@@ -57,6 +59,7 @@ export class FilesResource {
 
   /**
    * Uploads a file from Blob, File, Buffer, or file path (Node.js only)
+   * @rest POST /files
    * @group Files Core
    * @param file - File, Blob, Buffer, or file path (string)
    * @param filename - Custom filename (required for Buffer/Blob, optional for path)
@@ -90,6 +93,7 @@ export class FilesResource {
 
   /**
    * Deletes a file
+   * @rest DELETE /files/{file_id}
    * @group Files Core
    * @param fileId - File identifier
    * @since 1.0.0

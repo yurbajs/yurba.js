@@ -17,6 +17,7 @@ export class SearchResource {
 
   /**
    * Finds dialogs
+   * @rest POST /dialogs/find/{mask}
    * @group Search
    * @param query - Search mask
    * @param payload - {@link FindDialogPayload} Search data
@@ -68,6 +69,7 @@ export class SearchResource {
 
   /**
    * Finds users
+   * @rest POST /users/find
    * @group Search
    * @param payload - {@link FindUserPayload} Search filters
    * @param page - Page number (default 0)
@@ -108,6 +110,7 @@ export class SearchResource {
 
   /**
    * Finds tracks
+   * @rest GET /musebase/find/{mask} *
    * @group Search
    * @param query - Song name or artist
    * @param page - Page number (optional)

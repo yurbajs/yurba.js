@@ -25,6 +25,7 @@ export class MusebaseResource {
 
   /**
    * Gets a track by identifier
+   * @rest GET /musebase/{track_id} *
    * @group Tracks
    * @param trackId - Track identifier
    * @since 1.0.0
@@ -47,6 +48,7 @@ export class MusebaseResource {
 
   /**
    * Creates a new playlist
+   * @rest POST /musebase/playlists
    * @group Playlists
    * @param name - Playlist name
    * @param release - Release information
@@ -69,6 +71,7 @@ export class MusebaseResource {
 
   /**
    * Gets a playlist by identifier
+   * @rest GET /musebase/playlists/{playlist_id} *
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @since 1.0.0
@@ -86,6 +89,7 @@ export class MusebaseResource {
 
   /**
    * Gets user playlists by tag
+   * @rest GET /user/{user_tag}/playlists *
    * @group Playlists
    * @param tag - User tag
    * @since 1.0.0
@@ -103,6 +107,7 @@ export class MusebaseResource {
 
   /**
    * Updates a playlist
+   * @rest PATCH /musebase/playlists/{playlist_id}
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @param name - Playlist name
@@ -127,6 +132,7 @@ export class MusebaseResource {
 
   /**
    * Deletes a playlist
+   * @rest DELETE /musebase/playlists/{playlist_id}
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @since 1.0.0
@@ -144,6 +150,7 @@ export class MusebaseResource {
 
   /**
    * Adds a track to playlist
+   * @rest POST /musebase/playlists/{playlist_id}/tracks/{track_id}
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @param trackId - Track identifier
@@ -162,6 +169,7 @@ export class MusebaseResource {
 
   /**
    * Removes a track from playlist
+   * @rest DELETE /musebase/playlists/{playlist_id}/tracks/{track_id}
    * @group Playlists
    * @param playlistId - Playlist identifier
    * @param trackId - Track identifier
@@ -180,6 +188,7 @@ export class MusebaseResource {
 
   /**
    * Find tracks
+   * @rest GET /musebase/find/{mask} *
    * @group Tracks
    * @param query - Song name or artist
    * @param page - Page number (optional)

@@ -18,6 +18,7 @@ export class PhotosResource {
 
   /**
    * Gets all photos (up to 12 per page)
+   * @rest GET /photos
    * @group Photos Core
    * @param page - Page number (optional)
    * @param mode - Set to 'private' for private photos (optional)
@@ -42,6 +43,7 @@ export class PhotosResource {
 
   /**
    * Gets a photo by identifier
+   * @rest GET /photos/{photo_id} *
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
@@ -59,6 +61,7 @@ export class PhotosResource {
 
   /**
    * Uploads a photo
+   * @rest POST /photos/upload *
    * @group Photos Core
    * @param input - Path to photo file or Buffer
    * @param caption - Photo caption
@@ -94,6 +97,7 @@ export class PhotosResource {
 
   /**
    * Deletes a photo
+   * @rest DELETE /photos/{photo_id} *
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
