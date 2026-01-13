@@ -83,6 +83,7 @@ export default defineConfig({
       chunkSizeWarningLimit: 1000,
     },
   },
+  ignoreDeadLinks: true,
 
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },

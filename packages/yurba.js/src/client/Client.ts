@@ -49,7 +49,7 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  *
  * const client = new Client();
  *
- * client.registerCommand('hello', { name: 'string' }, (message, args) => {
+ * client.commands.register('hello', { name: 'string' }, (message, args) => {
  *   message.reply(`Hello, ${args.name}!`);
  * });
  *

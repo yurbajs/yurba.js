@@ -76,9 +76,16 @@ exports.load = function (app) {
                         model.typeHierarchy &&
                         model.typeHierarchy.next
                     ) {
-                        const extendsTypes = model.typeHierarchy.types.map((t) =>
-                            context.helpers.getHierarchyType(t, { isTarget: false })
-                        );
+                        const extendsTypes = model.typeHierarchy.types.map((t) => {
+                            // Check if the type has a reflection (is a documented type)
+                            if (t.reflection) {
+                                const url = context.urlTo(t.reflection);
+                                const name = t.reflection.name;
+                                return `[${name}](${url})`;
+                            }
+                            // Fallback to plain text for external types
+                            return context.helpers.getHierarchyType(t, { isTarget: false });
+                        });
 
                         if (extendsTypes.length > 0) {
                             const extendsBlock = `> Extends: ${extendsTypes.join(', ')}`;
