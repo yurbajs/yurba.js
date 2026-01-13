@@ -116,6 +116,7 @@ class Client extends EventEmitter {
   // Other
   private _dialogs?: DialogModel[];
   private isReady: boolean = false;
+  private readyTimestamp: number | null = null;
 
 
   /**
@@ -179,6 +180,24 @@ class Client extends EventEmitter {
   }
 
   /**
+   * Timestamp when the client became ready
+   * @type {Date | null}
+   * @readonly
+   */
+  get readyAt(): Date | null {
+    return this.readyTimestamp ? new Date(this.readyTimestamp) : null;
+  }
+
+  /**
+   * Duration in milliseconds since the client became ready
+   * @type {number | null}
+   * @readonly
+   */
+  get uptime(): number | null {
+    return this.readyTimestamp ? Date.now() - this.readyTimestamp : null;
+  }
+
+  /**
    * Getter for bot user dialogs
    * @returns {DialogModel[]} Dialogs 
    */
@@ -215,11 +234,13 @@ class Client extends EventEmitter {
     // Set up event handlers for reconnection
     this.wsm.on('close', () => {
       this.isReady = false;
+      this.readyTimestamp = null;
       this.handleReconnect();
     });
 
     this.wsm.on('error', () => {
       this.isReady = false;
+      this.readyTimestamp = null;
       this.handleReconnect();
     });
 
@@ -234,6 +255,7 @@ class Client extends EventEmitter {
 
       this.wsm.once('ready', () => {
         this.isReady = true;
+        this.readyTimestamp = Date.now();
         this.reconnectAttempts = 0;
         this.emit('ready');
       });
