@@ -99,7 +99,7 @@ export class AccountResource {
 
   /**
    * Activate promo code
-   * @rest GET /promo/{promo}
+   * @rest GET /promo/{promo} https://docs.yurba.one/reference/get_promo-promo
    * @group Auth Core
    * @param promo - Promo code
    * @since 1.0.0
@@ -147,7 +147,7 @@ export class AccountResource {
 
   /**
    * Update profile settings
-   * @rest PATCH /settings/profile
+   * @rest PATCH /settings/profile https://docs.yurba.one/reference/patch_settings-profile
    * @group Profile
    * @param settings - Profile settings to update
    * @since 1.0.0
