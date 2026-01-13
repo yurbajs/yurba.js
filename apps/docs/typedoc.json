@@ -19,6 +19,7 @@
   "sourceLinkTemplate": "https://github.com/yurbajs/yurba.js/blob/main/{path}#L{line}",
   "cleanOutputDir": false,
   "treatWarningsAsErrors": false,
+  "logLevel": "Error",
   "validation": {
     "notExported": false,
     "invalidLink": false,

@@ -4,6 +4,8 @@ const { ReflectionKind } = require('typedoc');
  * @param {import('typedoc').Application} app
  */
 exports.load = function (app) {
+
+
     app.renderer.on('beginRender', () => {
         const theme = app.renderer.theme;
         if (theme) {
