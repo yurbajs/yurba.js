@@ -133,26 +133,46 @@ h6 {
 
 .api-badge-post {
   color: #198754;
-  background: #062014;
+  background: #d1f4e0;
   border: 1px solid #198754;
 }
 
 .api-badge-delete {
   color: #DC3545;
-  background: #350D11;
+  background: #f8d7da;
   border: 1px solid #DC3545;
 }
 
 .api-badge-get {
   color: #0D6EFD;
-  background: #031A3D;
+  background: #cfe2ff;
   border: 1px solid #0D6EFD;
 }
 
 .api-badge-patch {
   color: #FFC107;
-  background: #3D2E02;
+  background: #fff3cd;
   border: 1px solid #FFC107;
+}
+
+.dark .api-badge-post {
+  color: #198754;
+  background: #062014;
+}
+
+.dark .api-badge-delete {
+  color: #DC3545;
+  background: #350D11;
+}
+
+.dark .api-badge-get {
+  color: #0D6EFD;
+  background: #031A3D;
+}
+
+.dark .api-badge-patch {
+  color: #FFC107;
+  background: #3D2E02;
 }
 
 .api-path {
