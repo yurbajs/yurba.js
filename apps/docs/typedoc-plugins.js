@@ -126,7 +126,7 @@ exports.load = function (app) {
                                 ? `<a href="${link}" target="_blank" class="api-link-icon"><img src="${iconSrc}" alt="API Docs" /></a>`
                                 : `<span class="api-link-icon no-link"><img src="${iconSrc}" alt="No API Docs" /></span>`;
 
-                            const apiInfoBlock = `<div class="api-info"><span class="${badgeClass}">${method}</span> <span class="api-path">${path}</span> ${iconHtml}</div>`;
+                            const apiInfoBlock = `<div class="api-info"><span class="${badgeClass}">${method}</span> <span class="api-path" title="Click to copy" data-copy-text="${path}">${path}</span> ${iconHtml}</div>`;
 
                             // Inject after the first heading found in the member container
                             md = md.replace(/^(#+ .*)$/m, `$1\n${apiInfoBlock}`);

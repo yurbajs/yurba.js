@@ -53,7 +53,24 @@ export default defineConfig({
     ['meta', { name: 'twitter:title', content: 'Yurba.js - Powerful Bot Library' }],
     ['meta', { name: 'twitter:description', content: 'The powerful library for creating bots and integrating with the Yurba API' }],
     ['meta', { name: 'twitter:image', content: 'https://yurba.js.org/banner.svg' }],
-    ['link', { rel: 'canonical', href: 'https://yurba.js.org' }]
+    ['link', { rel: 'canonical', href: 'https://yurba.js.org' }],
+    ['script', {}, `
+      document.addEventListener('click', (e) => {
+        const target = e.target.closest('.api-path');
+        if (target && target.dataset.copyText) {
+          const text = target.dataset.copyText;
+          navigator.clipboard.writeText(text).then(() => {
+            const originalText = target.innerText;
+            target.innerText = 'Copied!';
+            target.classList.add('copied');
+            setTimeout(() => {
+              target.innerText = originalText;
+              target.classList.remove('copied');
+            }, 1000);
+          });
+        }
+      });
+    `]
   ],
 
   srcDir: './dist/',
