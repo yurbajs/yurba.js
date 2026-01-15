@@ -215,3 +215,34 @@ h6 {
 .dark .api-link-icon img {
   filter: invert(1) brightness(2);
 }
+
+/* Outline Toggle Animation */
+.VPDocAsideOutline {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease;
+  transform-origin: right center;
+}
+
+.outline-hidden .VPDocAsideOutline {
+  transform: translateX(100%) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.VPDoc.has-aside .content-container {
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPDoc.has-aside .content {
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              padding-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.outline-hidden .VPDoc.has-aside .content-container {
+  max-width: calc(100% - 64px) !important;
+}
+
+.outline-hidden .VPDoc.has-aside .content {
+  max-width: 100% !important;
+  padding-right: 64px !important;
+}
