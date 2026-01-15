@@ -1,14 +1,11 @@
-// Import Client from yurba.js
-const { Client } = require("yurba.js");
-
-// Load config
-const config = require('./config.json');
+const { Client } = require("yurba.js"); // Import Client from yurba.js
+const config = require('./config.json'); // Load config
 
 // Load `.env`
 require('dotenv').config()
 
 // Create client (bot) with your token and prefix
-const client = new Client(process.env.YURBA_TOKEN, {prefix: config.prefix});
+const client = new Client({prefix: config.prefix});
 
 // -- Function for loading commands -- //
 
@@ -54,7 +51,7 @@ function loadCommands(client, commandsPath = './commands') {
                     }
                     
                     // Register command
-                    client.registerCommand(
+                    client.command.register(
                         command.name, // Name of command
                         command.args || {}, // Arguments in command
                         command.handler,
@@ -85,4 +82,4 @@ client.once('ready', () => {
 });
 
 // Initialize the bot (start it)
-client.init();
+client.init(process.env.YURBA_TOKEN);
