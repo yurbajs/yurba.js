@@ -1,5 +1,4 @@
 import { MessageModel, DialogModel } from '../api';
-import { CommandArgsSchema, CommandHandler } from '../core';
 
 export interface ClientOptions {
   prefix?: string;
@@ -17,15 +16,6 @@ export interface MiddlewareFunction {
   (message: MessageModel, next?: () => Promise<void>): Promise<void>;
 }
 
-export interface ICommandManager {
-  regusre(command: string, argsSchema: CommandArgsSchema, handler: CommandHandler): void;
-  getCommands(): string[];
-  handleCommand(message: MessageModel, enhanceMessage: (msg: MessageModel) => void): Promise<void>;
-}
-
-export interface IMessageManager {
-  enhanceMessage(message: MessageModel): void;
-}
 
 export interface IMiddlewareManager {
   use(middleware: MiddlewareFunction, config?: Partial<MiddlewareConfig>): void;
