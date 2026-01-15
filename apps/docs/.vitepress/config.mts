@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 import { apiLinksPlugin } from './md/apiLinks';
+import { outlineTransformPlugin } from './md/outlineTransform';
 
 let typedocSidebar = [];
 try {
@@ -114,5 +115,8 @@ export default defineConfig({
       dark: 'github-dark',
     },
     lineNumbers: true,
+    config: (md) => {
+      md.use(outlineTransformPlugin);
+    },
   },
 });

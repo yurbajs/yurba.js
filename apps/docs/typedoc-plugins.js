@@ -55,6 +55,29 @@ exports.load = function (app) {
         console.error('Error post-processing sidebar:', err);
       }
     }
+
+    // Post-process markdown files to transform Returns section
+    const processMarkdownFiles = (dir) => {
+      const files = fs.readdirSync(dir);
+      files.forEach(file => {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+        if (stat.isDirectory()) {
+          processMarkdownFiles(filePath);
+        } else if (file.endsWith('.md')) {
+          let content = fs.readFileSync(filePath, 'utf-8');
+          // Transform Returns section: wrap return type and description in blockquote
+          content = content.replace(/(#### Returns\n\n)(`[^`]+`)\n\n([^\n#]+)/g, '$1> $2\n> ? $3');
+          fs.writeFileSync(filePath, content);
+        }
+      });
+    };
+
+    try {
+      processMarkdownFiles(outDir);
+    } catch (err) {
+      console.error('Error post-processing markdown files:', err);
+    }
   });
 
   app.renderer.on('beginRender', () => {
@@ -107,48 +130,72 @@ exports.load = function (app) {
           return tag;
         };
 
+        // Helper to get @since tag
+        const getSinceTag = (model) => {
+          let tag = model.comment?.blockTags?.find(t => t.tag === '@since');
+          if (!tag && model.signatures) {
+            for (const sig of model.signatures) {
+              tag = sig.comment?.blockTags?.find(t => t.tag === '@since');
+              if (tag) break;
+            }
+          }
+          return tag;
+        };
+
         // Override the memberContainer partial
         const originalMemberContainer = context.partials.memberContainer;
         context.partials.memberContainer = function (model, options) {
           let md = originalMemberContainer.call(context, model, options);
 
           const restTag = getRestTag(model);
-          if (restTag) {
-            const content = restTag.content.map(c => c.text).join('').trim();
-            const parts = content.split(/\s+/);
-            if (parts.length >= 2) {
-              const method = parts[0];
-              const path = parts[1];
-              let link = parts[2];
+          const sinceTag = getSinceTag(model);
 
-              // Prepend base URL if link is a path
-              if (link && !link.startsWith('http')) {
-                link = `https://docs.yurba.one/${link.replace(/^\//, '')}`;
+          // Transform method signature format
+          md = md.replace(/(###+ )(\w+)\(\)\n\n> \*\*\2\*\*\(([^)]+)\): (.+?)\n\n([^\n]+)/gs, (match, hashes, name, params, returnType, description) => {
+            let result = `${hashes}.${name}(\`${params}\`): \`${returnType}\`\n\n`;
+            
+            if (restTag) {
+              const content = restTag.content.map(c => c.text).join('').trim();
+              const parts = content.split(/\s+/);
+              if (parts.length >= 2) {
+                const method = parts[0];
+                const path = parts[1];
+                let link = parts[2];
+
+                if (link && !link.startsWith('http')) {
+                  link = `https://docs.yurba.one/${link.replace(/^\//, '')}`;
+                }
+
+                const badgeClass = `api-badge api-badge-${method.toLowerCase()}`;
+                const iconSrc = link ? '/icons/link.svg' : '/icons/link-slash.svg';
+
+                const iconHtml = link
+                  ? `<a href="${link}" target="_blank" class="api-link-icon"><img src="${iconSrc}" alt="API Docs" /></a>`
+                  : `<span class="api-link-icon no-link"><img src="${iconSrc}" alt="No API Docs" /></span>`;
+
+                let sinceBadge = '';
+                if (sinceTag) {
+                  const version = sinceTag.content.map(c => c.text).join('').trim();
+                  sinceBadge = ` <span class="api-since-badge"><img src="/icons/since.svg" alt="Since" />${version}</span>`;
+                }
+
+                result += `<div class="api-info"><span class="${badgeClass}">${method}</span> <span class="api-path" title="Click to copy" data-copy-text="${path}">${path}</span> ${iconHtml}${sinceBadge}</div>\n\n`;
               }
-
-              const badgeClass = `api-badge api-badge-${method.toLowerCase()}`;
-              const iconSrc = link ? '/icons/link.svg' : '/icons/link-slash.svg';
-
-              const iconHtml = link
-                ? `<a href="${link}" target="_blank" class="api-link-icon"><img src="${iconSrc}" alt="API Docs" /></a>`
-                : `<span class="api-link-icon no-link"><img src="${iconSrc}" alt="No API Docs" /></span>`;
-
-              const apiInfoBlock = `<div class="api-info"><span class="${badgeClass}">${method}</span> <span class="api-path" title="Click to copy" data-copy-text="${path}">${path}</span> ${iconHtml}</div>`;
-
-              // Inject after the first heading found in the member container
-              md = md.replace(/^(#+ .*)$/m, `$1\n${apiInfoBlock}`);
             }
-          }
+            
+            result += `> <div class="api-description">${description}</div>`;
+            return result;
+          });
 
           return md;
         };
 
-        // Override the comment partial to hide @rest tag
+        // Override the comment partial to hide @rest and @since tags
         const originalComment = context.partials.comment;
         context.partials.comment = function (comment, options) {
           if (comment && comment.blockTags) {
-            // Filter out @rest tag from blockTags before rendering
-            const filteredBlockTags = comment.blockTags.filter(tag => tag.tag !== '@rest');
+            // Filter out @rest and @since tags from blockTags before rendering
+            const filteredBlockTags = comment.blockTags.filter(tag => tag.tag !== '@rest' && tag.tag !== '@since');
             const originalBlockTags = comment.blockTags;
 
             // Temporarily replace blockTags
@@ -183,19 +230,18 @@ exports.load = function (app) {
         context.partials.typeParametersList = function (model, options) {
           if (!model || model.length === 0) return '';
 
-          let md = '\n| Name | Type | Default | Description |\n';
-          md += '|------|------|---------|-------------|\n';
+          let md = '\n| Name | Type | Description |\n';
+          md += '|------|------|-------------|\n';
 
           model.forEach(param => {
             const name = `\`${param.name}\``;
             const type = param.type ? context.partials.someType(param.type) : '`any`';
-            const defaultVal = param.default ? `\`${param.default}\`` : '*required*';
             let desc = '';
             if (param.comment?.summary) {
               desc = param.comment.summary.map(p => p.text || '').join('').trim();
             }
 
-            md += `| ${name} | ${type} | ${defaultVal} | ${desc} |\n`;
+            md += `| ${name} | ${type} | ${desc} |\n`;
           });
 
           return md + '\n';
@@ -206,19 +252,19 @@ exports.load = function (app) {
         context.partials.parametersList = function (model, options) {
           if (!model || model.length === 0) return '';
 
-          let md = '\n| Name | Type | Default | Description |\n';
-          md += '|------|------|---------|-------------|\n';
+          let md = '\n| Name | Type | Description |\n';
+          md += '|------|------|-------------|\n';
 
           model.forEach(param => {
-            const name = `\`${param.name}\``;
+            const isOptional = param.flags?.isOptional || param.defaultValue;
+            const name = `\`${param.name}${isOptional ? '?' : ''}\``;
             const type = param.type ? context.partials.someType(param.type) : '`any`';
-            const defaultVal = param.defaultValue ? `\`${param.defaultValue}\`` : '*required*';
             let desc = '';
             if (param.comment?.summary) {
               desc = param.comment.summary.map(p => p.text || '').join('').trim();
             }
 
-            md += `| ${name} | ${type} | ${defaultVal} | ${desc} |\n`;
+            md += `| ${name} | ${type} | ${desc} |\n`;
           });
 
           return md + '\n';

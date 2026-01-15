@@ -216,6 +216,61 @@ h6 {
   filter: invert(1) brightness(2);
 }
 
+/* API Since Badge */
+.api-since-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  font-weight: 600;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  border: 1px solid var(--vp-c-divider);
+}
+
+.api-since-badge img {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
+.dark .api-since-badge img {
+  filter: invert(1) brightness(2);
+}
+
+/* API Description Styling */
+.api-description {
+  border-left: 3px solid #2D2E32;
+  padding-left: 16px;
+  margin: 8px 0;
+}
+
+/* Returns Section Styling */
+.vp-doc h4#returns + blockquote {
+  border-left: 3px solid #2D2E32;
+  padding-left: 16px;
+  margin: 12px 0;
+}
+
+/* Parameter Table Styling */
+.vp-doc table thead tr th:first-child {
+  background: #242424;
+}
+
+.vp-doc table thead tr th {
+  background: transparent;
+}
+
+.vp-doc table thead tr th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.vp-doc table thead tr th:last-child {
+  border-top-right-radius: 8px;
+}
+
 /* Hide aside when outline is toggled off */
 .outline-hidden .VPDoc .aside {
   display: none !important;
