@@ -280,21 +280,6 @@ export interface ShortUserModel {
 
 /**
  * User interface representing a Yurba user profile
- *
- * @remarks
- * Basic user information: ID, Name, Surname, Link, RegisterDate
- * Profile customization: Avatar, Banner, CosmeticAvatar, Status, About, Emoji
- * Account status: Creative, Ban, Deleted, Reports
- * Location information: Country, Region, City, CityNative
- * Personal information: Birthday, Website, WorksAt, Languages
- * Account features: Sub, Verify, Coins
- * Social metrics: Posts, Friends, Followers
- * Current status: Online
- * Account linking: OriginalAccount
- * Relationship with current user: RelationshipState
- * Privacy settings: PostState, CommentsState, AddFriendState, ViewFriendsState, SendMessageState, ViewAvatarState, ViewBirthdayState, SearchState, OnlineType
- * Optional sensitive data: Password, Email, EmailReserve
- * Optional user-specific data: TrackList, NewMessages, NewNotifications, FriendsRequests, Relationships
  */
 export interface UserModel {
   ID: number; // Unique user identifier
@@ -329,6 +314,9 @@ export interface UserModel {
   Online: Online; // Online status and last seen
   OriginalAccount: number; // Original account ID (for linked accounts)
   RelationshipState: RelationshipState; // Current relationship status
+	/**
+	 * tests
+	 */
   PostState: Privacy; // Who can post on user's wall
   CommentsState: Privacy; // Who can comment on user's posts
   AddFriendState: boolean; // Whether others can send friend requests
