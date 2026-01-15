@@ -51,7 +51,7 @@ function loadCommands(client, commandsPath = './commands') {
                     }
                     
                     // Register command
-                    client.command.register(
+                    client.commands.register(
                         command.name, // Name of command
                         command.args || {}, // Arguments in command
                         command.handler,

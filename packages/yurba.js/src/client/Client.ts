@@ -19,8 +19,6 @@ import {
   Photo
 } from '@yurbajs/types';
 
-
-
 import { kHandleCommand } from '../utils/symbols';
 import WSM from '../managers/websocket';
 import MessageManager from '../managers/Message';
@@ -49,7 +47,7 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  *
  * const client = new Client();
  *
- * client.registerCommand('hello', { name: 'string' }, (message, args) => {
+ * client.commands.register('hello', { name: 'string' }, (message, args) => {
  *   message.reply(`Hello, ${args.name}!`);
  * });
  *
