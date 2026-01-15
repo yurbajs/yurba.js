@@ -1,8 +1,8 @@
 import Logger, { LogLevel } from './Logger';
 
-interface DevConfig { 
-  debug: boolean; 
-  level?: LogLevel; 
+interface DevConfig {
+  debug: boolean;
+  level?: LogLevel;
 }
 
 export function CDLog(serviceName: string): Logger {
@@ -11,9 +11,9 @@ export function CDLog(serviceName: string): Logger {
   if (process.env.MODULES === 'yurbajs') {
     try {
       require('dotenv').config();
-      Dev = { 
-        debug: Boolean(process.env.DEBUG), 
-        level: process.env.LEVEL as unknown as LogLevel 
+      Dev = {
+        debug: Boolean(process.env.DEBUG),
+        level: process.env.LEVEL as unknown as LogLevel,
       };
     } catch { /* no-op */ }
   }

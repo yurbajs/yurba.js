@@ -39,7 +39,7 @@ export class BaseClient extends EventEmitter {
 
   constructor(options: BaseClientOptions = {}) {
     super();
-    
+
     this.options = {
       baseURL: 'https://api.yurba.one',
       timeout: 30000,
@@ -47,7 +47,7 @@ export class BaseClient extends EventEmitter {
       retryDelay: 1000,
       headers: {},
       debug: false,
-      ...options
+      ...options,
     };
 
     this.baseURL = this.options.baseURL;
@@ -55,7 +55,7 @@ export class BaseClient extends EventEmitter {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'User-Agent': `@yurbajs/rest@${Version}`,
-      ...this.options.headers
+      ...this.options.headers,
     };
   }
 
@@ -152,15 +152,15 @@ export class BaseClient extends EventEmitter {
   public async uploadFile<T = unknown>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<T> {
     const headers = { ...this.defaultHeaders, ...config?.headers };
     delete headers['Content-Type']; // Let browser set multipart boundary
-    
+
     const uploadConfig = {
       ...config,
       headers: {
         'Accept': 'application/json',
-        'token': headers['token']
-      }
+        'token': headers['token'],
+      },
     };
-    
+
     return this.request<T>('POST', this.buildUrl(endpoint), formData, uploadConfig);
   }
 
@@ -193,7 +193,7 @@ export class BaseClient extends EventEmitter {
   public getRateLimitStatus(): { canMakeRequest: boolean; resetTime: number } | null {
     return this.rateLimiter ? {
       canMakeRequest: this.rateLimiter.canMakeRequest(),
-      resetTime: this.rateLimiter.getResetTime()
+      resetTime: this.rateLimiter.getResetTime(),
     } : null;
   }
 
@@ -223,14 +223,14 @@ export class BaseClient extends EventEmitter {
             surname: typeof data.Surname === 'string' ? data.Surname : '',
             link: typeof data.Link === 'string' ? data.Link : '',
             avatar: typeof data.Avatar === 'number' ? data.Avatar : 0,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           };
           userCache.set(token, {
             id: cached.id,
             name: cached.name,
             surname: cached.surname,
             link: cached.link,
-            avatar: cached.avatar
+            avatar: cached.avatar,
           });
         }
       } catch {
@@ -261,12 +261,12 @@ export class BaseClient extends EventEmitter {
       if (endpoint === '@me') {
         return '/get_me';
       }
-      
+
       const cachedUser = await this.getCachedUser();
       if (!cachedUser) {
         throw new Error('User not found in cache. Call get(\'@me\') first or set token.');
       }
-      
+
       return endpoint.replace('@me', cachedUser.id.toString());
     }
     return endpoint;
@@ -312,7 +312,7 @@ export class BaseClient extends EventEmitter {
     if (lastError) {
       throw lastError;
     }
-    
+
     // This should never happen, but TypeScript needs it for safety
     throw new Error('Unknown error occurred');
   }
@@ -324,7 +324,7 @@ export class BaseClient extends EventEmitter {
         429,
         undefined,
         endpoint,
-        method
+        method,
       );
     }
 
@@ -338,23 +338,23 @@ export class BaseClient extends EventEmitter {
 
     let headers = { ...this.defaultHeaders, ...config?.headers };
     let body: BodyInit | undefined;
-    
+
     if (data instanceof FormData) {
       // For FormData, only keep essential headers
       headers = {
         'Accept': 'application/json',
-        'token': headers['token']
+        'token': headers['token'],
       };
       body = data;
     } else {
       body = data ? JSON.stringify(data) : undefined;
     }
-    
+
     const options: RequestInit = {
       method,
       headers,
       body,
-      signal
+      signal,
     };
 
     try {
@@ -362,7 +362,7 @@ export class BaseClient extends EventEmitter {
         console.log('REQUEST:', { method, url, data, headers });
         this.emit('request', { method, url, data, headers });
       }
-      
+
       const response = await fetch(url, options);
 
       if (this.rateLimiter) this.rateLimiter.recordRequest();
@@ -378,7 +378,7 @@ export class BaseClient extends EventEmitter {
       } catch (error) {
         throw new ApiError(`Failed to read response: ${error instanceof Error ? error.message : String(error)}`, response.status, undefined, endpoint, method);
       }
-      
+
       if (!response.ok) {
         await ErrorHandler.handleResponseText(responseText, response.status, endpoint, method);
       }

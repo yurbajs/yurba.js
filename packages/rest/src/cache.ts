@@ -41,12 +41,12 @@ class UserCache {
   get(token: string): CachedUser | null {
     const cached = this.cache.get(token);
     if (!cached) return null;
-    
+
     if (this.isExpired(cached)) {
       this.cache.delete(token);
       return null;
     }
-    
+
     return cached;
   }
 

@@ -29,7 +29,7 @@ describe('BaseClient', () => {
       const rest = new REST({
         baseURL: 'https://custom.api.url',
         timeout: 5000,
-        debug: true
+        debug: true,
       }).setToken('y.validtoken123');
       expect(rest).toBeInstanceOf(REST);
     });
@@ -101,12 +101,12 @@ describe('BaseClient', () => {
   describe('Rate Limiting', () => {
     test('should set rate limit configuration', () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       rest.setRateLimit({
         maxRequests: 100,
-        windowMs: 60000
+        windowMs: 60000,
       });
-      
+
       const status = rest.getRateLimitStatus();
       expect(status).toBeDefined();
       expect(status?.canMakeRequest).toBe(true);
@@ -123,13 +123,13 @@ describe('BaseClient', () => {
   describe('Request Management', () => {
     test('should cancel specific request', () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       expect(() => rest.cancelRequest('/test')).not.toThrow();
     });
 
     test('should cancel all requests', () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       expect(() => rest.cancelAllRequests()).not.toThrow();
     });
   });
@@ -137,23 +137,23 @@ describe('BaseClient', () => {
   describe('User Resolution', () => {
     test('should resolve @me to cached user ID', async () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       // Mock cached user
       rest.setCachedUser({
         id: 12345,
         name: 'Test',
         surname: 'User',
         link: 'testuser',
-        avatar: 0
+        avatar: 0,
       });
-      
+
       const resolved = await rest.resolveUser('@me');
       expect(resolved).toBe(12345);
     });
 
     test('should return user as-is for non-@me values', async () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       expect(await rest.resolveUser('username')).toBe('username');
       expect(await rest.resolveUser(12345)).toBe(12345);
     });
@@ -162,18 +162,18 @@ describe('BaseClient', () => {
   describe('Cache Management', () => {
     test('should set and clear cached user', () => {
       const rest = new REST().setToken('y.validtoken123');
-      
+
       const user = {
         id: 12345,
         name: 'Test',
         surname: 'User',
         link: 'testuser',
-        avatar: 0
+        avatar: 0,
       };
-      
+
       rest.setCachedUser(user);
       rest.clearCache();
-      
+
       expect(() => rest.clearCache()).not.toThrow();
     });
   });

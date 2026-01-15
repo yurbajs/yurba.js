@@ -14,7 +14,7 @@ export const TEST_CONFIG = {
   fileId: process.env.TEST_FILE_ID || '684',
   dialogId: process.env.TEST_DIALOG_ID || '123',
   appPublicKey: process.env.TEST_APP_PUBLIC_KEY || '',
-  timeout: 10000
+  timeout: 10000,
 };
 
 // Skip tests if no token provided
@@ -32,17 +32,17 @@ expect.extend({
     const pass = received && typeof received === 'object';
     return {
       message: () => `expected ${received} to be a valid Yurba API response`,
-      pass
+      pass,
     };
   },
-  
+
   toHaveYurbaId(received) {
     const pass = received && typeof received.ID === 'number' && received.ID > 0;
     return {
       message: () => `expected ${received} to have a valid Yurba ID`,
-      pass
+      pass,
     };
-  }
+  },
 });
 
 declare global {

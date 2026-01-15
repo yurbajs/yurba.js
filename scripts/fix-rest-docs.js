@@ -25,7 +25,7 @@ files.forEach(file => {
   content = content.replace(/@rest\s+(\w+)\s+(\/\S+?)(?:\s+(\*|\w+))?(?=\s*$)/gm, (match, method, apiPath, existing) => {
     const key = `${method} ${apiPath}`;
     const docKey = lookup[key];
-    
+
     if (docKey) {
       modified = true;
       return `@rest ${method} ${apiPath} ${docKey}`;

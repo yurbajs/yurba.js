@@ -16,7 +16,7 @@ export default class MiddlewareManager implements IMiddlewareManager {
 
   use(
     middleware: MiddlewareFunction,
-    config: Partial<MiddlewareConfig> = {}
+    config: Partial<MiddlewareConfig> = {},
   ): void {
     const fullConfig: MiddlewareConfig = {
       name: config.name ?? `middleware_${Date.now()}`,
@@ -24,7 +24,7 @@ export default class MiddlewareManager implements IMiddlewareManager {
     };
     if (this.middlewares.has(fullConfig.name)) {
       throw new Error(
-        `Middleware with name "${fullConfig.name}" already exists`
+        `Middleware with name "${fullConfig.name}" already exists`,
       );
     }
 

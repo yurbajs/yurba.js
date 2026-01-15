@@ -34,7 +34,7 @@ export class BatchRequest {
 
     try {
       const results = await Promise.all(promises);
-      
+
       return keys.reduce((acc, key, index) => {
         acc[key] = results[index];
         return acc;
@@ -57,7 +57,7 @@ export class BatchRequest {
     const promises = Array.from(this.requests.values());
 
     const results = await Promise.allSettled(promises);
-    
+
     return keys.reduce((acc, key, index) => {
       const result = results[index];
       if (result.status === 'fulfilled') {

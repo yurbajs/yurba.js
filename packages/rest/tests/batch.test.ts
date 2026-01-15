@@ -29,9 +29,9 @@ describe('Batch Requests', () => {
 
     test('should throw error for duplicate keys', () => {
       const promise = Promise.resolve('result');
-      
+
       batch.add('test', promise);
-      
+
       expect(() => batch.add('test', promise)).toThrow('Request with key "test" already exists');
     });
 
@@ -45,10 +45,10 @@ describe('Batch Requests', () => {
       batch.add('test2', Promise.resolve('result2'));
 
       const results = await batch.execute();
-      
+
       expect(results).toEqual({
         test1: 'result1',
-        test2: 'result2'
+        test2: 'result2',
       });
     });
 
@@ -64,7 +64,7 @@ describe('Batch Requests', () => {
       batch.add('failure', Promise.reject(new Error('failed')));
 
       const results = await batch.executeSettled();
-      
+
       expect(results.success).toBe('ok');
       expect(results.failure).toEqual({ error: expect.any(Error) });
     });
@@ -72,7 +72,7 @@ describe('Batch Requests', () => {
     test('should clear batch', () => {
       batch.add('test', Promise.resolve('result'));
       expect(batch.size()).toBe(1);
-      
+
       batch.clear();
       expect(batch.size()).toBe(0);
       expect(batch.isEmpty()).toBe(true);
@@ -89,7 +89,7 @@ describe('Batch Requests', () => {
 
     test('should create batch from REST client', () => {
       if (skipIfNoToken()) return;
-      
+
       const batch = rest.batch();
       expect(batch).toBeInstanceOf(BatchRequest);
     });

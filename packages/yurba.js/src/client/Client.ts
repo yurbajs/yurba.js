@@ -2,8 +2,8 @@ import { REST } from '@yurbajs/rest';
 import { EventEmitter } from 'events';
 import * as pkg from '../../package.json';
 
-const Version = pkg.version; 
-const Author = pkg.author; 
+const Version = pkg.version;
+const Author = pkg.author;
 
 import {
   MessageModel,
@@ -16,7 +16,7 @@ import {
   SendMessagePayload,
   DialogModel,
   UserModel,
-  Photo
+  Photo,
 } from '@yurbajs/types';
 
 
@@ -73,7 +73,7 @@ const erlog = (...args: unknown[]): void => { logging.error(...args); };
  */
 class Client extends EventEmitter {
   // Options
-  private token: string | boolean | undefined; 
+  private token: string | boolean | undefined;
   public prefix: string = '/';
 
   private reconnectAttempts: number = 0;
@@ -91,14 +91,14 @@ class Client extends EventEmitter {
    * @readonly
    */
   public readonly users: UserManager;
-  
+
   /**
    * The user client manager of this client
    * @type {UserClientManager}
    * @readonly
    */
   public readonly userClient: UserClientManager;
-  
+
   /**
    * The command manager of this client
    * @type {CommandManager}
@@ -142,7 +142,7 @@ class Client extends EventEmitter {
     this.maxReconnectAttempts = options.maxReconnectAttempts ?? 5;
     this.intents = options.intents ?? [];
 
-    this.api = new REST({'headers': {'X-Client': `Yurba.js@${Version}`}});
+    this.api = new REST({ 'headers': { 'X-Client': `Yurba.js@${Version}` } });
 
     this.middlewareManager = new MiddlewareManager();
     this.messageManager = new MessageManager(this);
@@ -150,11 +150,11 @@ class Client extends EventEmitter {
     this.userClient = new UserClientManager(this);
     this.commands = new CommandManager(this);
 
-    Object.defineProperty(this, 'token', { 
-      value: undefined, 
-      writable: true, 
-      enumerable: false, 
-      configurable: true 
+    Object.defineProperty(this, 'token', {
+      value: undefined,
+      writable: true,
+      enumerable: false,
+      configurable: true,
     });
 
     const envToken = process.env.YURBA_TOKEN ?? process.env.YTOKEN;
@@ -198,32 +198,37 @@ class Client extends EventEmitter {
 
   /**
    * Getter for bot user dialogs
-   * @returns {DialogModel[]} Dialogs 
+   * @returns {DialogModel[]} Dialogs
    */
   get dialogs(): DialogModel[] | undefined {
-      if (!this._dialogs) void this.api.dialogs.getAll()
-        .then((dialogs: DialogModel[]) => {
-          this._dialogs = dialogs;
-          return this._dialogs;
-        })
-        .catch(err => {
-          erlog('Error fetching dialogs:', err);
-        });
-      return this._dialogs;
+    if (!this._dialogs) void this.api.dialogs.getAll()
+      .then((dialogs: DialogModel[]) => {
+        this._dialogs = dialogs;
+        return this._dialogs;
+      })
+      .catch(err => {
+        erlog('Error fetching dialogs:', err);
+      });
+    return this._dialogs;
   }
 
   /**
    * Initializes the client
+  * @throws {YurbajsError}
+  * Thrown if the token is missing or invalid.
+  * Possible error codes:
+  * - {@link ErrorCodes.TokenMissing}
+  * - {@link ErrorCodes.TokenInvalid}
    * @returns Promise that resolves after successful initialization
    */
   async init(token = this.token): Promise<void> {
     this.token = token;
 
     if (!this.token) {
-       throw new YurbajsError(ErrorCodes.TokenMissing);
+      throw new YurbajsError(ErrorCodes.TokenMissing);
     }
     if (typeof this.token !== 'string' || !this.token.startsWith('y.') || this.token.length < 34) {
-      throw new YurbajsError(ErrorCodes.TokenInvalid); // * Magic number 34 should be a constant
+      throw new YurbajsError(ErrorCodes.TokenInvalid);
     }
 
     // Встановлюємо токен для існуючого API клієнта
@@ -272,7 +277,7 @@ class Client extends EventEmitter {
     } catch (error) {
       erlog('Failed to initialize client:', error);
       throw new ApiRequestError(
-        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to initialize client: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -290,7 +295,7 @@ class Client extends EventEmitter {
 
     this.reconnectAttempts++;
     log(
-      `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`
+      `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`,
     );
 
     setTimeout(async () => {
@@ -299,7 +304,7 @@ class Client extends EventEmitter {
       } catch (error) {
         const wsError = new WebSocketError(
           `Reconnect failed: ${error instanceof Error ? error.message : String(error)
-          }`
+          }`,
         );
         erlog('Reconnect failed:', wsError);
         this.emit('reconnectError', wsError);
@@ -316,7 +321,7 @@ class Client extends EventEmitter {
     try {
       await this.commands[kHandleCommand](
         msg,
-        this.messageManager.enhanceMessage.bind(this.messageManager)
+        this.messageManager.enhanceMessage.bind(this.messageManager),
       );
     } catch (err) {
       this.emit('commandError', { error: err, message: msg });
@@ -339,54 +344,54 @@ class Client extends EventEmitter {
       const msg = message;
       if ('Message' in msg) {
         switch (msg.Type) {
-          case 'message':
-            this.messageManager.enhanceMessage(msg.Message);
-            
-            await this.middlewareManager.execute(msg.Message);
-            
-            switch (msg.Message.Type) {
-              case undefined:
-              case null:
-              case '':
-                if (msg.Message.Text.startsWith(this.prefix)) {
-                  return await this.handleCommandMessage(msg.Message);
-                } else {
-                  this.emit('message', msg.Message);
-                }
-                break;
-              case 'join':
-                this.emit('join', msg.Message);
-                break;
-              case 'leave':
-                this.emit('leave', msg.Message);
-                break; 
-            }
-            break;
-          case 'message_delete':
-            this.emit('message_delete', msg.Message); 
-            break;
-          case 'read':
-            this.emit('read', msg.Message); 
-            break;
-          case 'typing':
-            this.emit('typing', msg.Message);
-            break;
+        case 'message':
+          this.messageManager.enhanceMessage(msg.Message);
 
-          case 'notification':
-            switch (msg.Message.Type) {
-              case 'post_on_wall':
-                this.emit('post_on_wall', msg.Message);
-                break;
-              case 'post_like':
-                this.emit('post_like', msg.Message);
-                break; 
-              case 'comment_post':
-                this.emit('comment_post', msg.Message); 
-                break; 
+          await this.middlewareManager.execute(msg.Message);
+
+          switch (msg.Message.Type) {
+          case undefined:
+          case null:
+          case '':
+            if (msg.Message.Text.startsWith(this.prefix)) {
+              return await this.handleCommandMessage(msg.Message);
+            } else {
+              this.emit('message', msg.Message);
             }
             break;
-          default:
+          case 'join':
+            this.emit('join', msg.Message);
             break;
+          case 'leave':
+            this.emit('leave', msg.Message);
+            break;
+          }
+          break;
+        case 'message_delete':
+          this.emit('message_delete', msg.Message);
+          break;
+        case 'read':
+          this.emit('read', msg.Message);
+          break;
+        case 'typing':
+          this.emit('typing', msg.Message);
+          break;
+
+        case 'notification':
+          switch (msg.Message.Type) {
+          case 'post_on_wall':
+            this.emit('post_on_wall', msg.Message);
+            break;
+          case 'post_like':
+            this.emit('post_like', msg.Message);
+            break;
+          case 'comment_post':
+            this.emit('comment_post', msg.Message);
+            break;
+          }
+          break;
+        default:
+          break;
         }
 
       }
@@ -423,9 +428,9 @@ class Client extends EventEmitter {
     check: (...args: T) => boolean,
     options: {
       timeout?: number;
-      multiple?: boolean; 
+      multiple?: boolean;
       signal?: AbortSignal;
-    } = {}
+    } = {},
   ): Promise<unknown> {
     // Validate event name is non-empty string
     if (!event || typeof event !== 'string') {
@@ -543,7 +548,7 @@ class Client extends EventEmitter {
    */
   async sendMessage(
     dialogId: number, // * Add validation for positive integer
-    payload: SendMessagePayload
+    payload: SendMessagePayload,
   ): Promise<MessageModel> {
     try {
       log(`Sending message to dialog ${dialogId}: ${payload.text}`);
@@ -586,7 +591,7 @@ class Client extends EventEmitter {
     } catch (err) {
       erlog(
         'Error deleting message:',
-        err instanceof Error ? err.message : err
+        err instanceof Error ? err.message : err,
       );
       return false; // * Boolean return doesn't provide error details to caller
     }
@@ -631,7 +636,7 @@ class Client extends EventEmitter {
    * client.on('message', handler);
    * client.off('message', handler);
    */
-  off(event: string | symbol, listener: (...args: unknown[]) => void): this { 
+  off(event: string | symbol, listener: (...args: unknown[]) => void): this {
     return super.off(event, listener);
   }
 
@@ -646,7 +651,7 @@ class Client extends EventEmitter {
    * client.emit('customEvent', { foo: 'bar' });
    * ```
    */
-  emit(event: string | symbol, ...args: unknown[]): boolean { 
+  emit(event: string | symbol, ...args: unknown[]): boolean {
     return super.emit(event, ...args);
   }
 
@@ -659,7 +664,7 @@ class Client extends EventEmitter {
    */
   removeListener(
     event: string | symbol,
-    listener: (...args: unknown[]) => void 
+    listener: (...args: unknown[]) => void,
   ): this {
     return super.removeListener(event, listener);
   }
@@ -726,8 +731,8 @@ class Client extends EventEmitter {
       throw new Error('WebSocket connection is closed');
     }
     this.wsm.send(JSON.stringify({
-      command: 'typing', 
-      thing_id: dialogId
+      command: 'typing',
+      thing_id: dialogId,
     }));
   }
 

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import DataManager from './DataManager';
 import { Client } from '../client/Client';
 
@@ -84,7 +84,7 @@ export default abstract class CachedManager<K, V> extends DataManager<K, V> {
    */
   constructor(client: Client, holds: new (...args: any[]) => V, iterable?: Iterable<V>) {
     super(client, holds);
-    
+
     this._cache = new LRUCache<K, V>(500); // Default 500 items
 
     if (iterable) {

@@ -58,7 +58,7 @@ export interface Emitter<Events extends Record<EventType, unknown>> {
  * @returns {Emitter}
  */
 export default function createEventEmitter<Events extends Record<EventType, unknown>>(
-  all?: EventHandlerMap<Events>
+  all?: EventHandlerMap<Events>,
 ): Emitter<Events> {
   type GenericEventHandler =
     | Handler<Events[keyof Events]>
@@ -149,7 +149,7 @@ export default function createEventEmitter<Events extends Record<EventType, unkn
           if (errorHandlers && errorHandlers.length > 0) {
             errorHandlers[0](error);
           } else {
-            // eslint-disable-next-line no-console
+
             console.error('Unhandled event emitter error:', error);
           }
         }
@@ -165,12 +165,12 @@ export default function createEventEmitter<Events extends Record<EventType, unkn
           if (errorHandlers && errorHandlers.length > 0) {
             errorHandlers[0](error);
           } else {
-            // eslint-disable-next-line no-console
+
             console.error('Unhandled event emitter error:', error);
           }
         }
       }
-    }
+    },
   };
 
   return emitter;

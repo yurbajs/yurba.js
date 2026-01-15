@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ErrorCodes } from './ErCodes';
 import { Messages } from './ErMessages';
 

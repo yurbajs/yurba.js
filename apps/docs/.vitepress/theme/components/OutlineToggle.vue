@@ -14,10 +14,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
-const isHidden = ref(false);
+const isHidden = ref(true);
 
 onMounted(() => {
-  isHidden.value = localStorage.getItem('outline-hidden') === 'true';
+  const stored = localStorage.getItem('outline-hidden');
+  isHidden.value = stored === null ? true : stored === 'true';
   if (isHidden.value) {
     document.documentElement.classList.add('outline-hidden');
   }
@@ -64,6 +65,20 @@ const toggleOutline = () => {
   display: block;
 }
 
+
+@media (min-width: 1280px) {
+  .outline-toggle {
+    right: 12px;
+  }
+  
+  .outline-hidden .outline-toggle {
+    right: 12px;
+  }
+  
+  body:not(.outline-hidden) .outline-toggle {
+    right: 32px;
+  }
+}
 
 @media (max-width: 1279px) {
   .outline-toggle {

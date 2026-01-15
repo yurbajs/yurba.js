@@ -226,9 +226,34 @@ h6 {
   max-width: 100% !important;
 }
 
-/* Increase spacing between sidebar and content */
+/* Layout - expand content like in guide */
+.VPDoc .container {
+  max-width: none !important;
+}
+
+.VPDoc .content {
+  max-width: 1000px !important;
+}
+
+.VPDoc.has-aside .content {
+  max-width: 1600px !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 1600px !important;
+}
+
+.VPDoc.has-aside .vp-doc {
+  max-width: 1600px !important;
+}
+
+/* Increase spacing between content and aside */
 @media (min-width: 1280px) {
   .VPDoc .aside {
-    padding-left: 64px !important;
+    padding-left: 96px !important;
+  }
+  
+  .VPSidebar {
+    padding-right: 32px !important;
   }
 }

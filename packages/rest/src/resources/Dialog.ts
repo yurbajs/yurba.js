@@ -10,7 +10,7 @@ import {
   FindDialogPayload,
   MessageModel,
   response,
-  responseMute
+  responseMute,
 } from '@yurbajs/types';
 
 /**
@@ -104,7 +104,7 @@ export class DialogResource {
   async createPrivate(userId: number): Promise<DialogModel> {
     if (userId < 1) throw new Error('Invalid user ID');
     return this.client.post<CreatePrivateDialogResponse>(
-      `/dialogs/private/${userId}`, {}
+      `/dialogs/private/${userId}`, {},
     );
   }
 
@@ -208,7 +208,7 @@ export class DialogResource {
     if (dialogId < 1) throw new Error('Invalid dialog ID');
     if (payload.name && payload.name.length > 330) throw new Error('Invalid name');
     if (payload.description && payload.description.length > 330) throw new Error('Invalid description');
-    
+
     return this.client.patch<response>(`/dialogs/${dialogId}`, payload);
   }
 
@@ -296,7 +296,7 @@ export class DialogResource {
    * const messages = await rest.dialogs.getMessage(123);
    * ```
    */
-  async getMessage(dialogId: number): Promise<MessageModel> { 
+  async getMessage(dialogId: number): Promise<MessageModel> {
     return this.client.get<MessageModel>(`/dialogs/${dialogId}/messages`);
   }
 
@@ -353,7 +353,7 @@ export class DialogResource {
    *
    * // With new attachments
    * import { File, Audio, Video, Photo } from '@yurbajs/utils'
-   * 
+   *
    * await rest.dialogs.sendMessage(123, {
    *   text: "Media",
    *   attachments: [
@@ -363,7 +363,7 @@ export class DialogResource {
    *     New Video('/path/to/video.mp4')
    *   ]
    * });
-   * 
+   *
    * // Edit message
    * await rest.dialogs.sendMessage(123, {
    *   text: "Updated",
@@ -373,7 +373,7 @@ export class DialogResource {
    */
   async sendMessage(
     dialogId: number,
-    payload: SendMessagePayload
+    payload: SendMessagePayload,
   ): Promise<MessageModel> {
     const messageData: SendMessagePayload = {
       text: payload.text || '',
@@ -385,7 +385,7 @@ export class DialogResource {
 
     return this.client.post<MessageModel>(
       `/dialogs/${dialogId}/messages`,
-      messageData
+      messageData,
     );
   }
 

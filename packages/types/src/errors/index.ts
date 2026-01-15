@@ -7,7 +7,7 @@ export class YurbaError extends Error {
     this.name = 'YurbaError';
     this.code = code;
     this.timestamp = new Date();
-    
+
     Object.setPrototypeOf(this, YurbaError.prototype);
   }
 }

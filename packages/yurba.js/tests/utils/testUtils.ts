@@ -1,15 +1,15 @@
 import { EventEmitter } from 'events';
 import { REST } from '@yurbajs/rest';
-import { 
-  Message, 
-  User, 
-  Author, 
-  DialogInfo, 
-  MessageType, 
+import {
+  Message,
+  User,
+  Author,
+  DialogInfo,
+  MessageType,
   DialogType,
   RelationshipState,
   Status,
-  Online
+  Online,
 } from '@yurbajs/types';
 
 // Valid token for testing
@@ -50,7 +50,7 @@ export const mockUser: User = {
     Online: true,
     LastBeen: Math.floor(Date.now() / 1000),
     Degree: '',
-    Status: Status.Online
+    Status: Status.Online,
   },
   OriginalAccount: 0,
   RelationshipState: RelationshipState.None,
@@ -64,7 +64,7 @@ export const mockUser: User = {
   SearchState: true,
   OnlineType: 0, // OnlineDisplayType.Default
   // Optional properties
-  Email: 'test@example.com'
+  Email: 'test@example.com',
 };
 
 // Mock author data
@@ -86,11 +86,11 @@ export const mockAuthor: Author = {
     Online: true,
     LastBeen: Math.floor(Date.now() / 1000),
     Degree: '',
-    Status: Status.Online
+    Status: Status.Online,
   },
   CommentsState: 0,
   ViewAvatarState: 0,
-  RelationshipState: RelationshipState.None
+  RelationshipState: RelationshipState.None,
 };
 
 // Mock dialog data
@@ -98,7 +98,7 @@ export const mockDialog: DialogInfo = {
   ID: 1,
   Name: 'Test Dialog',
   Type: DialogType.Private,
-  Avatar: 123
+  Avatar: 123,
 };
 
 // Mock message data
@@ -114,7 +114,7 @@ export const createMockMessage = (text: string = 'Test message', isCommand: bool
   Views: 0,
   Timestamp: Math.floor(Date.now() / 1000),
   EditTimestamp: Math.floor(Date.now() / 1000),
-  Read: false
+  Read: false,
 });
 
 // Mock REST client
@@ -126,23 +126,23 @@ export class MockREST extends EventEmitter {
         return Promise.resolve(mockUser);
       }
       return Promise.resolve(null);
-    })
+    }),
   };
-  
+
   messages = {
     send: jest.fn().mockImplementation((dialogId, text) => {
       return Promise.resolve(createMockMessage(text));
     }),
     delete: jest.fn().mockResolvedValue(true),
-    getMessages: jest.fn().mockResolvedValue([createMockMessage()])
+    getMessages: jest.fn().mockResolvedValue([createMockMessage()]),
   };
-  
+
   media = {
-    getPhoto: jest.fn().mockResolvedValue({ ID: 'photo1', URL: 'https://example.com/photo.jpg' })
+    getPhoto: jest.fn().mockResolvedValue({ ID: 'photo1', URL: 'https://example.com/photo.jpg' }),
   };
-  
+
   dialogs = {
-    getDialogs: jest.fn().mockResolvedValue([mockDialog])
+    getDialogs: jest.fn().mockResolvedValue([mockDialog]),
   };
 }
 
@@ -154,15 +154,15 @@ export class MockWebSocket extends EventEmitter {
     }, 10);
     return Promise.resolve();
   });
-  
+
   isConnected = jest.fn().mockReturnValue(true);
-  
+
   close = jest.fn();
-  
+
   send = jest.fn();
-  
+
   subscribeToEvents = jest.fn();
-  
+
   unsubscribeFromEvents = jest.fn();
 }
 
@@ -179,7 +179,7 @@ export const detectMemoryLeak = (emitter: EventEmitter, eventName: string): bool
 // Mock console methods for testing
 export const mockConsole = () => {
   const originalConsole = { ...console };
-  
+
   beforeEach(() => {
     console.log = jest.fn();
     console.error = jest.fn();
@@ -187,7 +187,7 @@ export const mockConsole = () => {
     console.info = jest.fn();
     console.debug = jest.fn();
   });
-  
+
   afterEach(() => {
     console.log = originalConsole.log;
     console.error = originalConsole.error;

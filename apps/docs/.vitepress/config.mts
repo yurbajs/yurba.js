@@ -70,7 +70,7 @@ export default defineConfig({
           });
         }
       });
-    `]
+    `],
   ],
 
   srcDir: './dist/',
@@ -95,24 +95,24 @@ export default defineConfig({
     sidebar: typedocSidebar,
     docFooter: {
       prev: false,
-      next: false
+      next: false,
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yurbajs/yurba.js' },
-      { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' }
+      { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' },
     ],
     search: {
-      provider: 'local'
+      provider: 'local',
     },
     outline: {
-      level: [2, 3]
-    }
+      level: [2, 3],
+    },
   },
   markdown: {
     theme: {
       light: 'github-light',
-      dark: 'github-dark'
+      dark: 'github-dark',
     },
     lineNumbers: true,
-  }
+  },
 });

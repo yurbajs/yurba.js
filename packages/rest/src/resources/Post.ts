@@ -1,5 +1,12 @@
 import { REST } from '../index';
-import { CreatePostPayload, GetPostPayload, PostModel, DeletePostResponse, Comment, BaseDelete } from '@yurbajs/types';
+import {
+  CreatePostPayload,
+  GetPostPayload,
+  PostModel,
+  DeletePostResponse,
+  Comment,
+  BaseDelete,
+} from '@yurbajs/types';
 
 /**
  * @category Resources
@@ -8,7 +15,7 @@ export class PostResource {
   /**
    * @ignore
    */
-  constructor(private client: REST) { }
+  constructor(private client: REST) {}
 
   /**
    * Posts Core
@@ -33,10 +40,17 @@ export class PostResource {
    * const olderPosts = await rest.posts.get('username', { lastId: 123 });
    * ```
    */
-  async get(user: string | number, payload: GetPostPayload): Promise<PostModel[]> {
-    if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
+  async get(
+    user: string | number,
+    payload: GetPostPayload,
+  ): Promise<PostModel[]> {
+    if (!user || (typeof user === 'string' && user.length > 255))
+      throw new Error('Invalid user');
     const resolvedUser = await this.client.resolveUser(user);
-    const params: Record<string, unknown> = { last_id: payload.lastId || 0, feed: payload.feed || false };
+    const params: Record<string, unknown> = {
+      last_id: payload.lastId || 0,
+      feed: payload.feed || false,
+    };
     if ('lang' in payload && payload.lang) params.lang = payload.lang;
     return this.client.get<PostModel[]>(`/user/${resolvedUser}/posts`, params);
   }
@@ -56,13 +70,13 @@ export class PostResource {
    * const post = await rest.posts.create('@me', {
    *   content: "Hello world!"
    * });
-   * 
+   *
    * // Post with photos
    * const postWithPhotos = await rest.posts.create('username', {
    *   content: "Check out these photos!",
    *   photos_list: [123, 456]
    * });
-   * 
+   *
    * // Post with attachments
    * const postWithAttachments = await rest.posts.create(12345, {
    *   content: "Sharing some content",
@@ -71,13 +85,13 @@ export class PostResource {
    *     { Type: "track", Item: 6422 }
    *   ]
    * });
-   * 
+   *
    * // Edit existing post
    * const editedPost = await rest.posts.create('@me', {
    *   content: "Updated content",
    *   edit: 98765
    * });
-   * 
+   *
    * // Repost
    * const repost = await rest.posts.create('@me', {
    *   content: "Great post!",
@@ -85,8 +99,12 @@ export class PostResource {
    * });
    * ```
    */
-  async create(user: string | number, payload: CreatePostPayload): Promise<PostModel> {
-    if (!user || (typeof user === 'string' && user.length > 255)) throw new Error('Invalid user');
+  async create(
+    user: string | number,
+    payload: CreatePostPayload,
+  ): Promise<PostModel> {
+    if (!user || (typeof user === 'string' && user.length > 255))
+      throw new Error('Invalid user');
     if (!payload || !payload.content) throw new Error('Invalid post data');
     const resolvedUser = await this.client.resolveUser(user);
     return this.client.post<PostModel>(`/user/${resolvedUser}/post`, payload);
@@ -128,7 +146,8 @@ export class PostResource {
    */
   async edit(postId: number, data: CreatePostPayload): Promise<PostModel> {
     if (postId < 1) throw new Error('Invalid post ID');
-    if (!data || (!data.content && !data.photos_list?.length)) throw new Error('Invalid post data');
+    if (!data || (!data.content && !data.photos_list?.length))
+      throw new Error('Invalid post data');
     return this.client.patch<PostModel>(`/posts/${postId}`, data);
   }
 
@@ -158,49 +177,32 @@ export class PostResource {
   }
 
   /**
-   * Adds a new comment to an existing post. Comments can include text content 
-   * and optional photo attachments.
-   * 
+   * Adds comment to post
    * @rest POST /posts/{post_id}/comment upload_comment
    * @group Post Comments
    * @param postId - Post identifier
-   * @param content - Comment content (max 1000 characters)
-   * @param photos - Array of photo IDs to attach to the comment
+   * @param content - Comment content
+   * @param photos - Photo IDs array
    * @since 1.0.0
-   * @returns {Promise<Comment>} The newly created comment object
+   * @returns {Promise<Comment>} Created comment
    * @throws {Error} If parameters are invalid
-   * 
    * @example
-   * **Basic Comment**
    * ```javascript
-   * const comment = await rest.posts.addComment(123, "Nice post!");
-   * console.log(comment.id); // 789
-   * ```
-   * 
-   * @example
-   * **Comment with Photo**
-   * ```javascript
-   * const commentWithPhoto = await rest.posts.addComment(
-   *   123, 
-   *   "Check this out!", 
-   *   [456, 789]
-   * );
-   * ```
-   * 
-   * @example
-   * **Error Handling**
-   * ```javascript
-   * try {
-   *   await rest.posts.addComment(123, "");
-   * } catch (error) {
-   *   console.error(error.message); // "Invalid content"
-   * }
+   * await rest.posts.addComment(123, "Nice post!");
+   * await rest.posts.addComment(123, "With photo", [456]);
    * ```
    */
-  async addComment(postId: number, content: string, photos: number[] = []): Promise<Comment> {
+  async addComment(
+    postId: number,
+    content: string,
+    photos: number[] = [],
+  ): Promise<Comment> {
     if (postId < 1) throw new Error('Invalid post ID');
     if (!content || content.length > 1000) throw new Error('Invalid content');
-    return this.client.post(`/posts/${postId}/comment`, { content, photos_list: photos });
+    return this.client.post(`/posts/${postId}/comment`, {
+      content,
+      photos_list: photos,
+    });
   }
 
   /**

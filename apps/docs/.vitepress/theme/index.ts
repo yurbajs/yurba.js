@@ -6,12 +6,12 @@ import OutlineToggle from './components/OutlineToggle.vue';
 import './custom.css';
 
 export default {
-    extends: DefaultTheme,
-    Layout() {
-        return h(DefaultTheme.Layout, null, {
-            'sidebar-nav-before': () => h(SidebarSelect),
-            'layout-bottom': () => h(TypePreview),
-            'layout-top': () => h(OutlineToggle)
-        });
-    }
+  extends: DefaultTheme,
+  Layout() {
+    return h(DefaultTheme.Layout, null, {
+      'sidebar-nav-before': () => h(SidebarSelect),
+      'layout-bottom': () => h(TypePreview),
+      'layout-top': () => h(OutlineToggle),
+    });
+  },
 };

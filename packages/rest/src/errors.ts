@@ -13,7 +13,7 @@ export class ApiError extends Error {
     status: number,
     body?: string,
     endpoint?: string,
-    method?: string
+    method?: string,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -109,44 +109,44 @@ export const ErrorHandler = {
       access_denied: 'You don\'t have access to this resource',
       token_not_found: 'Token does not exist',
       app_not_found: 'Incorrect app secret key',
-      
+
       // Rate Limiting
       too_many_attempts: 'Too many attempts, please try again later',
-      
+
       // User Registration/Login
       incorrect_password: 'Incorrect user password',
       name_is_too_short: 'Name must be at least 3 characters',
       password_is_too_short: 'Password must be at least 6 characters',
       invalid_password: 'Password encryption error',
       user_not_found: 'User with the specified email was not found',
-      
+
       // Email Service
       email_service_error: 'Error when sending email',
-      
+
       // Content Validation
       too_many_characters: 'You have reached the content length limit',
       too_many_photos: 'You have reached the photos count limit',
       invalid_photos: 'The photo list cannot be read or contains invalid photos',
       invalid_attachments: 'Failed to read attachments',
       invalid_tracks: 'Failed to read tracks json',
-      
+
       // File Upload
       upload_error: 'Error transferring file to database/storage',
       invalid_file: 'Your file is unreadable or in wrong format',
       invalid_content: 'Your file is unreadable or corrupted',
       delete_error: 'Error deleting from storage',
-      
+
       // Dialog/Chat
       invalid_type: 'Invalid dialog type',
       dialog_not_found: 'Incorrect dialog ID',
-      
+
       // Generic
       not_found: 'Resource not found',
       rate_limit_exceeded: 'Too many requests, please try again later',
       validation_error: 'Invalid request parameters',
       server_error: 'Internal server error occurred',
       unprocessable_entity: 'Request data validation failed',
-      invalid_request: 'Invalid request format or parameters'
+      invalid_request: 'Invalid request format or parameters',
     };
 
     return errorMap[detail] || `API Error: ${detail}`;
@@ -204,5 +204,5 @@ export const ErrorHandler = {
     }
 
     throw new ApiError(errorMessage, status, responseText, endpoint, method);
-  }
+  },
 };

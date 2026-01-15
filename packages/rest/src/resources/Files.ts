@@ -52,7 +52,7 @@ export class FilesResource {
     if (page !== undefined && page < 0) throw new Error('Invalid page number');
     const params = new URLSearchParams();
     if (page !== undefined) params.append('page', page.toString());
-    
+
     const query = params.toString();
     return this.client.get<File[]>(`/files${query ? `?${query}` : ''}`);
   }
@@ -71,15 +71,15 @@ export class FilesResource {
    * // Browser: Upload File from input
    * const fileInput = document.querySelector('input[type="file"]');
    * const file = await rest.files.upload(fileInput.files[0]);
-   * 
+   *
    * // Browser: Upload Blob
    * const blob = new Blob(['content'], { type: 'text/plain' });
    * const file = await rest.files.upload(blob, 'document.txt');
-   * 
+   *
    * // Node.js: Upload Buffer
    * const buffer = Buffer.from('content');
    * const file = await rest.files.upload(buffer, 'document.txt');
-   * 
+   *
    * // Node.js: Upload from file path
    * const file = await rest.files.upload('./document.pdf');
    * ```

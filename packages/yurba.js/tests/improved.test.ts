@@ -51,7 +51,7 @@ describe('Client Improvements', () => {
     it('should add middleware', () => {
       const middleware = jest.fn();
       client.use(middleware, { name: 'test-middleware', enabled: true });
-      
+
       const middlewares = client.getMiddlewares();
       expect(middlewares).toHaveLength(1);
       expect(middlewares[0].name).toBe('test-middleware');
@@ -60,7 +60,7 @@ describe('Client Improvements', () => {
     it('should remove middleware', () => {
       const middleware = jest.fn();
       client.use(middleware, { name: 'test-middleware', enabled: true });
-      
+
       const removed = client.removeMiddleware('test-middleware');
       expect(removed).toBe(true);
       expect(client.getMiddlewares()).toHaveLength(0);
@@ -77,7 +77,7 @@ describe('Client Improvements', () => {
     it('should register command successfully', () => {
       const handler = jest.fn();
       client.commands.register('test', { name: 'string' }, handler);
-      
+
       const commands = client.commands.getAll();
       expect(commands).toContain('test');
     });
@@ -85,7 +85,7 @@ describe('Client Improvements', () => {
     it('should not register duplicate commands', () => {
       const handler = jest.fn();
       client.commands.register('test', { name: 'string' }, handler);
-      
+
       expect(() => {
         client.commands.register('test', { name: 'string' }, handler);
       }).toThrow();

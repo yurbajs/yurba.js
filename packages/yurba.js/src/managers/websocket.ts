@@ -50,23 +50,23 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
         maxReconnectAttempts: 10,
         retryDelay: 5000,
         debug: true, // * Hardcoded debug mode - should be configurable
-      }
+      },
     );
 
     this.ws.on('open', () => {
       log.info('WebSocket connection opened.');
-      
+
       // Clear connection timeout
       if (this.connectionTimeoutId) {
         clearTimeout(this.connectionTimeoutId);
         this.connectionTimeoutId = null;
       }
-      
+
       // Set uptime timeout (wait 3 seconds before considering connection stable)
       this.uptimeTimeoutId = setTimeout(() => {
         log.info('WebSocket connection is now stable');
       }, 3000);
-      
+
       // Send queued messages
       while (this.messageQueue.length > 0) {
         const message = this.messageQueue.shift();
@@ -86,7 +86,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       } else {
         log.info('No dialogs to subscribe to');
       }
-      
+
       const ready_emit = this.emit('ready'); // Emit "ready" event for Client
       log.info('Ready emit:',ready_emit); // * Missing semicolon and logging emit result is not useful
     });
@@ -95,21 +95,21 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
       log.debug('WebSocket received a message:', data);
       try {
         const raw = JSON.parse(data.toString()); // * Unnecessary toString() call - data is already string
-        
+
         // Handle connection confirmation message
         if (raw.ok === 1 && raw.version) {
           log.info(`✅ WebSocket server confirmed, version: ${raw.version}`);
           return; // Don't emit this as a regular message
         }
-        
+
         this.emit('message', raw);
       } catch (err) {
         log.error('Failed to parse WebSocket message:', err);
         this.emit(
           'error',
-          new Error(`Failed to parse WebSocket message: ${err}`) // * String concatenation instead of proper error handling
+          new Error(`Failed to parse WebSocket message: ${err}`), // * String concatenation instead of proper error handling
         );
-      } 
+      }
     });
 
     this.ws.on('close', (code) => {
@@ -138,7 +138,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     };
 
     log.info(
-      `Subscribing to events for category: ${category}, thing_id: ${thing_id}`
+      `Subscribing to events for category: ${category}, thing_id: ${thing_id}`,
     );
 
     // Store subscription for possible restoration
@@ -169,7 +169,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
     };
 
     log.info(
-      `Unsubscribing from events for category: ${category}, thing_id: ${thing_id}`
+      `Unsubscribing from events for category: ${category}, thing_id: ${thing_id}`,
     );
 
     // Remove subscription from stored ones

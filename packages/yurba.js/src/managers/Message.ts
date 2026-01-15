@@ -33,7 +33,7 @@ export default class MessageManager implements IMessageManager {
     msg.reply = async (
       text: string,
       photos_list: any[] | null = null, // !WARN: Using 'any[]' loses type safety
-      attachments: any[] | null = null // !WARN: Using 'any[]' loses type safety
+      attachments: any[] | null = null, // !WARN: Using 'any[]' loses type safety
     ) => {
       log.debug(`Replying to message ${message.ID}:`, text);
       return await this.client.api.dialogs.sendMessage(
@@ -42,8 +42,8 @@ export default class MessageManager implements IMessageManager {
           text,
           replyTo: message.ID,
           photos_list: photos_list || [],
-          attachments: attachments || []
-        }
+          attachments: attachments || [],
+        },
       );
     };
 
@@ -54,7 +54,7 @@ export default class MessageManager implements IMessageManager {
       text: string,
       photos_list: any[] | null = null, // !WARN: Using 'any[]' loses type safety
       attachments: any[] | null = null, // !WARN: Using 'any[]' loses type safety
-      edit?: number | null
+      edit?: number | null,
     ) => {
       const response = await this.client.api.dialogs.sendMessage(
         message.Dialog?.ID as number, // !WARN: Type assertion without null check
@@ -63,13 +63,13 @@ export default class MessageManager implements IMessageManager {
           replyTo: message.ID,
           photos_list: photos_list || [],
           attachments: attachments || [],
-          edit: edit || null // * Redundant - edit is already number | null | undefined
-        }
+          edit: edit || null, // * Redundant - edit is already number | null | undefined
+        },
       );
       (response as any).edit = async ( // !WARN: Mutating response object with 'any' type
         newText: string,
         newPhotosList: any[] | null = photos_list, // !WARN: Using 'any[]' loses type safety
-        newAttachments: any[] | null = attachments // !WARN: Using 'any[]' loses type safety
+        newAttachments: any[] | null = attachments, // !WARN: Using 'any[]' loses type safety
       ) => {
         return await this.client.api.dialogs.sendMessage(
           message.Dialog?.ID as number, // !WARN: Type assertion without null check
@@ -78,8 +78,8 @@ export default class MessageManager implements IMessageManager {
             replyTo: message.ID,
             photos_list: newPhotosList || [],
             attachments: newAttachments || [],
-            edit: response.ID
-          }
+            edit: response.ID,
+          },
         );
       };
       return response;
@@ -100,7 +100,7 @@ export default class MessageManager implements IMessageManager {
       text?: string,
       replyToId?: number | null,
       photos_list?: any[] | null, // !WARN: Using 'any[]' loses type safety
-      attachments?: any[] | null // !WARN: Using 'any[]' loses type safety
+      attachments?: any[] | null, // !WARN: Using 'any[]' loses type safety
     ) => {
       log.debug(`Editing message ${message.ID}:`, text);
       return await this.client.api.dialogs.sendMessage(
@@ -110,8 +110,8 @@ export default class MessageManager implements IMessageManager {
           replyTo: replyToId ?? message.ReplyTo?.ID ?? null, // * Complex nullish coalescing - could be simplified
           photos_list: photos_list || message.Photos || [],
           attachments: attachments || message.Attachments || [],
-          edit: message.ID
-        }
+          edit: message.ID,
+        },
       );
     };
 

@@ -3,7 +3,7 @@
 // ================================
 /**
  * TODO LIST FOR ALL TYPES:
- * 
+ *
  * 📝 CORE ENTITIES:
  * [x] Photo
  *   [x] Add payload methods
@@ -24,7 +24,7 @@
  *   [x] Add edit methods
  *   [x] Add delete methods
 
- * 
+ *
  * 📎 ATTACHMENTS:
  * [x] Files (Attachments)
  *   [x] Add payload methods
@@ -36,16 +36,16 @@
  * [x] Music (Attachments)
  *   [x] Add payload methods
  *   [x] Add delete methods
- * 
+ *
  * 🔍 FEATURES:
  * [x] Search
- * 
+ *
  * [ ] Goling (Settings)
  *   [ ] Add types
  *   [ ] Add methods
- * 
+ *
  * [ ] Shop
- * 
+ *
  * 👥 SOCIAL:
  * [X] Friends
  * [x] Notifications // need to add gift model
@@ -1069,7 +1069,7 @@ export const languages: Lang[] = [
   { ID: 194, Code: 'ug', Name: 'ئۇيغۇر تىلى' },
   { ID: 195, Code: 'lij', Name: 'Líguru' },
   { ID: 196, Code: 'cbk-zam', Name: 'Chavacano de Zamboanga' },
-  { ID: 197, Code: 'gn', Name: "Avañe'ẽ" },
+  { ID: 197, Code: 'gn', Name: 'Avañe\'ẽ' },
   { ID: 198, Code: 'mt', Name: 'Malti' },
   { ID: 199, Code: 'fur', Name: 'Furlan' },
   { ID: 200, Code: 'dsb', Name: 'Dolnoserbski' },

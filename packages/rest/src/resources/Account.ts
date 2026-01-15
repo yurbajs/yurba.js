@@ -3,7 +3,7 @@ import {
   Login,
   BaseOkay,
   Token,
-  SettingsPayload
+  SettingsPayload,
 } from '@yurbajs/types';
 
 /**

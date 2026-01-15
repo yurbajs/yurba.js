@@ -1,110 +1,110 @@
 // https://vitepress.dev/guide/custom-theme
-import { h } from 'vue'
-import type { Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import { useData } from 'vitepress'
-import './main.css'
-import HeroActions from './components/HeroActions.vue'
-import Spacer from './components/Spacer.vue'
-import CallToAction from './components/CallToAction.vue'
+import { h } from 'vue';
+import type { Theme } from 'vitepress';
+import DefaultTheme from 'vitepress/theme';
+import { useData } from 'vitepress';
+import './main.css';
+import HeroActions from './components/HeroActions.vue';
+import Spacer from './components/Spacer.vue';
+import CallToAction from './components/CallToAction.vue';
 
 export default {
   extends: DefaultTheme,
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
       'home-hero-after': () => {
-        const { frontmatter } = useData()
-        const components = []
-        
+        const { frontmatter } = useData();
+        const components = [];
+
         if (frontmatter.value.HeroActions !== undefined) {
-          components.push(h(HeroActions))
+          components.push(h(HeroActions));
         }
-        
+
         if (frontmatter.value.Spacer !== undefined) {
-          components.push(h(Spacer, { height: frontmatter.value.Spacer.height }))
+          components.push(h(Spacer, { height: frontmatter.value.Spacer.height }));
         }
-        
-        return components.length > 0 ? components : null
+
+        return components.length > 0 ? components : null;
       },
       'home-features-after': () => {
-        const { frontmatter } = useData()
-        
+        const { frontmatter } = useData();
+
         if (frontmatter.value.CallToAction !== undefined) {
-          return h(CallToAction, frontmatter.value.CallToAction)
+          return h(CallToAction, frontmatter.value.CallToAction);
         }
-        
-        return null
-      }
-    })
+
+        return null;
+      },
+    });
   },
   enhanceApp({ app, router, siteData }) {
-    app.component('HeroActions', HeroActions)
-    app.component('Spacer', Spacer)
-    app.component('CallToAction', CallToAction)
-    
+    app.component('HeroActions', HeroActions);
+    app.component('Spacer', Spacer);
+    app.component('CallToAction', CallToAction);
+
     // Автоматичне розгортання активних розділів sidebar
     if (typeof window !== 'undefined') {
       const expandActiveSections = () => {
         setTimeout(() => {
-          const collapsibleSections = document.querySelectorAll('.VPSidebarItem.collapsible')
-          
+          const collapsibleSections = document.querySelectorAll('.VPSidebarItem.collapsible');
+
           collapsibleSections.forEach(section => {
-            const activeLink = section.querySelector('.items .link.active')
+            const activeLink = section.querySelector('.items .link.active');
             if (activeLink) {
-              const details = section.querySelector('details')
+              const details = section.querySelector('details');
               if (details && !details.open) {
-                details.open = true
+                details.open = true;
               }
             }
-          })
-        }, 100)
-      }
-      
+          });
+        }, 100);
+      };
+
       // Функція для правильної ініціалізації теми
       const initializeTheme = () => {
         // Форсуємо перерендер соціальних іконок
-        const socialLinks = document.querySelectorAll('.VPSocialLink')
+        const socialLinks = document.querySelectorAll('.VPSocialLink');
         socialLinks.forEach(link => {
-          (link as HTMLElement).style.opacity = '0.99'
+          (link as HTMLElement).style.opacity = '0.99';
           setTimeout(() => {
-            (link as HTMLElement).style.opacity = '1'
-          }, 10)
-        })
-      }
-      
+            (link as HTMLElement).style.opacity = '1';
+          }, 10);
+        });
+      };
+
       // Розгорнути при зміні маршруту
       router.onAfterRouteChanged = () => {
-        expandActiveSections()
-        initializeTheme()
-      }
-      
+        expandActiveSections();
+        initializeTheme();
+      };
+
       // Розгорнути при завантаженні
       document.addEventListener('DOMContentLoaded', () => {
-        expandActiveSections()
-        initializeTheme()
-      })
-      
+        expandActiveSections();
+        initializeTheme();
+      });
+
       setTimeout(() => {
-        expandActiveSections()
-        initializeTheme()
-      }, 300)
-      
+        expandActiveSections();
+        initializeTheme();
+      }, 300);
+
       // Слухач для зміни теми
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            const target = mutation.target as HTMLElement
+            const target = mutation.target as HTMLElement;
             if (target.classList.contains('dark') || target === document.documentElement) {
-              setTimeout(initializeTheme, 50)
+              setTimeout(initializeTheme, 50);
             }
           }
-        })
-      })
-      
+        });
+      });
+
       observer.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ['class']
-      })
+        attributeFilter: ['class'],
+      });
     }
-  }
-} satisfies Theme
+  },
+} satisfies Theme;

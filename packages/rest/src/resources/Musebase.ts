@@ -62,7 +62,12 @@ export class MusebaseResource {
    * const playlist = await rest.musebase.createPlaylist('My Playlist', '2024', 'Description', 123);
    * ```
    */
-  async createPlaylist(name: string, release: string, description: string, cover: number): Promise<Playlist> {
+  async createPlaylist(
+    name: string,
+    release: string,
+    description: string,
+    cover: number,
+  ): Promise<Playlist> {
     if (!name || name.length > 100) throw new Error('Invalid playlist name');
     if (cover < 1) throw new Error('Invalid cover photo ID');
     const playlistData: PlaylistPayload = { name, release, description, cover };
@@ -122,12 +127,21 @@ export class MusebaseResource {
    * await rest.musebase.updatePlaylist(123, 'Updated Name', '2024', 'New description', 456);
    * ```
    */
-  async updatePlaylist(playlistId: number, name: string, release: string, description: string, cover: number): Promise<EditPlaylistResponse> {
+  async updatePlaylist(
+    playlistId: number,
+    name: string,
+    release: string,
+    description: string,
+    cover: number,
+  ): Promise<EditPlaylistResponse> {
     if (playlistId < 1) throw new Error('Invalid playlist ID');
     if (!name || name.length > 100) throw new Error('Invalid playlist name');
     if (cover < 1) throw new Error('Invalid cover photo ID');
     const playlistData: PlaylistPayload = { name, release, description, cover };
-    return this.client.patch<EditPlaylistResponse>(`/musebase/playlists/${playlistId}`, playlistData);
+    return this.client.patch<EditPlaylistResponse>(
+      `/musebase/playlists/${playlistId}`,
+      playlistData,
+    );
   }
 
   /**
@@ -145,7 +159,9 @@ export class MusebaseResource {
    */
   async deletePlaylist(playlistId: number): Promise<DeletePlaylistResponse> {
     if (playlistId < 1) throw new Error('Invalid playlist ID');
-    return this.client.delete<DeletePlaylistResponse>(`/musebase/playlists/${playlistId}`);
+    return this.client.delete<DeletePlaylistResponse>(
+      `/musebase/playlists/${playlistId}`,
+    );
   }
 
   /**
@@ -162,9 +178,15 @@ export class MusebaseResource {
    * await rest.musebase.addTrackToPlaylist(123, 456);
    * ```
    */
-  async addTrackToPlaylist(playlistId: number, trackId: number): Promise<BaseOkay> {
+  async addTrackToPlaylist(
+    playlistId: number,
+    trackId: number,
+  ): Promise<BaseOkay> {
     if (playlistId < 1 || trackId < 1) throw new Error('Invalid parameters');
-    return this.client.post<BaseOkay>(`/musebase/playlists/${playlistId}/tracks/${trackId}`, {});
+    return this.client.post<BaseOkay>(
+      `/musebase/playlists/${playlistId}/tracks/${trackId}`,
+      {},
+    );
   }
 
   /**
@@ -181,9 +203,14 @@ export class MusebaseResource {
    * await rest.musebase.removeTrackFromPlaylist(123, 456);
    * ```
    */
-  async removeTrackFromPlaylist(playlistId: number, trackId: number): Promise<DeleteTrackResponse> {
+  async removeTrackFromPlaylist(
+    playlistId: number,
+    trackId: number,
+  ): Promise<DeleteTrackResponse> {
     if (playlistId < 1 || trackId < 1) throw new Error('Invalid parameters');
-    return this.client.delete<DeleteTrackResponse>(`/musebase/playlists/${playlistId}/tracks/${trackId}`);
+    return this.client.delete<DeleteTrackResponse>(
+      `/musebase/playlists/${playlistId}/tracks/${trackId}`,
+    );
   }
 
   /**

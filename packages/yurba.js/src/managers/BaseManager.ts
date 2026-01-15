@@ -10,10 +10,10 @@ export default abstract class BaseManager {
 
   constructor(client: Client) {
     Object.defineProperty(this, 'client', {
-        value: client,
-        enumerable: false, 
-        writable: true,
-        configurable: true
-      });
+      value: client,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
   }
 }
