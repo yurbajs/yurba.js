@@ -1,4 +1,4 @@
-import { MessageModel, IMessageManager } from '@yurbajs/types';
+import { MessageModel } from '@yurbajs/types';
 import { CDLog } from '../utils/devlog';
 import { Client } from '../client/Client';
 
@@ -8,7 +8,7 @@ const log = CDLog('MessageManager');
  * Message manager for client
  * @category Core
  */
-export default class MessageManager implements IMessageManager {
+export default class MessageManager {
   /** @ignore */
   private client: Client;
 
