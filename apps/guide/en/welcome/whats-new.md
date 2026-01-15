@@ -45,10 +45,6 @@ Updates focused on simplifying the API, better encapsulation, and preparing the 
   The token can be specified in `.env`, which simplifies client initialization  
   and improves separation of configuration and code.
 
-
-<p>From Devblog №1,2,3 -> <a href="https://t.me/justtealord">Source</a></p>
-
-
 ## Release - v0.1.9 (July 12, 2025)
 
 ### Major Improvements
