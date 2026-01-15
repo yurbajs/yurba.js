@@ -80,12 +80,15 @@ class Client extends EventEmitter {
   private wsmMessageSubscribed: boolean = false; // * Use Set or Map for better event subscription tracking
   private intents: string[] = []; // * Consider using enum or constants for intent validation
 
-  // REST
+  /**
+   * REST
+   * @type {REST}
+   * @readonly
+   */
   public readonly api: REST;
 
-  // Public Managers
   /**
-   * The user manager of this client
+   * The client user manager
    * @type {UserManager}
    * @readonly
    */
@@ -105,11 +108,9 @@ class Client extends EventEmitter {
    */
   public readonly commands: CommandManager;
 
-  // System Managers
   private wsm!: WSM;
   private messageManager!: MessageManager;
   private middlewareManager!: MiddlewareManager;
-
 
   // Other
   private _dialogs?: DialogModel[];
