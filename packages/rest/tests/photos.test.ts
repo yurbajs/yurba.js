@@ -105,7 +105,7 @@ describe('PhotosResource', () => {
       if (skipIfNoToken()) return;
 
       await expect(rest.photos.upload(null as any, 'test'))
-        .rejects.toThrow('Invalid input');
+        .rejects.toThrow('Invalid file type');
     });
 
     test('should throw error for long caption', async () => {
