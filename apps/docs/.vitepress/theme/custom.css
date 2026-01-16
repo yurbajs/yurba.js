@@ -256,31 +256,71 @@ h6 {
 
 /* Parameter Table Styling */
 .vp-doc table {
-  width: 100%;
-  table-layout: fixed;
+  width: 100% !important;
+  table-layout: fixed !important;
+  display: table !important;
 }
 
-.vp-doc table thead tr th:nth-child(1) {
-  width: 30%;
-  background: #242424;
+.vp-doc table thead {
+  display: table-header-group !important;
 }
 
-.vp-doc table thead tr th:nth-child(2) {
-  width: 30%;
-  background: transparent;
+.vp-doc table tbody {
+  display: table-row-group !important;
 }
 
-.vp-doc table thead tr th:nth-child(3) {
-  width: 40%;
-  background: transparent;
+.vp-doc table tr {
+  display: table-row !important;
+  border: none !important;
 }
 
-.vp-doc table thead tr th:first-child {
-  border-top-left-radius: 8px;
+.vp-doc table th,
+.vp-doc table td {
+  display: table-cell !important;
+  border: 1px solid var(--vp-c-divider) !important;
 }
 
-.vp-doc table thead tr th:last-child {
-  border-top-right-radius: 8px;
+.vp-doc table thead tr th:nth-child(1),
+.vp-doc table tbody tr td:nth-child(1) {
+  width: 30% !important;
+}
+
+.vp-doc table thead tr th:nth-child(2),
+.vp-doc table tbody tr td:nth-child(2) {
+  width: 30% !important;
+}
+
+.vp-doc table thead tr th:nth-child(3),
+.vp-doc table tbody tr td:nth-child(3) {
+  width: 40% !important;
+}
+
+@media (max-width: 768px) {
+  .vp-doc table,
+  .vp-doc table thead,
+  .vp-doc table tbody,
+  .vp-doc table tr,
+  .vp-doc table th,
+  .vp-doc table td {
+    display: table !important;
+  }
+  
+  .vp-doc table thead {
+    display: table-header-group !important;
+  }
+  
+  .vp-doc table tbody {
+    display: table-row-group !important;
+  }
+  
+  .vp-doc table tr {
+    display: table-row !important;
+  }
+  
+  .vp-doc table th,
+  .vp-doc table td {
+    display: table-cell !important;
+  }
 }
 
 /* Hide aside when outline is toggled off */
