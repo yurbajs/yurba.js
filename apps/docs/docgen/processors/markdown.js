@@ -8,7 +8,9 @@ const processFile = (filePath) => {
   content = content.replace(/\(``/g, '(`');
   content = content.replace(/``\)/g, '`)');
   content = content.replace(/: ``/g, ': `');
-  content = content.replace(/``\n\n` /g, ' ');
+  
+  // Fix newline and backtick before span
+  content = content.replace(/\n\n` </g, ' <');
   
   // Fix other double backticks
   content = content.replace(/``([^`\n]+?)``/g, '`$1`');
