@@ -106,7 +106,7 @@ export class PhotosResource {
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
-   * @returns {Promise<DeletePhotoResponse>} {@link DeletePhotoResponse} Delete response
+   * @returns {Promise<DeletePhotoResponse>} Delete response
    * @throws {Error} If photo ID is invalid
    * @example
    * ```javascript

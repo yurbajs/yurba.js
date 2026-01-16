@@ -228,6 +228,8 @@ h6 {
   background: var(--vp-c-bg-soft);
   color: var(--vp-c-text-2);
   border: 1px solid var(--vp-c-divider);
+  float: right;
+  margin-left: 12px;
 }
 
 .api-since-badge img {
@@ -240,11 +242,26 @@ h6 {
   filter: invert(1) brightness(2);
 }
 
+/* Clear float after method heading */
+.vp-doc h3:has(.api-since-badge)::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 /* API Description Styling */
+.vp-doc blockquote:has(.api-description) {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  background: var(--vp-c-bg-soft);
+}
+
 .api-description {
-  border-left: 3px solid #2D2E32;
-  padding-left: 16px;
-  margin: 8px 0;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 /* Returns Section Styling */
@@ -259,6 +276,10 @@ h6 {
   width: 100% !important;
   table-layout: fixed !important;
   display: table !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--vp-c-divider) !important;
 }
 
 .vp-doc table thead {
@@ -271,13 +292,56 @@ h6 {
 
 .vp-doc table tr {
   display: table-row !important;
-  border: none !important;
 }
 
-.vp-doc table th,
+.vp-doc table th {
+  display: table-cell !important;
+  border: none !important;
+  border-right: 1px solid var(--vp-c-divider) !important;
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+  background: #e8e8e9 !important;
+  color: #1a1a1a !important;
+}
+
+.vp-doc table th:last-child {
+  border-right: none !important;
+}
+
+.vp-doc table thead tr:first-child th:first-child {
+  border-top-left-radius: 6px !important;
+}
+
+.vp-doc table thead tr:first-child th:last-child {
+  border-top-right-radius: 6px !important;
+}
+
+.dark .vp-doc table th {
+  background: #24252A !important;
+  color: #F0F0F0 !important;
+}
+
 .vp-doc table td {
   display: table-cell !important;
-  border: 1px solid var(--vp-c-divider) !important;
+  border: none !important;
+  border-right: 1px solid var(--vp-c-divider) !important;
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+  background: transparent !important;
+}
+
+.vp-doc table td:last-child {
+  border-right: none !important;
+}
+
+.vp-doc table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.vp-doc table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 6px !important;
+}
+
+.vp-doc table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 6px !important;
 }
 
 .vp-doc table thead tr th:nth-child(1),
