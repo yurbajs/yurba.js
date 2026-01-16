@@ -255,11 +255,23 @@ h6 {
 }
 
 /* Parameter Table Styling */
-.vp-doc table thead tr th:first-child {
+.vp-doc table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.vp-doc table thead tr th:nth-child(1) {
+  width: 30%;
   background: #242424;
 }
 
-.vp-doc table thead tr th {
+.vp-doc table thead tr th:nth-child(2) {
+  width: 30%;
+  background: transparent;
+}
+
+.vp-doc table thead tr th:nth-child(3) {
+  width: 40%;
   background: transparent;
 }
 

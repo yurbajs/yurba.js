@@ -8,7 +8,7 @@ function transformOutline() {
   const outlineLinks = document.querySelectorAll('.VPDocAsideOutline .outline-link');
   outlineLinks.forEach((link) => {
     const text = link.textContent || '';
-    const match = text.match(/^(\w+)\([^)]*\)/);
+    const match = text.match(/^\.?(\w+)\([^)]*\)/);
     if (match) {
       const methodName = match[1];
       link.textContent = `.${methodName}`;
