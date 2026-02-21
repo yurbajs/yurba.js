@@ -35,7 +35,7 @@ export default class WSM extends EventEmitter implements IWebSocketManager {
    */
   constructor(token: string) {
     super();
-    this.token = token; // * No validation of token format or length
+    this.token = token;
   }
 
   /**

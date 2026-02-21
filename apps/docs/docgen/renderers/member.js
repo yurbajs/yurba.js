@@ -9,9 +9,10 @@ exports.patchMemberContainer = (context) => {
     const restTag = getTag(model, '@rest');
     const sinceTag = getTag(model, '@since');
 
-    md = md.replace(/(###+ )(\w+)\(\)\n\n> \*\*\2\*\*\(([^)]+)\): (.+?)\n\n([^\n]+)/gs, 
+    md = md.replace(/(###+ )(\w+)\(\)\n\n> \*\*\2\*\*\(([^)]+)\): (.+?)\n\n(?!####)([^\n]+)/gs, 
       (match, hashes, name, params, returnType, description) => {
-        let result = `${hashes}.${name}(\`${params}\`): \`${returnType}\``;
+        const methodName = restTag ? `.${name}` : name;
+        let result = `${hashes}${methodName}(\`${params}\`): \`${returnType}\``;
         
         if (sinceTag) {
           const version = getTagContent(sinceTag);
