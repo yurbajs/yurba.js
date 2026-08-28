@@ -319,10 +319,12 @@ export default defineConfig({
       { icon: 'github', link: links.github, ariaLabel: 'GitHub Repository' },
       { icon: 'npm', link: links.npm, ariaLabel: 'NPM Package' },
     ],
-footer: {
-  message: 'Released under the Apache-2.0 License.',
-  copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://rqxsts.ashreach.dev">Rqxsts</a>`,
-},
+
+    footer: {
+      message: 'Released under the Apache-2.0 License.',
+      copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://rqxsts.ashreach.dev">Rqxsts</a>`,
+    },
+
     externalLinkIcon: true,
   },
 });
