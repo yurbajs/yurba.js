@@ -52,7 +52,7 @@ export class VideoResource {
     if (page !== undefined && page < 0) throw new Error('Invalid page number');
     const params = new URLSearchParams();
     if (page !== undefined) params.append('page', page.toString());
-    
+
     const query = params.toString();
     return this.client.get<Video[]>(`/video${query ? `?${query}` : ''}`);
   }
@@ -75,10 +75,10 @@ export class VideoResource {
    */
   async upload(input: string | Buffer, filename?: string): Promise<Video> {
     if (!input) throw new Error('Invalid input');
-    
+
     let buffer: Buffer;
     let name: string;
-    
+
     if (typeof input === 'string') {
       buffer = readFileSync(input);
       name = filename || input.split('/').pop() || 'video';
@@ -86,10 +86,10 @@ export class VideoResource {
       buffer = input;
       name = filename || 'video';
     }
-    
+
     const formData = new FormData();
     const blob = new Blob([new Uint8Array(buffer)]);
-    
+
     formData.append('file', blob, name);
 
     return this.client.uploadFile<Video>('/video', formData);

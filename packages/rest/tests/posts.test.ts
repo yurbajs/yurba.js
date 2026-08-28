@@ -14,9 +14,9 @@ describe('PostResource', () => {
   describe('Core Methods', () => {
     test('should get user posts', async () => {
       if (skipIfNoToken()) return;
-      
+
       const posts = await rest.posts.get('@me', {});
-      
+
       expect(Array.isArray(posts)).toBe(true);
       if (posts.length > 0) {
         expect(posts[0]).toHaveYurbaId();
@@ -29,7 +29,7 @@ describe('PostResource', () => {
   describe('Comments Methods', () => {
     test('should get post comments', async () => {
       if (skipIfNoToken()) return;
-      
+
       try {
         const comments = await rest.posts.getComments(parseInt(TEST_CONFIG.postId));
         expect(Array.isArray(comments)).toBe(true);
@@ -40,11 +40,11 @@ describe('PostResource', () => {
 
     test('should add comment to post', async () => {
       if (skipIfNoToken()) return;
-      
+
       try {
         const comment = await rest.posts.addComment(
-          parseInt(TEST_CONFIG.postId), 
-          'Jest test comment'
+          parseInt(TEST_CONFIG.postId),
+          'Jest test comment',
         );
         expect(comment).toBeValidYurbaResponse();
       } catch (error: any) {
@@ -56,8 +56,8 @@ describe('PostResource', () => {
   describe('Error Handling', () => {
     test('should throw error for invalid user', async () => {
       if (skipIfNoToken()) return;
-      
-      await expect(rest.posts.create('', { 
+
+      await expect(rest.posts.create('', {
         content: 'test',
         photos_list: [],
         language: 1,
@@ -65,14 +65,14 @@ describe('PostResource', () => {
         edit: null,
         repost: null,
         timestamp: 0,
-        attachments: []
+        attachments: [],
       })).rejects.toThrow('Invalid user');
     });
 
     test('should throw error for invalid post data', async () => {
       if (skipIfNoToken()) return;
-      
-      await expect(rest.posts.create('@me', { 
+
+      await expect(rest.posts.create('@me', {
         content: 'test content',
         photos_list: [],
         language: 1,
@@ -80,13 +80,13 @@ describe('PostResource', () => {
         edit: null,
         repost: null,
         timestamp: 0,
-        attachments: []
+        attachments: [],
       })).rejects.toThrow();
     });
 
     test('should throw error for invalid post ID', async () => {
       if (skipIfNoToken()) return;
-      
+
       await expect(rest.posts.delete(0))
         .rejects.toThrow('Invalid post ID');
     });

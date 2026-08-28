@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 import { apiLinksPlugin } from './md/apiLinks';
+import { outlineTransformPlugin } from './md/outlineTransform';
 
 let typedocSidebar = [];
 try {
@@ -70,7 +71,7 @@ export default defineConfig({
           });
         }
       });
-    `]
+    `],
   ],
 
   srcDir: './dist/',
@@ -83,6 +84,7 @@ export default defineConfig({
       chunkSizeWarningLimit: 1000,
     },
   },
+  ignoreDeadLinks: true,
 
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'Yurba.js Logo' },
@@ -94,24 +96,27 @@ export default defineConfig({
     sidebar: typedocSidebar,
     docFooter: {
       prev: false,
-      next: false
+      next: false,
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yurbajs/yurba.js' },
-      { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' }
+      { icon: 'npm', link: 'https://www.npmjs.com/package/yurba.js' },
     ],
     search: {
-      provider: 'local'
+      provider: 'local',
     },
     outline: {
-      level: [2, 3]
-    }
+      level: [2, 3],
+    },
   },
   markdown: {
     theme: {
       light: 'github-light',
-      dark: 'github-dark'
+      dark: 'github-dark',
     },
     lineNumbers: true,
-  }
+    config: (md) => {
+      md.use(outlineTransformPlugin);
+    },
+  },
 });

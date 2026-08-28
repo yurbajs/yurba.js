@@ -4,7 +4,7 @@ import {
   AppToken,
   CreateAppPayload,
   BaseOkay,
-  ShortUserModel
+  ShortUserModel,
 } from '@yurbajs/types';
 
 /**
@@ -192,7 +192,7 @@ export class AppResource {
     if (!token || token.length < 1) throw new Error('Invalid token');
     if (!secretKey || secretKey.length < 1) throw new Error('Invalid secret key');
     return this.client.get<ShortUserModel>(`/apps/user/${token}`, {}, {
-      headers: { 'Secret-Key': secretKey }
+      headers: { 'Secret-Key': secretKey },
     });
   }
 }

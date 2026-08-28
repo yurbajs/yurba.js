@@ -59,19 +59,19 @@ describe('Simple Tests (No Token Required)', () => {
       const rest = new REST({
         baseURL: 'https://custom.api.url',
         timeout: 5000,
-        debug: true
+        debug: true,
       }).setToken('y.validtoken1234567890');
       expect(rest).toBeInstanceOf(REST);
     });
 
     test('should set rate limiting', () => {
       const rest = new REST().setToken('y.validtoken1234567890');
-      
+
       rest.setRateLimit({
         maxRequests: 100,
-        windowMs: 60000
+        windowMs: 60000,
       });
-      
+
       const status = rest.getRateLimitStatus();
       expect(status).toBeDefined();
       expect(status?.canMakeRequest).toBe(true);
@@ -81,15 +81,15 @@ describe('Simple Tests (No Token Required)', () => {
   describe('Cache Management', () => {
     test('should manage cached user', () => {
       const rest = new REST().setToken('y.validtoken1234567890');
-      
+
       const user = {
         id: 12345,
         name: 'Test',
         surname: 'User',
         link: 'testuser',
-        avatar: 0
+        avatar: 0,
       };
-      
+
       rest.setCachedUser(user);
       expect(() => rest.clearCache()).not.toThrow();
     });
@@ -98,7 +98,7 @@ describe('Simple Tests (No Token Required)', () => {
   describe('Request Management', () => {
     test('should handle request cancellation', () => {
       const rest = new REST().setToken('y.validtoken1234567890');
-      
+
       expect(() => rest.cancelRequest('/test')).not.toThrow();
       expect(() => rest.cancelAllRequests()).not.toThrow();
     });

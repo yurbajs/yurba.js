@@ -31,7 +31,7 @@ describe('DialogResource', () => {
           headers: expect.objectContaining({
             token: 'y.test-token-1234567890',
           }),
-        })
+        }),
       );
       expect(result).toEqual(mockDialog);
     });
@@ -47,7 +47,7 @@ describe('DialogResource', () => {
 
       expect(fetch).toHaveBeenCalledWith(
         expect.stringContaining('/dialogs/456?code=invite123'),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
@@ -73,7 +73,7 @@ describe('DialogResource', () => {
             edit: null,
             attachments: [],
           }),
-        })
+        }),
       );
       expect(result).toEqual(mockMessage);
     });
@@ -107,7 +107,7 @@ describe('DialogResource', () => {
               { Type: 'track', Item: 6422 },
             ],
           }),
-        })
+        }),
       );
     });
   });
@@ -131,11 +131,11 @@ describe('DialogResource', () => {
 
     it('should throw error for invalid name', async () => {
       await expect(
-        dialogs.create({ name: '', type: 'channel' })
+        dialogs.create({ name: '', type: 'channel' }),
       ).rejects.toThrow('Invalid name');
 
       await expect(
-        dialogs.create({ name: 'a'.repeat(331), type: 'channel' })
+        dialogs.create({ name: 'a'.repeat(331), type: 'channel' }),
       ).rejects.toThrow('Invalid name');
     });
   });

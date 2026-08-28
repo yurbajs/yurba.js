@@ -31,7 +31,7 @@ export default class CommandManager {
    * @param client Client instance
    */
   constructor(
-    client: Client
+    client: Client,
   ) {
     this.commands = new Map();
     this.client = client;
@@ -57,7 +57,7 @@ export default class CommandManager {
   register(
     command: string,
     argsSchema: CommandArgsSchema,
-    handler: CommandHandler
+    handler: CommandHandler,
   ): void {
     if (!command || typeof command !== 'string' || !command.trim()) {
       throw new Error('Command name is required'); // * Should use custom error class for consistency
@@ -92,9 +92,9 @@ export default class CommandManager {
    * @param message Message object
    * @param enhanceMessage Function to enhance message
    */
-   async [kHandleCommand](
+  async [kHandleCommand](
     message: MessageModel,
-    enhanceMessage: (msg: MessageModel) => void
+    enhanceMessage: (msg: MessageModel) => void,
   ): Promise<void> {
     enhanceMessage(message);
 
@@ -125,7 +125,7 @@ export default class CommandManager {
 
       log.debug(
         `Executing command "${actualCommand}" with args:`,
-        parsedArgs
+        parsedArgs,
       );
       await handler(message, parsedArgs as any); // !WARN: Using 'any' loses type safety
     } catch (error) {
@@ -144,7 +144,7 @@ export default class CommandManager {
    */
   private async parseArgs<T extends Record<string, unknown>>(
     args: string[],
-    argsSchema: CommandArgsSchema
+    argsSchema: CommandArgsSchema,
   ): Promise<T> {
     const parsedArgs: Record<string, unknown> = {};
 
@@ -190,7 +190,7 @@ export default class CommandManager {
         if (required) {
           throw new CommandError(
             `Missing required argument: ${argName}`,
-            'parseArgs'
+            'parseArgs',
           );
         } else {
           // If argument is optional, use default value
@@ -202,7 +202,7 @@ export default class CommandManager {
               log.error(`Default user "${defaultValue}" not found:`, error);
               throw new CommandError(
                 `Default user "${defaultValue}" not found.`,
-                'parseArgs'
+                'parseArgs',
               );
             }
           } else {
@@ -213,79 +213,79 @@ export default class CommandManager {
       }
 
       switch (type) {
-        case 'string':
-          parsedArgs[argName] = argValue;
-          break;
-        case 'int': {
-          const intValue = parseInt(argValue, 10);
-          if (isNaN(intValue)) {
-            throw new CommandError(
-              `Argument "${argName}" must be an integer.`,
-              'parseArgs'
-            );
-          }
-          parsedArgs[argName] = intValue;
-          break;
+      case 'string':
+        parsedArgs[argName] = argValue;
+        break;
+      case 'int': {
+        const intValue = parseInt(argValue, 10);
+        if (isNaN(intValue)) {
+          throw new CommandError(
+            `Argument "${argName}" must be an integer.`,
+            'parseArgs',
+          );
         }
-        case 'float': {
-          const floatValue = parseFloat(argValue);
-          if (isNaN(floatValue)) {
-            throw new CommandError(
-              `Argument "${argName}" must be a number.`,
-              'parseArgs'
-            );
-          }
-          parsedArgs[argName] = floatValue;
-          break;
+        parsedArgs[argName] = intValue;
+        break;
+      }
+      case 'float': {
+        const floatValue = parseFloat(argValue);
+        if (isNaN(floatValue)) {
+          throw new CommandError(
+            `Argument "${argName}" must be a number.`,
+            'parseArgs',
+          );
         }
-        case 'boolean': {
-          const lowerValue = argValue.toLowerCase();
-          if (['true', 'yes', '1', 'y'].includes(lowerValue)) {
-            parsedArgs[argName] = true;
-          } else if (['false', 'no', '0', 'n'].includes(lowerValue)) {
-            parsedArgs[argName] = false;
-          } else {
-            throw new CommandError(
-              `Argument "${argName}" must be a boolean (true/false, yes/no, 1/0, y/n).`,
-              'parseArgs'
-            );
-          }
-          break;
+        parsedArgs[argName] = floatValue;
+        break;
+      }
+      case 'boolean': {
+        const lowerValue = argValue.toLowerCase();
+        if (['true', 'yes', '1', 'y'].includes(lowerValue)) {
+          parsedArgs[argName] = true;
+        } else if (['false', 'no', '0', 'n'].includes(lowerValue)) {
+          parsedArgs[argName] = false;
+        } else {
+          throw new CommandError(
+            `Argument "${argName}" must be a boolean (true/false, yes/no, 1/0, y/n).`,
+            'parseArgs',
+          );
         }
-        case 'user': {
-          if (!this.client.users)
-            throw new CommandError(
-              'getUser function not provided',
-              'parseArgs'
-            );
-          const userTag = argValue.startsWith('@')
-            ? argValue.slice(1)
-            : argValue;
-          try {
-            const user = await this.client.users.fetch(userTag);
-            if (!user) {
-              throw new CommandError(
-                `User "${argValue}" not found.`,
-                'parseArgs'
-              );
-            }
-            parsedArgs[argName] = user;
-          } catch (error) {
-            log.error(`Error getting user "${argValue}":`, error);
+        break;
+      }
+      case 'user': {
+        if (!this.client.users)
+          throw new CommandError(
+            'getUser function not provided',
+            'parseArgs',
+          );
+        const userTag = argValue.startsWith('@')
+          ? argValue.slice(1)
+          : argValue;
+        try {
+          const user = await this.client.users.fetch(userTag);
+          if (!user) {
             throw new CommandError(
               `User "${argValue}" not found.`,
-              'parseArgs'
+              'parseArgs',
             );
           }
-          break;
-        }
-        case 'repost':
+          parsedArgs[argName] = user;
+        } catch (error) {
+          log.error(`Error getting user "${argValue}":`, error);
           throw new CommandError(
-            'Repost is not supported in the current Message type.',
-            'parseArgs'
-          ); // * Hardcoded unsupported feature - should be configurable or removed
-        default:
-          throw new CommandError(`Unknown argument type: ${type}`, 'parseArgs');
+            `User "${argValue}" not found.`,
+            'parseArgs',
+          );
+        }
+        break;
+      }
+      case 'repost':
+        throw new CommandError(
+          'Repost is not supported in the current Message type.',
+          'parseArgs',
+        ); // * Hardcoded unsupported feature - should be configurable or removed
+      default:
+        throw new CommandError(`Unknown argument type: ${type}`, 'parseArgs');
       }
     }
 
@@ -317,7 +317,7 @@ export default class CommandManager {
    * }
    */
   public get(
-    command: string
+    command: string,
   ): { argsSchema: CommandArgsSchema; description?: string } | undefined {
     const commandInfo = this.commands.get(command);
     if (!commandInfo) return undefined;

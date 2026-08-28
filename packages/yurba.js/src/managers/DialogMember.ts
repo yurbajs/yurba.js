@@ -52,25 +52,25 @@ export default class DialogMemberManager extends CachedManager<string, DialogMem
       const members: DialogMember[] = [];
       let page = 0;
       let hasMore = true;
-      
+
       while (hasMore) {
         const data = await this.client.api.dialogs.getMembers(this.dialogId, page);
-        
+
         if (data.length === 0) {
           hasMore = false;
           break;
         }
-        
+
         for (const memberData of data) {
           const cacheKey = this.getCacheKey(memberData.Member.ID);
           const member = this._add(memberData, cache, { id: cacheKey });
           members.push(member);
         }
-        
+
         hasMore = data.length === 10;
         page++;
       }
-      
+
       return members;
     } catch (error) {
       log.error(`Error fetching members from dialog ${this.dialogId}:`, error);

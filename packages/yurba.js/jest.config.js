@@ -5,11 +5,11 @@ module.exports = {
   moduleNameMapper: {
     '^@yurbajs/types$': '<rootDir>/../types/src/index',
     '^@yurbajs/rest$': '<rootDir>/../rest/src/index',
-    '^@yurbajs/ws$': '<rootDir>/../ws/src/index'
+    '^@yurbajs/ws$': '<rootDir>/../ws/src/index',
   },
   transform: {
     '^.+\.ts$': ['ts-jest', {
-      useESM: false
-    }]
-  }
+      useESM: false,
+    }],
+  },
 };

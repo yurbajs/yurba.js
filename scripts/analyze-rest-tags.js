@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
 
@@ -8,31 +7,31 @@ const files = fs.readdirSync(resourcesDir).filter(f => f.endsWith('.ts') && f !=
 const stats = {
   withLink: [],
   withoutLink: [],
-  total: 0
+  total: 0,
 };
 
 files.forEach(file => {
   const filePath = path.join(resourcesDir, file);
   const content = fs.readFileSync(filePath, 'utf-8');
   const restRegex = /@rest\s+(GET|POST|PUT|PATCH|DELETE)\s+([^\s]+)(?:\s+(.+))?$/gm;
-  
+
   let match;
   while ((match = restRegex.exec(content)) !== null) {
     const [, method, endpoint, link] = match;
     const lineNum = content.substring(0, match.index).split('\n').length;
     stats.total++;
-    
+
     const cleanLink = link?.trim().split(/\s+/)[0] || null;
     const hasLink = cleanLink && cleanLink !== '*' && cleanLink.length > 0;
-    
+
     const entry = {
       file,
       line: lineNum,
       method,
       endpoint,
-      link: hasLink ? cleanLink : null
+      link: hasLink ? cleanLink : null,
     };
-    
+
     if (hasLink) {
       stats.withLink.push(entry);
     } else {

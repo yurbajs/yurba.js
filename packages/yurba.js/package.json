@@ -4,16 +4,16 @@
   "description": "The powerful library for creating bots and integrating with the Yurba API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yurbajs/yurba.js.git"
   },
   "bugs": {
-    "url": "https://github.com/rastgame/yurba.js/issues"
+    "url": "https://github.com/yurbajs/yurba.js/issues"
   },
-  "homepage": "https://github.com/RastGame/Yurba.js",
+  "homepage": "https://github.com/yurbajs/Yurba.js",
   "files": [
     "README.md",
     "LICENSE",

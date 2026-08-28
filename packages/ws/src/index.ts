@@ -1,7 +1,7 @@
 import ReconnectingWebSocket from './Websocket';
 
 export {
-  ReconnectingWebSocket
+  ReconnectingWebSocket,
 };
 
 export default ReconnectingWebSocket;

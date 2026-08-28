@@ -36,7 +36,7 @@ export default class DialogManager extends CachedManager<number, Dialog> {
    */
   async fetch(dialog: number | string, { cache = true, force = false } = {}): Promise<Dialog | null> {
     const id = this.resolveId(dialog);
-    
+
     if (!force && id) {
       const existing = this.cache.get(id);
       if (existing) return existing;

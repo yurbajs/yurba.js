@@ -34,7 +34,7 @@ export class SearchResource {
    *   country: 0, // all countries
    *   topic: 0    // all topics
    * });
-   * 
+   *
    * // Search groups by popularity
    * const groups = await rest.search.dialogs('tech', {
    *   sort: 1,    // by popularity
@@ -42,7 +42,7 @@ export class SearchResource {
    *   country: 0,
    *   topic: 5    // tech & science
    * });
-   * 
+   *
    * // Search channels alphabetically
    * const channels = await rest.search.dialogs('news', {
    *   sort: 2,    // alphabetically
@@ -50,7 +50,7 @@ export class SearchResource {
    *   country: 231, // USA
    *   topic: 0
    * }, 1); // page 1
-   * 
+   *
    * // Using enum types
    * import { Country, FDTopic } from '@yurbajs/types';
    * const education = await rest.search.dialogs('learn', {
@@ -89,7 +89,7 @@ export class SearchResource {
    *   online: 0,
    *   avatar: 0
    * });
-   * 
+   *
    * // Search married users from Ukraine
    * const marriedUsers = await rest.search.users({
    *   sort: 0,
@@ -121,10 +121,10 @@ export class SearchResource {
    * ```javascript
    * // Search by song name
    * const tracks = await rest.search.tracks('Bohemian Rhapsody');
-   * 
+   *
    * // Search by artist
    * const artistTracks = await rest.search.tracks('Queen');
-   * 
+   *
    * // With pagination
    * const moreTracks = await rest.search.tracks('rock', 1);
    * ```

@@ -20,7 +20,7 @@ export default class UserClientManager {
 
   async fetch(force = false): Promise<User> {
     const now = Date.now();
-    
+
 
     if (!force && this._user && (now - this._lastFetch) < this._cacheTTL) {
       return this._user;
@@ -37,7 +37,7 @@ export default class UserClientManager {
       this._fetchPromise = undefined;
       return user;
     });
-    
+
     return this._fetchPromise;
   }
 

@@ -4,12 +4,12 @@ module.exports = {
   roots: ['<rootDir>/tests'],
   testMatch: ['<rootDir>/tests/**/*.test.{js,ts}'],
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.ts$': 'ts-jest',
   },
   collectCoverageFrom: [
     'src/**/*.{ts,js}',
     '!src/**/*.d.ts',
-    '!src/index.ts'
+    '!src/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
@@ -17,5 +17,5 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/tests/']
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/tests/'],
 };

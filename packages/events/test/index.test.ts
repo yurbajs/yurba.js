@@ -119,11 +119,11 @@ describe('@yurbajs/events', () => {
       it('should register a one-time handler', () => {
         const handler = jest.fn();
         emitter.once('foo', handler);
-        
+
         emitter.emit('foo', 'test');
         expect(handler).toHaveBeenCalledWith('test');
         expect(handler).toHaveBeenCalledTimes(1);
-        
+
         emitter.emit('foo', 'test2');
         expect(handler).toHaveBeenCalledTimes(1); // Should not be called again
       });
@@ -131,11 +131,11 @@ describe('@yurbajs/events', () => {
       it('should work with wildcard events', () => {
         const handler = jest.fn();
         emitter.once('*', handler);
-        
+
         emitter.emit('foo', 'test');
         expect(handler).toHaveBeenCalledWith('foo', 'test');
         expect(handler).toHaveBeenCalledTimes(1);
-        
+
         emitter.emit('bar', 123);
         expect(handler).toHaveBeenCalledTimes(1); // Should not be called again
       });
@@ -143,11 +143,11 @@ describe('@yurbajs/events', () => {
       it('should be removable with off()', () => {
         const handler = jest.fn();
         emitter.once('foo', handler);
-        
+
         // Get the wrapper function that was actually registered
         const registeredHandlers = events.get('foo') as any[];
         expect(registeredHandlers).toHaveLength(1);
-        
+
         emitter.off('foo', registeredHandlers[0]);
         emitter.emit('foo', 'test');
         expect(handler).not.toHaveBeenCalled();
@@ -162,20 +162,20 @@ describe('@yurbajs/events', () => {
       it('should add handler to the beginning of the list', () => {
         const handler1 = jest.fn();
         const handler2 = jest.fn();
-        
+
         emitter.on('foo', handler1);
         emitter.prependListener('foo', handler2);
-        
+
         expect(events.get('foo')).toEqual([handler2, handler1]);
       });
 
       it('should work with wildcard events', () => {
         const handler1 = jest.fn();
         const handler2 = jest.fn();
-        
+
         emitter.on('*', handler1);
         emitter.prependListener('*', handler2);
-        
+
         expect(events.get('*')).toEqual([handler2, handler1]);
       });
     });
@@ -188,18 +188,18 @@ describe('@yurbajs/events', () => {
       it('should add one-time handler to the beginning of the list', () => {
         const handler1 = jest.fn();
         const handler2 = jest.fn();
-        
+
         emitter.on('foo', handler1);
         emitter.prependOnceListener('foo', handler2);
-        
+
         const handlers = events.get('foo') as any[];
         expect(handlers).toHaveLength(2);
-        
+
         emitter.emit('foo', 'test');
         expect(handler2).toHaveBeenCalledWith('test');
         expect(handler1).toHaveBeenCalledWith('test');
         expect(handler2).toHaveBeenCalledTimes(1);
-        
+
         emitter.emit('foo', 'test2');
         expect(handler2).toHaveBeenCalledTimes(1); // Should not be called again
         expect(handler1).toHaveBeenCalledTimes(2);
@@ -249,11 +249,11 @@ describe('@yurbajs/events', () => {
         emitter.on('foo', handler1);
         emitter.on('foo', handler2);
         emitter.on('bar', handler1);
-        
+
         emitter.off('foo');
         expect(events.get('foo')).toEqual([]);
         expect(events.get('bar')).toHaveLength(1);
-        
+
         emitter.off('bar');
         expect(events.get('bar')).toEqual([]);
       });
@@ -270,7 +270,7 @@ describe('@yurbajs/events', () => {
         emitter.on('foo', handler1);
         emitter.on('foo', handler2);
         emitter.on('bar', handler1);
-        
+
         emitter.removeAllListeners('foo');
         expect(events.get('foo')).toEqual([]);
         expect(events.get('bar')).toHaveLength(1);
@@ -281,7 +281,7 @@ describe('@yurbajs/events', () => {
         emitter.on('foo', handler);
         emitter.on('bar', handler);
         emitter.on('*', handler);
-        
+
         emitter.removeAllListeners();
         expect(events.size).toBe(0);
       });
@@ -294,15 +294,15 @@ describe('@yurbajs/events', () => {
 
       it('should return correct count of listeners', () => {
         expect(emitter.listenerCount('foo')).toBe(0);
-        
+
         const handler1 = jest.fn();
         const handler2 = jest.fn();
         emitter.on('foo', handler1);
         expect(emitter.listenerCount('foo')).toBe(1);
-        
+
         emitter.on('foo', handler2);
         expect(emitter.listenerCount('foo')).toBe(2);
-        
+
         emitter.off('foo', handler1);
         expect(emitter.listenerCount('foo')).toBe(1);
       });
@@ -321,12 +321,12 @@ describe('@yurbajs/events', () => {
 
       it('should return array of event names', () => {
         expect(emitter.eventNames()).toEqual([]);
-        
+
         const handler = jest.fn();
         emitter.on('foo', handler);
         emitter.on('bar', handler);
         emitter.on('*', handler);
-        
+
         const names = emitter.eventNames();
         expect(names).toContain('foo');
         expect(names).toContain('bar');
@@ -343,10 +343,10 @@ describe('@yurbajs/events', () => {
       it('should invoke handler for type', () => {
         const event = { a: 'b' };
         const handler = jest.fn();
-        
+
         emitter.on('foo', handler);
         emitter.emit('foo', 'test');
-        
+
         expect(handler).toHaveBeenCalledWith('test');
         expect(handler).toHaveBeenCalledTimes(1);
       });
@@ -369,12 +369,12 @@ describe('@yurbajs/events', () => {
       it('should invoke wildcard handlers', () => {
         const wildcardHandler = jest.fn();
         const specificHandler = jest.fn();
-        
+
         emitter.on('*', wildcardHandler);
         emitter.on('foo', specificHandler);
-        
+
         emitter.emit('foo', 'test');
-        
+
         expect(specificHandler).toHaveBeenCalledWith('test');
         expect(wildcardHandler).toHaveBeenCalledWith('foo', 'test');
       });
@@ -384,12 +384,12 @@ describe('@yurbajs/events', () => {
         const faultyHandler = jest.fn(() => {
           throw new Error('Test error');
         });
-        
+
         emitter.on('error', errorHandler);
         emitter.on('foo', faultyHandler);
-        
+
         emitter.emit('foo', 'test');
-        
+
         expect(faultyHandler).toHaveBeenCalled();
         expect(errorHandler).toHaveBeenCalledWith(expect.any(Error));
       });
@@ -399,12 +399,12 @@ describe('@yurbajs/events', () => {
         const faultyHandler = jest.fn(() => {
           throw new Error('Test error');
         });
-        
+
         emitter.on('foo', faultyHandler);
         emitter.emit('foo', 'test');
-        
+
         expect(consoleSpy).toHaveBeenCalledWith('Unhandled event emitter error:', expect.any(Error));
-        
+
         consoleSpy.mockRestore();
       });
 
@@ -413,12 +413,12 @@ describe('@yurbajs/events', () => {
         const faultyWildcardHandler = jest.fn(() => {
           throw new Error('Wildcard error');
         });
-        
+
         emitter.on('error', errorHandler);
         emitter.on('*', faultyWildcardHandler);
-        
+
         emitter.emit('foo', 'test');
-        
+
         expect(faultyWildcardHandler).toHaveBeenCalled();
         expect(errorHandler).toHaveBeenCalledWith(expect.any(Error));
       });
@@ -427,7 +427,7 @@ describe('@yurbajs/events', () => {
         const handler = jest.fn();
         emitter.on(eventType, handler);
         emitter.emit(eventType, 'symbol test');
-        
+
         expect(handler).toHaveBeenCalledWith('symbol test');
       });
 
@@ -435,7 +435,7 @@ describe('@yurbajs/events', () => {
         const handler = jest.fn();
         emitter.on('foo', handler);
         emitter.emit('foo', 'test');
-        
+
         expect(handler).toHaveBeenCalledWith('test');
       });
     });
@@ -447,17 +447,17 @@ describe('@yurbajs/events', () => {
           command: { name: string; args: string[] };
           error: Error;
         };
-        
+
         const botEmitter = createEventEmitter<BotEvents>();
         const messageHandler = jest.fn();
         const commandHandler = jest.fn();
-        
+
         botEmitter.on('message', messageHandler);
         botEmitter.on('command', commandHandler);
-        
+
         botEmitter.emit('message', { text: 'Hello', userId: '123' });
         botEmitter.emit('command', { name: 'ping', args: [] });
-        
+
         expect(messageHandler).toHaveBeenCalledWith({ text: 'Hello', userId: '123' });
         expect(commandHandler).toHaveBeenCalledWith({ name: 'ping', args: [] });
       });
@@ -467,20 +467,20 @@ describe('@yurbajs/events', () => {
           'middleware:before': { context: any };
           'middleware:after': { context: any; result: any };
         };
-        
+
         const middlewareEmitter = createEventEmitter<MiddlewareEvents>();
         const beforeHandler = jest.fn();
         const afterHandler = jest.fn();
-        
+
         middlewareEmitter.on('middleware:before', beforeHandler);
         middlewareEmitter.on('middleware:after', afterHandler);
-        
+
         const context = { userId: '123' };
         const result = { success: true };
-        
+
         middlewareEmitter.emit('middleware:before', { context });
         middlewareEmitter.emit('middleware:after', { context, result });
-        
+
         expect(beforeHandler).toHaveBeenCalledWith({ context });
         expect(afterHandler).toHaveBeenCalledWith({ context, result });
       });
@@ -491,19 +491,19 @@ describe('@yurbajs/events', () => {
           'plugin:unload': { name: string };
           'plugin:error': { name: string; error: Error };
         }>();
-        
+
         const loadHandler = jest.fn();
         const unloadHandler = jest.fn();
         const errorHandler = jest.fn();
-        
+
         pluginEmitter.on('plugin:load', loadHandler);
         pluginEmitter.on('plugin:unload', unloadHandler);
         pluginEmitter.on('plugin:error', errorHandler);
-        
+
         pluginEmitter.emit('plugin:load', { name: 'test-plugin' });
         pluginEmitter.emit('plugin:unload', { name: 'test-plugin' });
         pluginEmitter.emit('plugin:error', { name: 'test-plugin', error: new Error('Plugin failed') });
-        
+
         expect(loadHandler).toHaveBeenCalledWith({ name: 'test-plugin' });
         expect(unloadHandler).toHaveBeenCalledWith({ name: 'test-plugin' });
         expect(errorHandler).toHaveBeenCalledWith({ name: 'test-plugin', error: expect.any(Error) });

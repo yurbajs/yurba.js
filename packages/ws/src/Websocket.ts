@@ -63,7 +63,7 @@ class ReconnectingWebSocket extends EventEmitter {
     if (this.options.debug) {
       this.emit('debug', `Attempting to connect WebSocket... [Attempt ${this.reconnectAttempts + 1}]`);
     }
-    
+
     try {
       this.ws = new WebSocket(this.url);
       this.reconnectAttempts++; // * Increment happens before connection success - could be misleading
@@ -89,7 +89,7 @@ class ReconnectingWebSocket extends EventEmitter {
     this.reconnectAttempts = 0;
     this.isConnected = true;
     this.emit('open');
-    
+
     // Send queued messages
     while (this.messageQueue.length > 0) {
       const msg = this.messageQueue.shift();
@@ -113,7 +113,7 @@ class ReconnectingWebSocket extends EventEmitter {
     }
     this.isConnected = false;
     this.stopPingInterval();
-    
+
     if (!this.forceClosed && this.reconnectAttempts < this.options.maxReconnectAttempts) {
       if (this.options.debug) {
         this.emit('debug', `Reconnecting in ${this.options.retryDelay / 1000} seconds...`);
@@ -141,7 +141,7 @@ class ReconnectingWebSocket extends EventEmitter {
       try {
         this.ws.close();
       } catch (closeErr) {
-          console.log(`Dev: ${closeErr}`) // * Direct console.log instead of proper logging
+        console.log(`Dev: ${closeErr}`); // * Direct console.log instead of proper logging
       }
     }
   }
@@ -164,17 +164,17 @@ class ReconnectingWebSocket extends EventEmitter {
    */
   private startPingInterval(): void {
     this.stopPingInterval();
-    
+
     if (this.options.pingInterval > 0) {
       this.pingIntervalId = setInterval(() => {
         if (this.isConnected && this.ws?.readyState === WebSocket.OPEN) {
           if (this.options.debug) {
             this.emit('debug', 'Sending ping');
           }
-          
+
           try {
             this.ws.ping();
-            
+
             // Set timeout for pong
             this.pongTimeoutId = setTimeout(() => {
               if (this.options.debug) {
@@ -184,7 +184,7 @@ class ReconnectingWebSocket extends EventEmitter {
                 try {
                   this.ws.terminate(); // !WARN: Forceful termination without graceful close
                 } catch (err) {
-                  console.log(`Dev: ${err}`) // * Direct console.log instead of proper logging
+                  console.log(`Dev: ${err}`); // * Direct console.log instead of proper logging
                 }
               }
             }, this.options.pongTimeout);
@@ -205,7 +205,7 @@ class ReconnectingWebSocket extends EventEmitter {
       clearInterval(this.pingIntervalId);
       this.pingIntervalId = undefined;
     }
-    
+
     if (this.pongTimeoutId) {
       clearTimeout(this.pongTimeoutId);
       this.pongTimeoutId = undefined;
@@ -259,12 +259,12 @@ class ReconnectingWebSocket extends EventEmitter {
     }
     this.forceClosed = true;
     this.stopPingInterval();
-    
+
     if (this.ws) {
       try {
         this.ws.close(code, reason);
       } catch (err) {
-        console.log(`Dev: ${err}`) // * Direct console.log instead of proper logging
+        console.log(`Dev: ${err}`); // * Direct console.log instead of proper logging
         // Ignore errors when closing
       }
     }

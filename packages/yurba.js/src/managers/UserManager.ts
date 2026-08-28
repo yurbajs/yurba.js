@@ -43,16 +43,16 @@ export default class UserManager extends CachedManager<number, User> {
    * @example
    * // Fetch a user by ID
    * const user = await client.users.fetch(123456);
-   * 
+   *
    * // Fetch a user by link
    * const user = await client.users.fetch('username');
-   * 
+   *
    * // Force fetch from API
    * const user = await client.users.fetch(123456, { force: true });
    */
   async fetch(user: number | string, { cache = true, force = false } = {}): Promise<User | null> {
     const id = this.resolveId(user);
-    
+
     // If it's a string and not a number, check link cache first
     if (!id && typeof user === 'string') {
       const cachedId = this.linkCache.get(user);
@@ -60,7 +60,7 @@ export default class UserManager extends CachedManager<number, User> {
         const existing = this.cache.get(cachedId);
         if (existing) return existing;
       }
-      
+
       // Fetch by link/tag
       try {
         const data = await this.client.api.users.get(user);
@@ -76,9 +76,9 @@ export default class UserManager extends CachedManager<number, User> {
         return null;
       }
     }
-    
+
     if (!id) return null;
-    
+
     if (!force) {
       const existing = this.cache.get(id);
       if (existing) return existing;

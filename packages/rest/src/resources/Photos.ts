@@ -9,7 +9,7 @@ export class PhotosResource {
   /**
    * @ignore
    */
-  constructor(private client: REST) { }
+  constructor(private client: REST) {}
 
   /**
    * Photos Core
@@ -77,7 +77,12 @@ export class PhotosResource {
    * const photo = await rest.photos.upload(buffer, 'My photo', 'public', 'image.png');
    * ```
    */
-  async upload(input: string | Buffer | Blob, caption: string = '', mode: 'public' | 'private' = 'public', filename?: string): Promise<Photo> {
+  async upload(
+    input: string | Buffer | Blob,
+    caption: string = '',
+    mode: 'public' | 'private' = 'public',
+    filename?: string,
+  ): Promise<Photo> {
     if (caption.length > 1000) throw new Error('Caption too long');
 
     const prepared = await prepareFile(input, filename);
@@ -101,7 +106,7 @@ export class PhotosResource {
    * @group Photos Core
    * @param photoId - Photo identifier
    * @since 1.0.0
-   * @returns {Promise<DeletePhotoResponse>} {@link DeletePhotoResponse} Delete response
+   * @returns {Promise<DeletePhotoResponse>} Delete response
    * @throws {Error} If photo ID is invalid
    * @example
    * ```javascript

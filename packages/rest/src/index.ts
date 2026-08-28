@@ -54,7 +54,7 @@ export class REST extends BaseClient {
    * Get posts resource
    * @returns PostResource instance
    */
-  get posts(): PostResource { 
+  get posts(): PostResource {
     if (!this._posts) this._posts = new PostResource(this);
     return this._posts;
   }
@@ -140,7 +140,7 @@ export class REST extends BaseClient {
    *   .add('user', rest.users.me())
    *   .add('posts', rest.posts.get('@me', {}))
    *   .execute();
-   * 
+   *
    * console.log(results.user);  // User object
    * console.log(results.posts); // Posts array
    * ```
@@ -155,7 +155,7 @@ export type { CachedUser } from './cache';
 
 export {
   ApiError, BaseClientOptions,RequestConfig, RateLimitConfig,
-  UserResource, BatchRequest, DialogResource, AppResource, PostResource, MusebaseResource, PhotosResource, AccountResource, FilesResource, VideoResource, SearchResource, ShopResource
+  UserResource, BatchRequest, DialogResource, AppResource, PostResource, MusebaseResource, PhotosResource, AccountResource, FilesResource, VideoResource, SearchResource, ShopResource,
 };
 
 // Default export for convenience

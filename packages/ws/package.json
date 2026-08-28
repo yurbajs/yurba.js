@@ -4,16 +4,16 @@
   "description": "WebSocket client for yurba.one",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rastgame/yurba.js.git"
+    "url": "git+https://github.com/yurbajs/yurba.js.git"
   },
   "bugs": {
-    "url": "https://github.com/rastgame/yurba.js/issues"
+    "url": "https://github.com/yurbajs/yurba.js/issues"
   },
-  "homepage": "https://github.com/RastGame/Yurba.js/tree/main/packages/ws",
+  "homepage": "https://github.com/yurbajs/Yurba.js/tree/main/packages/ws",
   "files": [
     "README.md",
     "LICENSE",

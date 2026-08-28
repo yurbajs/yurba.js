@@ -14,7 +14,7 @@ export class User extends Base {
    * @readonly
    */
   public readonly id: number;
-  
+
   private _data: UserModel;
 
   /**
