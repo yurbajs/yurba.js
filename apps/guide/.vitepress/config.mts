@@ -96,7 +96,7 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/logo.svg' }],
     ['link', { rel: 'apple-touch-icon', href: '/logo.svg' }],
     ['meta', { name: 'theme-color', content: '#00c7be' }],
-    ['meta', { name: 'author', content: 'RastGame' }],
+    ['meta', { name: 'author', content: 'Rqxstse' }],
     ['meta', { name: 'keywords', content: 'yurba.js, yurba, bot, api, javascript, typescript, library' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'Yurba.js' }],
@@ -322,7 +322,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the Apache-2.0 License.',
-      copyright: `Copyright © 2025-${new Date().getFullYear()} RastGame`,
+      copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://rqxsts.ashreach.dev>Rqxsts</a>`,
     },
 
     externalLinkIcon: true,
