@@ -1,23 +1,3 @@
-<script setup>
-import { VPTeamMembers } from 'vitepress/theme'
-import { onMounted } from 'vue'
-
-const avatars = ['/rastgame.jpg', '/rastgame.jpeg']
-
-const members = [
-  {
-    avatar: avatars[Math.floor(Math.random() * avatars.length)],
-    name: 'RastGame',
-    title: 'Founder | developer | tester | others..',
-    links: [
-      { icon: 'github', link: 'https://github.com/rastgame' },
-      { icon: 'yurba', link: 'https://github.com/rastgame' }
-    ]
-  }
-]
-
-</script>
-
 # Про Yurba.js
 
 Потужна бібліотека для створення ботів та інтеграції з API Yurba.
@@ -26,7 +6,7 @@ const members = [
 
 <VPTeamMembers size="small" :members />
 
-На цей момент весь проєкт створений, підтримується та розроблюється засновником - [RastGame](https://github.com/rastgame).
+На цей момент весь проєкт створений, підтримується та розроблюється засновником - [Rqxsts](https://rqxsts.ashreach.dev).
 
 ## Мета
 
