@@ -44,7 +44,7 @@
   "skipErrorChecking": false,
   "navigationLinks": {
     "Guide": "https://yurba.js.org",
-    "GitHub": "https://github.com/RastGame/Yurba.js",
+    "GitHub": "https://github.com/yurbajs/Yurba.js",
     "npm": "https://www.npmjs.com/package/yurba.js"
   },
   "visibilityFilters": {

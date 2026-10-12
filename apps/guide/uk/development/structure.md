@@ -21,7 +21,7 @@ SRC - або source code, містить основний код бота. Да�
     "guide-bot"
   ],
   "license": "ISC",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
@@ -188,4 +188,4 @@ Ready!
 > [!NOTE] Дякуємо, що ви з нами
 > Щодо посібника і конкретно інформації про продовження основної роботи по створенню бота - на цьому поки все, продовження з'явиться з часом.
 > Також я був би дуже радий побачити ідеї і звіти про проблеми з Посібником і не тільки в [issues](https://github.com/yurbajs/yurba.js/issues) і [pull requests](https://github.com/yurbajs/yurba.js/pulls) з мітками `Ideas` і `Guide`.
-> Особисто RastGame `;)`
+> Особисто [Rqxsts](https://rqxsts.ashreach.dev) `;)`

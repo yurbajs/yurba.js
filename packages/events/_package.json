@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rastgame/yurba.js.git",
+    "url": "git+https://github.com/yurbajs/yurba.js.git",
     "directory": "packages/events"
   },
   "keywords": [
@@ -37,7 +37,7 @@
     "emitter",
     "yurbajs"
   ],
-  "homepage": "https://github.com/rastgame/yurba.js/tree/main/packages/events",
+  "homepage": "https://github.com/yurbajs/yurba.js/tree/main/packages/events",
   "author": "YurbaJS Team",
   "license": "MIT",
   "files": [

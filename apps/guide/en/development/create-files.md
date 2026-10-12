@@ -62,7 +62,7 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
     "guide-bot"
   ],
   "license": "ISC",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
@@ -90,7 +90,7 @@ YURBA_TOKEN=YOUR-TOKEN-HERE
     "guide-bot"
   ],
   "license": "ISC",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {

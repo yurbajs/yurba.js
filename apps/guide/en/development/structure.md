@@ -21,7 +21,7 @@ Since our `index.js` is now in the `src` folder, we need to update the start scr
     "guide-bot"
   ],
   "license": "ISC",
-  "author": "RastGame",
+  "author": "Rqxsts",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
@@ -188,4 +188,4 @@ Available commands: ping
 > [!NOTE] Thank you for being with us
 > Regarding the guide and specifically information about continuing the main work on creating the bot - this is the end for now, continuation will appear over time.
 > Also, I would be very happy to see ideas and reports about issues with the Guide and not only in [issues](https://github.com/yurbajs/yurba.js/issues) and [pull requests](https://github.com/yurbajs/yurba.js/pulls) with labels `Ideas` and `Guide`.
-> Personally RastGame `;)`
+> Personally [Rqxsts](https://rqxsts.ashreach.dev)  `;)`
