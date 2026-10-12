@@ -111,6 +111,9 @@ export type MessageType =
 
 // -------- POST TYPES --------
 // OpenAPI: articles
+/**
+ * @category Models
+ */
 export interface ArticleModel {
   Author?: ShortUserModel | null;
   Backlinks: number;
@@ -152,10 +155,16 @@ export interface ArticleModel {
   Watching: boolean;
   Words: number;
 }
+/**
+ * @category Models
+ */
 export interface ArticlesAuthorModel {
   Articles: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface ArticlesDiffModel {
   Added: number;
   Between: number;
@@ -165,15 +174,24 @@ export interface ArticlesDiffModel {
   Removed: number;
   To: RevisionModel;
 }
+/**
+ * @category Models
+ */
 export interface ArticlesNoteModel {
   Comments?: boolean;
   Slug: string;
   Title: string;
 }
+/**
+ * @category Models
+ */
 export interface AuthoredSideModel {
   Authors: ArticlesAuthorModel[];
   Tags: TagCount[];
 }
+/**
+ * @category Models
+ */
 export interface CardModel {
   Author?: ShortUserModel | null;
   Comments: number;
@@ -193,6 +211,9 @@ export interface CardModel {
   Views: number;
   Words: number;
 }
+/**
+ * @category Models
+ */
 export interface ChangeModel {
   Article: string;
   CanCheck: boolean;
@@ -209,6 +230,9 @@ export interface FieldChange {
   From: string;
   To: string;
 }
+/**
+ * @category Models
+ */
 export interface HomeModel {
   Edits: number;
   Featured: CardModel[];
@@ -219,6 +243,9 @@ export interface HomeModel {
   Updated: CardModel[];
   Wanted: WantedModel[];
 }
+/**
+ * @category Models
+ */
 export interface RevisionModel {
   Comment: string;
   Current: boolean;
@@ -232,6 +259,9 @@ export interface RevisionModel {
   Title: string;
   User?: ShortUserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface RevisionViewModel {
   Content: string;
   Cover: string;
@@ -241,6 +271,9 @@ export interface RevisionViewModel {
   Tags: string[];
   Title: string;
 }
+/**
+ * @category Models
+ */
 export interface SaveModel {
   authored: boolean;
   base: number;
@@ -257,6 +290,9 @@ export interface SaveModel {
   title: string;
   translation_of: string;
 }
+/**
+ * @category Models
+ */
 export interface SavedModel {
   Revision: number;
   Slug: string;
@@ -269,6 +305,9 @@ export interface Source {
   Title: string;
   Url: string;
 }
+/**
+ * @category Models
+ */
 export interface SourceRulesModel {
   Banned: string[];
   Weak: string[];
@@ -277,6 +316,9 @@ export interface TagCount {
   Count: number;
   Tag: string;
 }
+/**
+ * @category Models
+ */
 export interface TranslationModel {
   Lang: string;
   Slug: string;
@@ -286,21 +328,33 @@ export interface WantedFrom {
   Slug: string;
   Title: string;
 }
+/**
+ * @category Models
+ */
 export interface WantedModel {
   From?: WantedFrom[];
   Links: number;
   Slug: string;
   Title: string;
 }
+/**
+ * @category Models
+ */
 export interface WatchingModel {
   Items: CardModel[];
   Total: number;
 }
 // OpenAPI: posts
+/**
+ * @category Models
+ */
 export interface PostLikesModel {
   IsLikedByYou: boolean;
   Likes: number;
 }
+/**
+ * @category Models
+ */
 export interface PostsAttachmentModel {
   ID: number;
   Item: unknown;
@@ -308,6 +362,9 @@ export interface PostsAttachmentModel {
   Timestamp: number;
   Type: string;
 }
+/**
+ * @category Models
+ */
 export interface PostsUploadAttachmentModel {
   item: ItemRef;
   spoiler: boolean;
@@ -411,6 +468,9 @@ export interface AvatarModel {
   Timestamp: number;
 }
 // OpenAPI: photos
+/**
+ * @category Models
+ */
 export interface AlbumModel {
   Author?: ShortUserModel | null;
   Contains: boolean;
@@ -425,10 +485,16 @@ export interface AlbumModel {
   Updated: number;
   Visibility: string;
 }
+/**
+ * @category Models
+ */
 export interface AlbumPageModel {
   Album: AlbumModel;
   Photos: Photo[];
 }
+/**
+ * @category Models
+ */
 export interface EditAlbumModel {
   description: string | null;
   name: string | null;
@@ -436,6 +502,9 @@ export interface EditAlbumModel {
   profile: boolean | null;
   visibility: string | null;
 }
+/**
+ * @category Models
+ */
 export interface EditPhotoModel {
   description: string | null;
   link: string | null;
@@ -443,6 +512,9 @@ export interface EditPhotoModel {
   title: string | null;
   visibility: string | null;
 }
+/**
+ * @category Models
+ */
 export interface PhotoLikesModel {
   IsLikedByYou: boolean;
   Likes: number;
@@ -481,19 +553,31 @@ export type DeletePhotoResponse = BaseDelete;
 
 // -------- DIALOG TYPES --------
 // OpenAPI: dialogs
+/**
+ * @category Models
+ */
 export interface AddFailureModel {
   Reason: string;
   User: number;
 }
+/**
+ * @category Models
+ */
 export interface AddMembersModel {
   Added: number[];
   Failed: AddFailureModel[];
 }
+/**
+ * @category Models
+ */
 export interface BanModel {
   By: number;
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface ButtonModel {
   App?: string;
   Command?: string;
@@ -503,27 +587,42 @@ export interface ButtonModel {
   Text: string;
   Url?: string;
 }
+/**
+ * @category Models
+ */
 export interface CategoryModel {
   Dialog: string;
   ID: number;
   Name: string;
   Position: number;
 }
+/**
+ * @category Models
+ */
 export interface CommentsModel {
   Count: number;
   Recent: ShortUserModel[];
 }
+/**
+ * @category Models
+ */
 export interface DialogLinkModel {
   Code: string;
   Dialog: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface DialogsAttachmentModel {
   ID: number;
   Item: unknown;
   Timestamp: number;
   Type: string;
 }
+/**
+ * @category Models
+ */
 export interface DialogsFolderModel {
   Exclude: string[];
   ExcludeMuted: boolean;
@@ -534,16 +633,25 @@ export interface DialogsFolderModel {
   Pins: string[];
   Types: string[];
 }
+/**
+ * @category Models
+ */
 export interface DialogsUploadAttachmentModel {
   item: ItemRef;
   type: string;
 }
+/**
+ * @category Models
+ */
 export interface FindDialogsModel {
   country?: number;
   sort?: number;
   topic?: number;
   type?: number;
 }
+/**
+ * @category Models
+ */
 export interface FolderEditModel {
   exclude: string[];
   excludeMuted: boolean;
@@ -552,19 +660,31 @@ export interface FolderEditModel {
   name: string;
   types: string[];
 }
+/**
+ * @category Models
+ */
 export interface InvitableModel {
   State: string;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface KeyModel {
   Text: string;
 }
+/**
+ * @category Models
+ */
 export interface LinkItemModel {
   Links: string[];
   Message: string;
   Text: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface MarkupModel {
   Inline?: ButtonModel[][];
   Keyboard?: KeyModel[][];
@@ -572,12 +692,18 @@ export interface MarkupModel {
   Placeholder?: string;
   Remove?: boolean;
 }
+/**
+ * @category Models
+ */
 export interface MediaItemModel {
   Attachment: DialogsAttachmentModel;
   ID: number;
   Message: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface MediaSummaryModel {
   Audio: number;
   File: number;
@@ -587,40 +713,64 @@ export interface MediaSummaryModel {
   Video: number;
   Voice: number;
 }
+/**
+ * @category Models
+ */
 export interface MemberTagModel {
   Color: string;
   Owner: boolean;
   Text: string;
 }
+/**
+ * @category Models
+ */
 export interface MentionRoleModel {
   Color: string;
   ID: number;
   Name: string;
   Slug: string;
 }
+/**
+ * @category Models
+ */
 export interface MentionSuggestionsModel {
   All: boolean;
   Roles: MentionRoleModel[];
   Users: ShortUserModel[];
 }
+/**
+ * @category Models
+ */
 export interface ReactMessageModel {
   reaction: string;
 }
+/**
+ * @category Models
+ */
 export interface ReactionModel {
   Count: number;
   Emoji: string;
   Mine: boolean;
   Recent?: ShortUserModel[];
 }
+/**
+ * @category Models
+ */
 export interface ReactionSettingsModel {
   list: string[];
   mode: string;
 }
+/**
+ * @category Models
+ */
 export interface ReactorModel {
   Reaction: string;
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface RoleModel {
   Color: string;
   Dialog: string;
@@ -629,6 +779,9 @@ export interface RoleModel {
   Permissions: number;
   Position: number;
 }
+/**
+ * @category Models
+ */
 export interface RolesModel {
   Dialog: string;
   Permissions: number;
@@ -636,10 +789,16 @@ export interface RolesModel {
   SlowMode: number;
   Top: number;
 }
+/**
+ * @category Models
+ */
 export interface SeenModel {
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface ShortDialogModel {
   Avatar: string;
   Emoji: string;
@@ -651,16 +810,25 @@ export interface ShortDialogModel {
   Type: string;
   Verify: string;
 }
+/**
+ * @category Models
+ */
 export interface ThreadAccessModel {
   Roles: ThreadRoleModel[];
   SendRestricted: boolean;
   ViewRestricted: boolean;
 }
+/**
+ * @category Models
+ */
 export interface ThreadRoleModel {
   CanSend: boolean;
   CanView: boolean;
   Role: number;
 }
+/**
+ * @category Models
+ */
 export interface UpdateChannelModel {
   avatar?: string | null;
   comments?: boolean | null;
@@ -675,11 +843,17 @@ export interface UpdateChannelModel {
   signMessages?: boolean | null;
   topic?: number | null;
 }
+/**
+ * @category Models
+ */
 export interface UpdateRoleModel {
   color?: string | null;
   name?: string | null;
   permissions?: number | null;
 }
+/**
+ * @category Models
+ */
 export interface VoiceParticipantModel {
   Deafened: boolean;
   Joined: number;
@@ -687,6 +861,9 @@ export interface VoiceParticipantModel {
   Muted: boolean;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface VoiceRoomModel {
   ID: number;
   Participants: VoiceParticipantModel[];
@@ -1068,11 +1245,17 @@ export interface SubscribePayload {
 
 // -------- Files types --------
 // OpenAPI: files
+/**
+ * @category Models
+ */
 export interface EditFileModel {
   folder: string | null;
   name: string | null;
   visibility: string | null;
 }
+/**
+ * @category Models
+ */
 export interface FilesFolderModel {
   Count: number;
   ID: string;
@@ -1103,29 +1286,47 @@ export type DeletFileResponse = BaseDelete;
 
 // ------- Account Types ------
 // OpenAPI: accounts
+/**
+ * @category Models
+ */
 export interface AssertionModel {
   authenticatorData: string;
   clientDataJSON: string;
   id: string;
   signature: string;
 }
+/**
+ * @category Models
+ */
 export interface AudienceModel {
   ListID?: number;
   Name?: string;
   Type: string;
 }
+/**
+ * @category Models
+ */
 export interface BackgroundModel {
   Animated: number;
   Art: string;
 }
+/**
+ * @category Models
+ */
 export interface BranchInvitesModel {
   invites: UserModel[];
   original: UserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface BranchesModel {
   branches: UserModel[];
   invited: UserModel[];
 }
+/**
+ * @category Models
+ */
 export interface FindPeopleModel {
   avatar?: number;
   city?: number;
@@ -1136,11 +1337,17 @@ export interface FindPeopleModel {
   sort?: number;
   worksAt?: string;
 }
+/**
+ * @category Models
+ */
 export interface FriendListModel {
   ID: number;
   Members: number;
   Name: string;
 }
+/**
+ * @category Models
+ */
 export interface InventoryItemModel {
   Acquired: number;
   Animated: number;
@@ -1154,13 +1361,22 @@ export interface InventoryItemModel {
   Sub: number;
   Type: string;
 }
+/**
+ * @category Models
+ */
 export interface LinkModel {
   ID: number;
   Type: string;
 }
+/**
+ * @category Models
+ */
 export interface NotificationSettingsModel {
   notificationSettings?: number | null;
 }
+/**
+ * @category Models
+ */
 export interface OauthTokenModel {
   access_token: string;
   expires_in: number;
@@ -1168,6 +1384,9 @@ export interface OauthTokenModel {
   scope: string;
   token_type: string;
 }
+/**
+ * @category Models
+ */
 export interface OauthUserModel {
   Avatar?: string;
   AvatarUrl?: string;
@@ -1178,18 +1397,27 @@ export interface OauthUserModel {
   RegisterDate?: number;
   Surname?: string;
 }
+/**
+ * @category Models
+ */
 export interface OnlineStatusModel {
   Degree: string;
   LastBeen: number;
   Online: boolean;
   Status: string;
 }
+/**
+ * @category Models
+ */
 export interface PasskeyModel {
   ID: number;
   LastUsed: number;
   Name: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface PasskeyOptionsModel {
   Challenge: string;
   Credentials: string[];
@@ -1197,6 +1425,9 @@ export interface PasskeyOptionsModel {
   UserID?: string;
   UserName?: string;
 }
+/**
+ * @category Models
+ */
 export interface PasskeyRegistrationModel {
   alg: number;
   authenticatorData: string;
@@ -1205,6 +1436,9 @@ export interface PasskeyRegistrationModel {
   name: string;
   publicKey: string;
 }
+/**
+ * @category Models
+ */
 export interface PrivacyModel {
   SearchState?: number | null;
   addFriendState?: number | null;
@@ -1220,6 +1454,9 @@ export interface PrivacyModel {
   viewStoriesState?: number | null;
   webState?: number | null;
 }
+/**
+ * @category Models
+ */
 export interface ProofModel {
   code: string;
   email_code: string;
@@ -1227,9 +1464,15 @@ export interface ProofModel {
   password: string;
   recovery_code: string;
 }
+/**
+ * @category Models
+ */
 export interface RelationshipModel {
   RelationshipState: string;
 }
+/**
+ * @category Models
+ */
 export interface SectionsModel {
   Articles: number;
   Gifts: number;
@@ -1240,6 +1483,9 @@ export interface SectionsModel {
   VideoPlaylists: number;
   Videos: number;
 }
+/**
+ * @category Models
+ */
 export interface SecurityModel {
   Passkeys: PasskeyModel[];
   Password: boolean;
@@ -1249,6 +1495,9 @@ export interface SecurityModel {
   Totp: boolean;
   TwoFactor: boolean;
 }
+/**
+ * @category Models
+ */
 export interface SessionModel {
   Current: boolean;
   Device: string;
@@ -1258,6 +1507,9 @@ export interface SessionModel {
   Online: boolean;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface SettingsModel {
   about?: string | null;
   avatar?: string | null;
@@ -1281,6 +1533,9 @@ export interface SettingsModel {
   website?: string | null;
   worksAt?: string | null;
 }
+/**
+ * @category Models
+ */
 export interface ShopCategoryModel {
   Description: string;
   ID: number;
@@ -1289,6 +1544,9 @@ export interface ShopCategoryModel {
   Name: string;
   Slug: string;
 }
+/**
+ * @category Models
+ */
 export interface ShopGiftModel {
   ID: number;
   Item: ShopItem;
@@ -1296,6 +1554,9 @@ export interface ShopGiftModel {
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface TotpSetupModel {
   Secret: string;
   Uri: string;
@@ -1342,6 +1603,9 @@ export interface SettingsPayload {
 
 // -------- Music types --------
 // OpenAPI: tracks
+/**
+ * @category Models
+ */
 export interface PlaylistLegacyModel {
   Author: ShortUserModel;
   Cover: string;
@@ -1354,6 +1618,9 @@ export interface PlaylistLegacyModel {
   Tracks: Track[];
   Visibility: string;
 }
+/**
+ * @category Models
+ */
 export interface UpdatePlaylistModel {
   cover: string | null;
   description: string | null;
@@ -1425,6 +1692,9 @@ export type DeleteTrackResponse = Playlist;
 
 // -------- Videos types --------
 // OpenAPI: video
+/**
+ * @category Models
+ */
 export interface EditPlaylistModel {
   description: string | null;
   name: string | null;
@@ -1432,11 +1702,17 @@ export interface EditPlaylistModel {
   video: string | null;
   visibility: string | null;
 }
+/**
+ * @category Models
+ */
 export interface EditVideoModel {
   description: string | null;
   name: string | null;
   visibility: string | null;
 }
+/**
+ * @category Models
+ */
 export interface PhotosVideoModel {
   description: string;
   name: string;
@@ -1444,28 +1720,46 @@ export interface PhotosVideoModel {
   track: string;
   visibility: string;
 }
+/**
+ * @category Models
+ */
 export interface PlaylistPageModel {
   Playlist: VideoPlaylistModel;
   Videos: Video[];
 }
+/**
+ * @category Models
+ */
 export interface SoundModel {
   Count: number;
   Track: VideoTrackModel;
   Videos: Video[];
 }
+/**
+ * @category Models
+ */
 export interface StoryVideoModel {
   Code: string;
   Duration: number;
 }
+/**
+ * @category Models
+ */
 export interface VideoLikesModel {
   IsLikedByYou: boolean;
   Likes: number;
 }
+/**
+ * @category Models
+ */
 export interface VideoPhotoModel {
   Height: number;
   ID: string;
   Width: number;
 }
+/**
+ * @category Models
+ */
 export interface VideoPlaylistModel {
   Author?: ShortUserModel | null;
   Contains: boolean;
@@ -1480,6 +1774,9 @@ export interface VideoPlaylistModel {
   Updated: number;
   Visibility: string;
 }
+/**
+ * @category Models
+ */
 export interface VideoTrackModel {
   Author: string;
   Cover: string;
@@ -1551,6 +1848,9 @@ export type DeleteCommentResponse = BaseDelete;
 
 // -------- Search types --------
 // OpenAPI: search
+/**
+ * @category Models
+ */
 export interface HistoryModel {
   ID: number;
   Query: string;
@@ -1760,11 +2060,17 @@ export interface CreateAppPayload {
 // ================================
 // -------- OPENAPI MODELS --------
 // OpenAPI: bots
+/**
+ * @category Models
+ */
 export interface AnswerModel {
   Alert?: boolean;
   Text?: string;
   Url?: string;
 }
+/**
+ * @category Models
+ */
 export interface BotInfoModel {
   About: string;
   AllowGroups: boolean;
@@ -1779,6 +2085,9 @@ export interface BotInfoModel {
   Started: boolean;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface BotModel {
   About: string;
   Admins: ShortUserModel[];
@@ -1801,22 +2110,37 @@ export interface BotModel {
   User: ShortUserModel;
   Users: number;
 }
+/**
+ * @category Models
+ */
 export interface BotsAppModel {
   Url: string;
 }
+/**
+ * @category Models
+ */
 export interface CommandModel {
   Command: string;
   Description: string;
   Scope: string;
 }
+/**
+ * @category Models
+ */
 export interface DeliveryModel {
   Mode: string;
   Pending: number;
 }
+/**
+ * @category Models
+ */
 export interface DialogBotsModel {
   Bots: BotInfoModel[];
   Keyboard: KeyboardModel | null;
 }
+/**
+ * @category Models
+ */
 export interface FoundBotModel {
   About: string;
   AllowGroups: boolean;
@@ -1833,11 +2157,17 @@ export interface FoundBotModel {
   User: ShortUserModel;
   Users: number;
 }
+/**
+ * @category Models
+ */
 export interface InlineAnswerModel {
   Placeholder: string;
   Query: string;
   Results: InlineResultModel[];
 }
+/**
+ * @category Models
+ */
 export interface InlineResultModel {
   Attachments?: DialogsUploadAttachmentModel[];
   Description?: string;
@@ -1846,19 +2176,31 @@ export interface InlineResultModel {
   Text?: string;
   Title: string;
 }
+/**
+ * @category Models
+ */
 export interface KeyboardModel {
   Bot: number;
   Markup: MarkupModel | null;
   Message: string;
 }
+/**
+ * @category Models
+ */
 export interface SearchModel {
   Bots: FoundBotModel[];
   Categories: string[];
 }
+/**
+ * @category Models
+ */
 export interface StatsCommandModel {
   Command: string;
   Count: number;
 }
+/**
+ * @category Models
+ */
 export interface StatsDayModel {
   Callbacks: number;
   Day: number;
@@ -1869,12 +2211,18 @@ export interface StatsDayModel {
   Stopped: number;
   Users: number;
 }
+/**
+ * @category Models
+ */
 export interface StatsModel {
   Blocked: number;
   Commands: StatsCommandModel[];
   Days: StatsDayModel[];
   Users: number;
 }
+/**
+ * @category Models
+ */
 export interface UpdateBotModel {
   about?: string | null;
   allowGroups?: boolean | null;
@@ -1891,6 +2239,9 @@ export interface UpdateBotModel {
   readAll?: boolean | null;
 }
 // OpenAPI: calls
+/**
+ * @category Models
+ */
 export interface CallModel {
   Answered: number;
   Callee: ShortUserModel;
@@ -1902,12 +2253,18 @@ export interface CallModel {
   State: string;
   Video: boolean;
 }
+/**
+ * @category Models
+ */
 export interface CallsJoinModel {
   Call: CallModel;
   Token: string;
   Url: string;
 }
 // OpenAPI: coins
+/**
+ * @category Models
+ */
 export interface BalanceModel {
   Coins: number;
   Month: MonthModel;
@@ -1917,6 +2274,9 @@ export interface BalanceModel {
   Today: TodayModel;
   Visited: boolean;
 }
+/**
+ * @category Models
+ */
 export interface CoinsEntryModel {
   Amount: number;
   Reason: string;
@@ -1925,10 +2285,16 @@ export interface CoinsEntryModel {
   Target: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface MonthModel {
   Earned: number;
   Spent: number;
 }
+/**
+ * @category Models
+ */
 export interface RatesModel {
   ActivityCap: number;
   Caps: Record<string, number>;
@@ -1951,17 +2317,26 @@ export interface RatesModel {
   Video: number;
   VideoSeconds: number;
 }
+/**
+ * @category Models
+ */
 export interface TodayModel {
   Earned: number;
   Times: Record<string, number>;
 }
 // OpenAPI: env
+/**
+ * @category Models
+ */
 export interface CityModel {
   Country: number;
   ID: number;
   Name: string;
   Region: number;
 }
+/**
+ * @category Models
+ */
 export interface CountryModel {
   ID: number;
   Iso: string;
@@ -1971,11 +2346,17 @@ export interface ItemRef {
   Code: boolean;
   ID: number;
 }
+/**
+ * @category Models
+ */
 export interface LanguageModel {
   Code: string;
   ID: number;
   Name: string;
 }
+/**
+ * @category Models
+ */
 export interface RegionModel {
   Country: number;
   ID: number;
@@ -1987,6 +2368,9 @@ export interface Error {
   ok: number;
 }
 // OpenAPI: handlers
+/**
+ * @category Models
+ */
 export interface FeedModel {
   Channels: ShortDialogModel[];
   Groups: ShortDialogModel[];
@@ -2005,10 +2389,16 @@ export interface UploadCommentBody {
   reply_to: string;
 }
 // OpenAPI: payments
+/**
+ * @category Models
+ */
 export interface CheckoutModel {
   Order: OrderModel;
   Url: string;
 }
+/**
+ * @category Models
+ */
 export interface OrderModel {
   Code: string;
   Coins: number;
@@ -2018,6 +2408,9 @@ export interface OrderModel {
   Status: string;
   Updated: number;
 }
+/**
+ * @category Models
+ */
 export interface PackModel {
   Active: boolean;
   Coins: number;
@@ -2025,11 +2418,17 @@ export interface PackModel {
   Position: number;
   Price: number;
 }
+/**
+ * @category Models
+ */
 export interface ShopModel {
   Enabled: boolean;
   Packs: PackModel[];
 }
 // OpenAPI: polls
+/**
+ * @category Models
+ */
 export interface PollModel {
   Anonymous: boolean;
   Author: number;
@@ -2044,12 +2443,18 @@ export interface PollModel {
   Voted: number[];
   Votes: number;
 }
+/**
+ * @category Models
+ */
 export interface PollOptionModel {
   Content: string;
   ID: number;
   Voters: ShortUserModel[];
   Votes: number;
 }
+/**
+ * @category Models
+ */
 export interface UploadPollModel {
   anonymous: boolean;
   correct: number;
@@ -2058,10 +2463,16 @@ export interface UploadPollModel {
   question: string;
   quiz: boolean;
 }
+/**
+ * @category Models
+ */
 export interface VotePollModel {
   options: number[];
 }
 // OpenAPI: projects
+/**
+ * @category Models
+ */
 export interface ActivityModel {
   Data: Record<string, unknown>;
   ID: number;
@@ -2132,6 +2543,9 @@ export interface ApiScheme {
   Scopes?: string[];
   Type?: string;
 }
+/**
+ * @category Models
+ */
 export interface ApiSyncModel {
   add: ApiOpKey[];
   base: string;
@@ -2141,10 +2555,16 @@ export interface ApiSyncModel {
   remove: string[];
   reviewed: string[];
 }
+/**
+ * @category Models
+ */
 export interface BlameModel {
   Lines: number[];
   Revs: RevModel[];
 }
+/**
+ * @category Models
+ */
 export interface BranchModel {
   Ahead: number;
   Behind: number;
@@ -2157,6 +2577,9 @@ export interface BranchModel {
   Updated: number;
   UpdatedBy?: ShortUserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface CheckModel {
   Description: string;
   Name: string;
@@ -2170,6 +2593,9 @@ export interface CodeHit {
   Path: string;
   Text: string;
 }
+/**
+ * @category Models
+ */
 export interface CommitModel {
   base: string;
   branch: string;
@@ -2181,6 +2607,9 @@ export interface CommitResult {
   Branch: string;
   Rev: string;
 }
+/**
+ * @category Models
+ */
 export interface CompareModel {
   Ahead: number;
   Base: string;
@@ -2192,6 +2621,9 @@ export interface CompareModel {
   Revs: RevModel[];
   Unsettled: string[];
 }
+/**
+ * @category Models
+ */
 export interface ContributorModel {
   First: number;
   ID: number;
@@ -2201,6 +2633,9 @@ export interface ContributorModel {
   User?: ShortUserModel | null;
   Weeks: number[];
 }
+/**
+ * @category Models
+ */
 export interface CreateModel {
   default_branch: string;
   description: string;
@@ -2229,6 +2664,9 @@ export interface DocVersion {
   Ref: string;
   Release: boolean;
 }
+/**
+ * @category Models
+ */
 export interface DocsModel {
   Api?: ApiOperation | null;
   ApiMissing?: boolean;
@@ -2245,10 +2683,16 @@ export interface DocsModel {
   Text: string;
   Versions: DocVersion[];
 }
+/**
+ * @category Models
+ */
 export interface EventsModel {
   Events: ActivityModel[];
   Last: number;
 }
+/**
+ * @category Models
+ */
 export interface FileDiffModel {
   Added: number;
   Binary: boolean;
@@ -2268,6 +2712,9 @@ export interface FileEdit {
   from: string;
   path: string;
 }
+/**
+ * @category Models
+ */
 export interface InsightsModel {
   Contributors: ContributorModel[];
   Forks: number;
@@ -2280,6 +2727,9 @@ export interface InsightsModel {
   Watchers: number;
   Weeks: number[];
 }
+/**
+ * @category Models
+ */
 export interface ItemDetailModel {
   Blocked?: string;
   CanClose: boolean;
@@ -2292,6 +2742,9 @@ export interface ItemDetailModel {
   RequiredChecks?: string[];
   Timeline: ProjectsCommentModel[];
 }
+/**
+ * @category Models
+ */
 export interface ItemUpdateModel {
   assignees: string[] | null;
   body: string | null;
@@ -2304,21 +2757,33 @@ export interface LanguageShare {
   Name: string;
   Share: number;
 }
+/**
+ * @category Models
+ */
 export interface MemberModel {
   Role: string;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface MergeModel {
   delete_branch: boolean;
   message: string;
   method: string;
 }
+/**
+ * @category Models
+ */
 export interface NewCommentModel {
   body: string;
   line: number;
   path: string;
   state: string;
 }
+/**
+ * @category Models
+ */
 export interface NewItemModel {
   body: string;
   draft: boolean;
@@ -2328,6 +2793,9 @@ export interface NewItemModel {
   title: string;
   upstream: boolean;
 }
+/**
+ * @category Models
+ */
 export interface NewReleaseModel {
   notes: string;
   prerelease: boolean;
@@ -2335,6 +2803,9 @@ export interface NewReleaseModel {
   tag: string;
   title: string;
 }
+/**
+ * @category Models
+ */
 export interface ProjectModel {
   Archived: boolean;
   Branches: number;
@@ -2372,11 +2843,17 @@ export interface ProjectRef {
   Name: string;
   Owner: string;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsAuthorModel {
   ID: number;
   Name: string;
   User?: ShortUserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsCommentModel {
   Body: string;
   Data?: Record<string, unknown>;
@@ -2390,12 +2867,18 @@ export interface ProjectsCommentModel {
   Timestamp: number;
   User: ShortUserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsDiffModel {
   Added: number;
   Cut: boolean;
   Files: FileDiffModel[];
   Removed: number;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsEntryModel {
   Hash: string;
   Kind: string;
@@ -2403,6 +2886,9 @@ export interface ProjectsEntryModel {
   Name: string;
   Size: number;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsFileModel {
   Binary: boolean;
   Hash: string;
@@ -2417,6 +2903,9 @@ export interface ProjectsFileModel {
   Size: number;
   Text?: string | null;
 }
+/**
+ * @category Models
+ */
 export interface ProjectsNoteModel {
   Comments?: boolean;
   Kind?: string;
@@ -2425,6 +2914,9 @@ export interface ProjectsNoteModel {
   Tag?: string;
   Title?: string;
 }
+/**
+ * @category Models
+ */
 export interface ReleaseModel {
   Author?: ShortUserModel | null;
   Cdn: string;
@@ -2442,11 +2934,17 @@ export interface ReleaseModel {
   Web: string;
   Zip: string;
 }
+/**
+ * @category Models
+ */
 export interface RevDetailModel {
   Branches: string[];
   Diff: ProjectsDiffModel;
   Rev: RevModel;
 }
+/**
+ * @category Models
+ */
 export interface RevModel {
   Author: ProjectsAuthorModel;
   Change: string;
@@ -2459,6 +2957,9 @@ export interface RevModel {
   Title: string;
   Verified: boolean;
 }
+/**
+ * @category Models
+ */
 export interface SetCheckModel {
   description: string;
   name: string;
@@ -2466,12 +2967,18 @@ export interface SetCheckModel {
   state: string;
   url: string;
 }
+/**
+ * @category Models
+ */
 export interface TagModel {
   Name: string;
   Rev: RevModel;
   Timestamp: number;
   User?: ShortUserModel | null;
 }
+/**
+ * @category Models
+ */
 export interface TreeModel {
   Entries: ProjectsEntryModel[];
   Path: string;
@@ -2480,6 +2987,9 @@ export interface TreeModel {
   Rev: RevModel;
   Revs: number;
 }
+/**
+ * @category Models
+ */
 export interface UpdateModel {
   archived: boolean | null;
   default_branch: string | null;
@@ -2490,6 +3000,9 @@ export interface UpdateModel {
   website: string | null;
 }
 // OpenAPI: promo
+/**
+ * @category Models
+ */
 export interface RewardModel {
   Amount?: number;
   Kind: string;
@@ -2502,6 +3015,9 @@ export interface Model {
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface ReferralsStatusModel {
   Code: string;
   Count: number;
@@ -2509,11 +3025,17 @@ export interface ReferralsStatusModel {
   Reward: number;
 }
 // OpenAPI: stories
+/**
+ * @category Models
+ */
 export interface CreateHighlightModel {
   CloseFriends: boolean;
   Cover: string;
   Name: string;
 }
+/**
+ * @category Models
+ */
 export interface HighlightFullModel {
   CloseFriends?: boolean;
   Cover: string;
@@ -2522,6 +3044,9 @@ export interface HighlightFullModel {
   Mine: boolean;
   Name: string;
 }
+/**
+ * @category Models
+ */
 export interface HighlightModel {
   CloseFriends?: boolean;
   Count: number;
@@ -2530,6 +3055,9 @@ export interface HighlightModel {
   Mine: boolean;
   Name: string;
 }
+/**
+ * @category Models
+ */
 export interface OverlayAnswerModel {
   Answer: string;
   Kind: string;
@@ -2546,15 +3074,24 @@ export interface OverlayResponse {
   Mined: boolean;
   Total: number;
 }
+/**
+ * @category Models
+ */
 export interface ReactStoryModel {
   Reaction: string;
 }
+/**
+ * @category Models
+ */
 export interface RespondModel {
   Answer: string;
   Kind: string;
   Num: number;
   Overlay: string;
 }
+/**
+ * @category Models
+ */
 export interface StoryGroupModel {
   Author: ShortUserModel;
   HasUnseen: boolean;
@@ -2562,6 +3099,9 @@ export interface StoryGroupModel {
   Mine: boolean;
   Stories: StoryModel[];
 }
+/**
+ * @category Models
+ */
 export interface StoryModel {
   Audience?: AudienceModel | null;
   Author: ShortUserModel;
@@ -2583,11 +3123,17 @@ export interface StoryModel {
   Viewed: boolean;
   Views: number;
 }
+/**
+ * @category Models
+ */
 export interface StoryViewerModel {
   Reaction: string;
   Timestamp: number;
   User: ShortUserModel;
 }
+/**
+ * @category Models
+ */
 export interface UploadStoryModel {
   Audience: string;
   Caption: string;
@@ -2601,6 +3147,9 @@ export interface UploadStoryModel {
   Track: string;
 }
 // OpenAPI: subs
+/**
+ * @category Models
+ */
 export interface PerksModel {
   Bots: number;
   CommentChars: number;
@@ -2620,6 +3169,9 @@ export interface PerksModel {
   VideoSize: number;
   VoiceText: boolean;
 }
+/**
+ * @category Models
+ */
 export interface PlanModel {
   Cost: number;
   Days: number;
@@ -2627,6 +3179,9 @@ export interface PlanModel {
   Name: string;
   Perks: PerksModel;
 }
+/**
+ * @category Models
+ */
 export interface StorageModel {
   Files: number;
   Limit: number;
@@ -2636,6 +3191,9 @@ export interface StorageModel {
   Used: number;
   Videos: number;
 }
+/**
+ * @category Models
+ */
 export interface SubsEntryModel {
   Cost: number;
   Days: number;
@@ -2644,6 +3202,9 @@ export interface SubsEntryModel {
   Name: string;
   Timestamp: number;
 }
+/**
+ * @category Models
+ */
 export interface SubsStatusModel {
   Auto: boolean;
   Coins: number;
@@ -2656,6 +3217,9 @@ export interface SubsStatusModel {
   Storage: StorageModel;
 }
 // OpenAPI: voice
+/**
+ * @category Models
+ */
 export interface VoiceJoinModel {
   CanSpeak: boolean;
   Dialog: string;
