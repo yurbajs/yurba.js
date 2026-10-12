@@ -1,19 +1,34 @@
 import { REST } from '../src/index';
-import { TEST_CONFIG, skipIfNoToken } from './setup';
+import { TEST_CONFIG, installFetchMock, mockFetchRoutes } from './setup';
+
+const me = {
+  ID: 1111,
+  Name: 'Test',
+  Surname: 'User',
+  Link: 'tester',
+  Avatar: 1,
+};
+
+const post = {
+  ID: Number(TEST_CONFIG.postId),
+  Content: 'Hello',
+  Author: me,
+};
 
 describe('PostResource', () => {
   let rest: REST;
-  let createdPostId: number;
 
-  beforeAll(() => {
-    if (!skipIfNoToken()) {
-      rest = new REST().setToken(TEST_CONFIG.token);
-    }
+  beforeEach(() => {
+    installFetchMock();
+    rest = new REST().setToken('y.test-token-1234567890');
   });
 
   describe('Core Methods', () => {
     test('should get user posts', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([
+        { match: '/get_me', body: me },
+        { match: `/user/${me.ID}/posts`, body: [post] },
+      ]);
 
       const posts = await rest.posts.get('@me', {});
 
@@ -28,35 +43,32 @@ describe('PostResource', () => {
 
   describe('Comments Methods', () => {
     test('should get post comments', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{
+        match: `/posts/${TEST_CONFIG.postId}/comments`,
+        body: [{ ID: 1, Content: 'Nice' }],
+      }]);
 
-      try {
-        const comments = await rest.posts.getComments(parseInt(TEST_CONFIG.postId));
-        expect(Array.isArray(comments)).toBe(true);
-      } catch (error: any) {
-        expect(error.message).toMatch(/Invalid post ID|not found/);
-      }
+      const comments = await rest.posts.getComments(parseInt(TEST_CONFIG.postId));
+      expect(Array.isArray(comments)).toBe(true);
     });
 
     test('should add comment to post', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{
+        match: `/posts/${TEST_CONFIG.postId}/comment`,
+        method: 'POST',
+        body: { ID: 2, Content: 'Jest test comment' },
+      }]);
 
-      try {
-        const comment = await rest.posts.addComment(
-          parseInt(TEST_CONFIG.postId),
-          'Jest test comment',
-        );
-        expect(comment).toBeValidYurbaResponse();
-      } catch (error: any) {
-        expect(error.message).toMatch(/Invalid post ID|not found|Access denied/);
-      }
+      const comment = await rest.posts.addComment(
+        parseInt(TEST_CONFIG.postId),
+        'Jest test comment',
+      );
+      expect(comment).toBeValidYurbaResponse();
     });
   });
 
   describe('Error Handling', () => {
     test('should throw error for invalid user', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.posts.create('', {
         content: 'test',
         photos_list: [],
@@ -70,10 +82,8 @@ describe('PostResource', () => {
     });
 
     test('should throw error for invalid post data', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.posts.create('@me', {
-        content: 'test content',
+        content: '',
         photos_list: [],
         language: 1,
         nsfw: false,
@@ -81,12 +91,10 @@ describe('PostResource', () => {
         repost: null,
         timestamp: 0,
         attachments: [],
-      })).rejects.toThrow();
+      })).rejects.toThrow('Invalid post data');
     });
 
     test('should throw error for invalid post ID', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.posts.delete(0))
         .rejects.toThrow('Invalid post ID');
     });

@@ -1,18 +1,23 @@
 import { REST } from '../src/index';
-import { TEST_CONFIG, skipIfNoToken } from './setup';
+import { TEST_CONFIG, installFetchMock, mockFetchRoutes } from './setup';
+
+const photo = {
+  ID: Number(TEST_CONFIG.photoId),
+  Author: { ID: 1111, Name: 'Test' },
+  Url: 'https://cdn.example/photo.png',
+};
 
 describe('PhotosResource', () => {
   let rest: REST;
 
-  beforeAll(() => {
-    if (!skipIfNoToken()) {
-      rest = new REST().setToken(TEST_CONFIG.token);
-    }
+  beforeEach(() => {
+    installFetchMock();
+    rest = new REST().setToken('y.test-token-1234567890');
   });
 
   describe('Core Methods', () => {
     test('should get all photos', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{ method: 'GET', match: '/photos', body: [photo] }]);
 
       const photos = await rest.photos.getAll();
 
@@ -25,7 +30,7 @@ describe('PhotosResource', () => {
     });
 
     test('should get photos with pagination', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{ method: 'GET', match: '/photos', body: [photo] }]);
 
       const photos = await rest.photos.getAll(1);
 
@@ -33,7 +38,7 @@ describe('PhotosResource', () => {
     });
 
     test('should get private photos', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{ method: 'GET', match: '/photos', body: [photo] }]);
 
       const photos = await rest.photos.getAll(0, 'private');
 
@@ -41,25 +46,18 @@ describe('PhotosResource', () => {
     });
 
     test('should get photo by ID', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{ method: 'GET', match: `/photos/${TEST_CONFIG.photoId}`, body: photo }]);
 
-      try {
-        const photo = await rest.photos.get(TEST_CONFIG.photoId);
+      const result = await rest.photos.get(TEST_CONFIG.photoId);
 
-        expect(photo).toBeValidYurbaResponse();
-        expect(photo).toHaveProperty('ID');
-        expect(photo).toHaveProperty('Url');
-      } catch (error: any) {
-        expect(error.message).toMatch(/not found|Invalid photo ID/);
-      }
+      expect(result).toBeValidYurbaResponse();
+      expect(result).toHaveProperty('ID');
+      expect(result).toHaveProperty('Url');
     });
   });
 
   describe('Upload Methods', () => {
     test('should handle upload with buffer', async () => {
-      if (skipIfNoToken()) return;
-
-      // Create a simple test image buffer (1x1 PNG)
       const pngBuffer = Buffer.from([
         0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
         0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
@@ -72,45 +70,38 @@ describe('PhotosResource', () => {
         0x60, 0x82,
       ]);
 
-      try {
-        const photo = await rest.photos.upload(
-          pngBuffer,
-          'Jest test photo',
-          'public',
-          'test.png',
-        );
+      mockFetchRoutes([
+        { method: 'POST', match: '/photos', body: photo },
+        { method: 'DELETE', match: `/photos/${photo.ID}`, body: { ok: true } },
+      ]);
 
-        expect(photo).toBeValidYurbaResponse();
-        expect(photo).toHaveProperty('ID');
-        expect(photo).toHaveProperty('Url');
+      const uploaded = await rest.photos.upload(
+        pngBuffer,
+        'Jest test photo',
+        'public',
+        'test.png',
+      );
 
-        // Clean up - delete the uploaded photo
-        await rest.photos.delete(photo.ID);
-      } catch (error: any) {
-        // Upload might fail due to rate limits or other restrictions
-        expect(error.message).toBeDefined();
-      }
+      expect(uploaded).toBeValidYurbaResponse();
+      expect(uploaded).toHaveProperty('ID');
+      expect(uploaded).toHaveProperty('Url');
+
+      await rest.photos.delete(uploaded.ID);
     });
   });
 
   describe('Error Handling', () => {
     test('should throw error for invalid photo ID', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.photos.get(''))
         .rejects.toThrow('Invalid photo ID');
     });
 
     test('should throw error for invalid input', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.photos.upload(null as any, 'test'))
         .rejects.toThrow('Invalid file type');
     });
 
     test('should throw error for long caption', async () => {
-      if (skipIfNoToken()) return;
-
       const longCaption = 'a'.repeat(1001);
       const buffer = Buffer.from('test');
 
@@ -119,8 +110,6 @@ describe('PhotosResource', () => {
     });
 
     test('should throw error for invalid page number', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.photos.getAll(-1))
         .rejects.toThrow('Invalid page number');
     });

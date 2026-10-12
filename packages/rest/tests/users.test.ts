@@ -1,21 +1,26 @@
 import { REST } from '../src/index';
-import { TEST_CONFIG, skipIfNoToken } from './setup';
+import { TEST_CONFIG, installFetchMock, mockFetchRoutes } from './setup';
+
+const me = {
+  ID: 1111,
+  Name: 'Test',
+  Surname: 'User',
+  Link: 'tester',
+  Avatar: 1,
+  RegisterDate: 1_700_000_000,
+};
 
 describe('UserResource', () => {
   let rest: REST;
 
-  beforeAll(() => {
-    if (!skipIfNoToken()) {
-      rest = new REST().setToken(TEST_CONFIG.token);
-    }
+  beforeEach(() => {
+    installFetchMock();
+    rest = new REST().setToken('y.test-token-1234567890');
   });
 
   describe('Core Methods', () => {
     test('should get current user info', async () => {
-      if (skipIfNoToken()) {
-        console.log('⏭️  Skipping test - no token provided');
-        return;
-      }
+      mockFetchRoutes([{ match: '/get_me', body: me }]);
 
       const user = await rest.users.me();
 
@@ -27,7 +32,7 @@ describe('UserResource', () => {
     });
 
     test('should get user by identifier', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{ match: `/user/${TEST_CONFIG.userId}`, body: me }]);
 
       const user = await rest.users.get(TEST_CONFIG.userId);
 
@@ -37,7 +42,10 @@ describe('UserResource', () => {
     });
 
     test('should get user by @me', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([
+        { match: '/get_me', body: me },
+        { match: `/user/${me.ID}`, body: me },
+      ]);
 
       const user = await rest.users.get('@me');
 
@@ -48,7 +56,10 @@ describe('UserResource', () => {
 
   describe('Friends Methods', () => {
     test('should get current user friends', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([
+        { match: '/get_me', body: me },
+        { match: `/user/${me.ID}/friends`, body: [me] },
+      ]);
 
       const friends = await rest.users.friends();
 
@@ -56,19 +67,24 @@ describe('UserResource', () => {
     });
 
     test('should handle private friends list', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{
+        match: `/user/${TEST_CONFIG.userId}/friends`,
+        ok: false,
+        status: 403,
+        body: { detail: 'access_denied' },
+      }]);
 
-      try {
-        await rest.users.getFriends(TEST_CONFIG.userId, 0);
-      } catch (error: any) {
-        expect(error.message).toMatch(/Access denied|resource does not exist|You don't have access to this resource/);
-      }
+      await expect(rest.users.getFriends(TEST_CONFIG.userId, 0))
+        .rejects.toThrow(/Access denied|resource does not exist|You don't have access to this resource/);
     });
   });
 
   describe('Gifts Methods', () => {
     test('should get current user gifts', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([
+        { match: '/get_me', body: me },
+        { match: `/user/${me.ID}/gifts`, body: [] },
+      ]);
 
       const gifts = await rest.users.gifts();
 
@@ -76,7 +92,10 @@ describe('UserResource', () => {
     });
 
     test('should get user gifts', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([{
+        match: `/user/${TEST_CONFIG.userId}/gifts`,
+        body: [{ ID: 1, User: me, Target: me }],
+      }]);
 
       const gifts = await rest.users.getGifts(TEST_CONFIG.userId);
 
@@ -91,15 +110,11 @@ describe('UserResource', () => {
 
   describe('Error Handling', () => {
     test('should throw error for invalid user identifier', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.users.get('')).rejects.toThrow('Invalid user');
       await expect(rest.users.get('a'.repeat(256))).rejects.toThrow('Invalid user');
     });
 
     test('should throw error for invalid page number', async () => {
-      if (skipIfNoToken()) return;
-
       await expect(rest.users.friends(-1)).rejects.toThrow('Invalid page number');
     });
   });

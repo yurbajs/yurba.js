@@ -1,5 +1,5 @@
 import { REST, BatchRequest } from '../src/index';
-import { skipIfNoToken, TEST_CONFIG } from './setup';
+import { installFetchMock, mockFetchRoutes } from './setup';
 
 describe('Batch Requests', () => {
   describe('BatchRequest Class', () => {
@@ -82,20 +82,22 @@ describe('Batch Requests', () => {
   describe('REST Integration', () => {
     let rest: REST;
 
-    beforeAll(() => {
-      if (skipIfNoToken()) return;
-      rest = new REST().setToken(TEST_CONFIG.token);
+    beforeEach(() => {
+      installFetchMock();
+      rest = new REST().setToken('y.test-token-1234567890');
     });
 
     test('should create batch from REST client', () => {
-      if (skipIfNoToken()) return;
-
       const batch = rest.batch();
       expect(batch).toBeInstanceOf(BatchRequest);
     });
 
-    test('should execute real API batch requests', async () => {
-      if (skipIfNoToken()) return;
+    test('should execute API batch requests', async () => {
+      const me = { ID: 1111, Name: 'Test' };
+      mockFetchRoutes([
+        { match: '/get_me', body: me },
+        { match: `/user/${me.ID}/posts`, body: [] },
+      ]);
 
       const results = await rest.batch()
         .add('me', rest.users.me())
@@ -104,10 +106,18 @@ describe('Batch Requests', () => {
 
       expect(results.me).toHaveProperty('ID');
       expect(Array.isArray(results.posts)).toBe(true);
-    }, 15000);
+    });
 
     test('should handle mixed success/failure in settled mode', async () => {
-      if (skipIfNoToken()) return;
+      mockFetchRoutes([
+        { match: '/get_me', body: { ID: 1111, Name: 'Test' } },
+        {
+          match: '/user/-1',
+          ok: false,
+          status: 404,
+          body: { detail: 'not_found' },
+        },
+      ]);
 
       const results = await rest.batch()
         .add('me', rest.users.me())
@@ -116,6 +126,6 @@ describe('Batch Requests', () => {
 
       expect(results.me).toHaveProperty('ID');
       expect(results.invalid).toHaveProperty('error');
-    }, 15000);
+    });
   });
 });

@@ -1,9 +1,7 @@
 import { config } from 'dotenv';
 
-// Load environment variables
-config();
+config({ quiet: true });
 
-// Global test configuration
 export const TEST_CONFIG = {
   token: process.env.YURBA_TOKEN || '',
   userId: process.env.TEST_USER_ID || '1111',
@@ -17,7 +15,6 @@ export const TEST_CONFIG = {
   timeout: 10000,
 };
 
-// Skip tests if no token provided
 export const skipIfNoToken = () => {
   if (!TEST_CONFIG.token) {
     console.warn('⚠️  Skipping API tests - no YURBA_TOKEN provided');
@@ -26,7 +23,48 @@ export const skipIfNoToken = () => {
   return false;
 };
 
-// Custom matchers
+export interface MockRoute {
+  method?: string;
+  match: string;
+  ok?: boolean;
+  status?: number;
+  body: unknown;
+}
+
+export function installFetchMock(): void {
+  global.fetch = jest.fn();
+}
+
+export function mockFetchRoutes(routes: MockRoute[]): void {
+  (global.fetch as jest.Mock).mockImplementation(async (url: string, options?: RequestInit) => {
+    const href = String(url);
+    const method = (options?.method || 'GET').toUpperCase();
+    const route = routes
+      .filter((r) => href.includes(r.match) && (!r.method || r.method.toUpperCase() === method))
+      .sort((a, b) => b.match.length - a.match.length)[0];
+
+    if (!route) {
+      return {
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        text: async () => JSON.stringify({ detail: 'not_found' }),
+      };
+    }
+
+    const ok = route.ok ?? true;
+    const status = route.status ?? (ok ? 200 : 400);
+
+    return {
+      ok,
+      status,
+      statusText: ok ? 'OK' : 'Error',
+      text: async () =>
+        typeof route.body === 'string' ? route.body : JSON.stringify(route.body),
+    };
+  });
+}
+
 expect.extend({
   toBeValidYurbaResponse(received) {
     const pass = received && typeof received === 'object';

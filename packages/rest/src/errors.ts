@@ -140,6 +140,10 @@ export const ErrorHandler = {
       invalid_type: 'Invalid dialog type',
       dialog_not_found: 'Incorrect dialog ID',
 
+      // Media / posts
+      photo_not_found: 'Photo not found',
+      post_not_found: 'Post not found',
+
       // Generic
       not_found: 'Resource not found',
       rate_limit_exceeded: 'Too many requests, please try again later',
