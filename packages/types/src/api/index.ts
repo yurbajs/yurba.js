@@ -72,6 +72,20 @@ export interface MessageModel {
   Timestamp: number;
   EditTimestamp: number;
   Read: boolean;
+
+  By?: ShortUserModel | null;
+  Comments?: CommentsModel | null;
+  Forwarded: ShortUserModel | null;
+  Markup?: MarkupModel | null;
+  Mentioned: boolean;
+  MentionedRoles: MentionRoleModel[];
+  MentionsAll: boolean;
+  Reactions: ReactionModel[];
+  Signature: string;
+  Tag: MemberTagModel | null;
+  Thread?: string;
+  Via?: ShortUserModel | null;
+  Withheld?: boolean;
 }
 
 export interface SendMessagePayload {
@@ -96,6 +110,210 @@ export type MessageType =
   | '';
 
 // -------- POST TYPES --------
+// OpenAPI: articles
+export interface ArticleModel {
+  Author?: ShortUserModel | null;
+  Backlinks: number;
+  CanDelete: boolean;
+  CanEdit: boolean;
+  CanManage: boolean;
+  Comments: number;
+  Content: string;
+  Contributors: ShortUserModel[];
+  Cover: string;
+  EditBlocked?: string;
+  Edits: number;
+  ID: number;
+  Infobox: string[][];
+  Kind: string;
+  Lang: string;
+  Liked: boolean;
+  Likes: number;
+  Links: Record<string, boolean>;
+  Minutes: number;
+  More: CardModel[];
+  People: number;
+  Protected: number;
+  Published: number;
+  RedirectedFrom?: string;
+  Revision: number;
+  Shares: number;
+  Slug: string;
+  Sources: Source[];
+  Status: string;
+  Summary: string;
+  Tags: string[];
+  Timestamp: number;
+  Title: string;
+  Translations: TranslationModel[];
+  Updated: number;
+  UpdatedBy?: ShortUserModel | null;
+  Views: number;
+  Watching: boolean;
+  Words: number;
+}
+export interface ArticlesAuthorModel {
+  Articles: number;
+  User: ShortUserModel;
+}
+export interface ArticlesDiffModel {
+  Added: number;
+  Between: number;
+  Fields: FieldChange[];
+  From: RevisionModel;
+  Hunks: Hunk[];
+  Removed: number;
+  To: RevisionModel;
+}
+export interface ArticlesNoteModel {
+  Comments?: boolean;
+  Slug: string;
+  Title: string;
+}
+export interface AuthoredSideModel {
+  Authors: ArticlesAuthorModel[];
+  Tags: TagCount[];
+}
+export interface CardModel {
+  Author?: ShortUserModel | null;
+  Comments: number;
+  Cover: string;
+  Edits: number;
+  ID: number;
+  Kind: string;
+  Lang: string;
+  Likes: number;
+  Published: number;
+  Slug: string;
+  Status: string;
+  Summary: string;
+  Tags: string[];
+  Title: string;
+  Updated: number;
+  Views: number;
+  Words: number;
+}
+export interface ChangeModel {
+  Article: string;
+  CanCheck: boolean;
+  New: boolean;
+  Revision: RevisionModel;
+  Slug: string;
+}
+export interface FactKey {
+  Count: number;
+  Key: string;
+}
+export interface FieldChange {
+  Field: string;
+  From: string;
+  To: string;
+}
+export interface HomeModel {
+  Edits: number;
+  Featured: CardModel[];
+  New: CardModel[];
+  People: number;
+  Tags: TagCount[];
+  Total: number;
+  Updated: CardModel[];
+  Wanted: WantedModel[];
+}
+export interface RevisionModel {
+  Comment: string;
+  Current: boolean;
+  Delta: number;
+  Hidden: boolean;
+  ID: number;
+  Minor: boolean;
+  Patrolled: boolean;
+  Size: number;
+  Timestamp: number;
+  Title: string;
+  User?: ShortUserModel | null;
+}
+export interface RevisionViewModel {
+  Content: string;
+  Cover: string;
+  Infobox: string[][];
+  Revision: RevisionModel;
+  Sources: Source[];
+  Tags: string[];
+  Title: string;
+}
+export interface SaveModel {
+  authored: boolean;
+  base: number;
+  comment: string;
+  content: string;
+  cover: string;
+  draft: boolean;
+  infobox: string[][];
+  lang: string;
+  minor: boolean;
+  post: boolean;
+  sources: Source[];
+  tags: string[];
+  title: string;
+  translation_of: string;
+}
+export interface SavedModel {
+  Revision: number;
+  Slug: string;
+}
+export interface Source {
+  Accessed?: string;
+  Kind?: string;
+  Level?: string;
+  Published?: string;
+  Title: string;
+  Url: string;
+}
+export interface SourceRulesModel {
+  Banned: string[];
+  Weak: string[];
+}
+export interface TagCount {
+  Count: number;
+  Tag: string;
+}
+export interface TranslationModel {
+  Lang: string;
+  Slug: string;
+  Title: string;
+}
+export interface WantedFrom {
+  Slug: string;
+  Title: string;
+}
+export interface WantedModel {
+  From?: WantedFrom[];
+  Links: number;
+  Slug: string;
+  Title: string;
+}
+export interface WatchingModel {
+  Items: CardModel[];
+  Total: number;
+}
+// OpenAPI: posts
+export interface PostLikesModel {
+  IsLikedByYou: boolean;
+  Likes: number;
+}
+export interface PostsAttachmentModel {
+  ID: number;
+  Item: unknown;
+  Spoiler?: boolean;
+  Timestamp: number;
+  Type: string;
+}
+export interface PostsUploadAttachmentModel {
+  item: ItemRef;
+  spoiler: boolean;
+  type: string;
+}
+
 /**
   * @category Models
   */
@@ -116,6 +334,15 @@ export interface PostModel {
   Language: Language;
   Repost: PostModel | null;
   Nsfw: boolean; // Spoiler
+
+  Audience?: AudienceModel | null;
+  Bookmarked?: boolean;
+  Bookmarks: number;
+  CloseFriends?: boolean;
+  CommentsDisabled?: boolean;
+  Pinned?: boolean;
+  Sensitive?: boolean;
+  Withheld?: boolean;
 }
 
 /**
@@ -149,6 +376,8 @@ export interface CreatePostPayload {
 export interface Likes {
   IsLikedByYou: boolean;
   Likes: number;
+
+  Liked: boolean;
 }
 
 export type DeletePostResponse = BaseDelete;
@@ -156,6 +385,12 @@ export type EditPostResponse = PostModel;
 export type CreatePostResponse = PostModel;
 
 // -------- COMMENTS TYPES -------
+// OpenAPI: comments
+export interface CommentLikesModel {
+  IsLikedByYou: boolean;
+  Likes: number;
+}
+
 /**
  * @category Models
  */
@@ -170,6 +405,49 @@ export interface CommentModel {
 }
 
 // -------- PHOTO TYPES --------
+// OpenAPI: avatars
+export interface AvatarModel {
+  Photo: string;
+  Timestamp: number;
+}
+// OpenAPI: photos
+export interface AlbumModel {
+  Author?: ShortUserModel | null;
+  Contains: boolean;
+  Count: number;
+  Covers: Photo[];
+  Description: string;
+  ID: string;
+  Mine: boolean;
+  Name: string;
+  Profile: boolean;
+  Timestamp: number;
+  Updated: number;
+  Visibility: string;
+}
+export interface AlbumPageModel {
+  Album: AlbumModel;
+  Photos: Photo[];
+}
+export interface EditAlbumModel {
+  description: string | null;
+  name: string | null;
+  photo: string | null;
+  profile: boolean | null;
+  visibility: string | null;
+}
+export interface EditPhotoModel {
+  description: string | null;
+  link: string | null;
+  sensitive: boolean | null;
+  title: string | null;
+  visibility: string | null;
+}
+export interface PhotoLikesModel {
+  IsLikedByYou: boolean;
+  Likes: number;
+}
+
 /**
  * @category Models
  */
@@ -179,12 +457,243 @@ export interface Photo {
   Caption: string;
   Timestamp: number;
   Url: string;
+
+  Color: string;
+  Comments?: number | null;
+  Description: string;
+  Height: number;
+  Likes?: PhotoLikesModel | null;
+  Link: string;
+  Mine?: boolean;
+  Nsfw: boolean;
+  Sensitive: boolean;
+  SensitiveMark?: boolean;
+  Title: string;
+  Topics: string[];
+  User?: ShortUserModel | null;
+  Visibility: string;
+  Width: number;
+  Withheld?: boolean;
 }
 
 export type UploadPhotoResponse = Photo;
 export type DeletePhotoResponse = BaseDelete;
 
 // -------- DIALOG TYPES --------
+// OpenAPI: dialogs
+export interface AddFailureModel {
+  Reason: string;
+  User: number;
+}
+export interface AddMembersModel {
+  Added: number[];
+  Failed: AddFailureModel[];
+}
+export interface BanModel {
+  By: number;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface ButtonModel {
+  App?: string;
+  Command?: string;
+  Copy?: string;
+  Data?: string;
+  Style?: string;
+  Text: string;
+  Url?: string;
+}
+export interface CategoryModel {
+  Dialog: string;
+  ID: number;
+  Name: string;
+  Position: number;
+}
+export interface CommentsModel {
+  Count: number;
+  Recent: ShortUserModel[];
+}
+export interface DialogLinkModel {
+  Code: string;
+  Dialog: string;
+  Timestamp: number;
+}
+export interface DialogsAttachmentModel {
+  ID: number;
+  Item: unknown;
+  Timestamp: number;
+  Type: string;
+}
+export interface DialogsFolderModel {
+  Exclude: string[];
+  ExcludeMuted: boolean;
+  ExcludeRead: boolean;
+  ID: number;
+  Include: string[];
+  Name: string;
+  Pins: string[];
+  Types: string[];
+}
+export interface DialogsUploadAttachmentModel {
+  item: ItemRef;
+  type: string;
+}
+export interface FindDialogsModel {
+  country?: number;
+  sort?: number;
+  topic?: number;
+  type?: number;
+}
+export interface FolderEditModel {
+  exclude: string[];
+  excludeMuted: boolean;
+  excludeRead: boolean;
+  include: string[];
+  name: string;
+  types: string[];
+}
+export interface InvitableModel {
+  State: string;
+  User: ShortUserModel;
+}
+export interface KeyModel {
+  Text: string;
+}
+export interface LinkItemModel {
+  Links: string[];
+  Message: string;
+  Text: string;
+  Timestamp: number;
+}
+export interface MarkupModel {
+  Inline?: ButtonModel[][];
+  Keyboard?: KeyModel[][];
+  Once?: boolean;
+  Placeholder?: string;
+  Remove?: boolean;
+}
+export interface MediaItemModel {
+  Attachment: DialogsAttachmentModel;
+  ID: number;
+  Message: string;
+  Timestamp: number;
+}
+export interface MediaSummaryModel {
+  Audio: number;
+  File: number;
+  Groups: number;
+  Link: number;
+  Photo: number;
+  Video: number;
+  Voice: number;
+}
+export interface MemberTagModel {
+  Color: string;
+  Owner: boolean;
+  Text: string;
+}
+export interface MentionRoleModel {
+  Color: string;
+  ID: number;
+  Name: string;
+  Slug: string;
+}
+export interface MentionSuggestionsModel {
+  All: boolean;
+  Roles: MentionRoleModel[];
+  Users: ShortUserModel[];
+}
+export interface ReactMessageModel {
+  reaction: string;
+}
+export interface ReactionModel {
+  Count: number;
+  Emoji: string;
+  Mine: boolean;
+  Recent?: ShortUserModel[];
+}
+export interface ReactionSettingsModel {
+  list: string[];
+  mode: string;
+}
+export interface ReactorModel {
+  Reaction: string;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface RoleModel {
+  Color: string;
+  Dialog: string;
+  ID: number;
+  Name: string;
+  Permissions: number;
+  Position: number;
+}
+export interface RolesModel {
+  Dialog: string;
+  Permissions: number;
+  Roles: RoleModel[];
+  SlowMode: number;
+  Top: number;
+}
+export interface SeenModel {
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface ShortDialogModel {
+  Avatar: string;
+  Emoji: string;
+  ID: string;
+  Members: number;
+  Name: string;
+  Parent: string;
+  Super: boolean;
+  Type: string;
+  Verify: string;
+}
+export interface ThreadAccessModel {
+  Roles: ThreadRoleModel[];
+  SendRestricted: boolean;
+  ViewRestricted: boolean;
+}
+export interface ThreadRoleModel {
+  CanSend: boolean;
+  CanView: boolean;
+  Role: number;
+}
+export interface UpdateChannelModel {
+  avatar?: string | null;
+  comments?: boolean | null;
+  country?: number | null;
+  description?: string | null;
+  emoji?: string | null;
+  history?: boolean | null;
+  link?: string | null;
+  name?: string | null;
+  private?: boolean | null;
+  reactions?: ReactionSettingsModel | null;
+  signMessages?: boolean | null;
+  topic?: number | null;
+}
+export interface UpdateRoleModel {
+  color?: string | null;
+  name?: string | null;
+  permissions?: number | null;
+}
+export interface VoiceParticipantModel {
+  Deafened: boolean;
+  Joined: number;
+  MicOff: boolean;
+  Muted: boolean;
+  User: ShortUserModel;
+}
+export interface VoiceRoomModel {
+  ID: number;
+  Participants: VoiceParticipantModel[];
+  Started: number;
+  StartedBy: number;
+}
+
 export interface DialogInfo {
   ID: number;
   Type: DialogType;
@@ -214,6 +723,24 @@ export interface DialogModel {
   Fire: number;
   Mute: boolean;
   Member: boolean;
+
+  Archived: boolean;
+  Category: number;
+  Comments: boolean;
+  Emoji: string;
+  History: boolean;
+  MutedUntil: number;
+  Parent: string;
+  Permissions: number;
+  Pinned: boolean;
+  Reactions?: ReactionSettingsModel | null;
+  Roles: number[];
+  Saved: boolean;
+  SignMessages: boolean;
+  SlowMode: number;
+  Super: boolean;
+  Voice: boolean;
+  VoiceChat: VoiceRoomModel | null;
 }
 
 /**
@@ -224,6 +751,11 @@ export interface DialogMemberModel {
   Dialog: number;
   Member: UserModel;
   Timestamp: number;
+
+  MutedUntil: number;
+  Owner: boolean;
+  Roles: number[];
+  Tag: string;
 }
 
 export interface FindDialogPayload {
@@ -308,6 +840,10 @@ export interface ShortUserModel {
   CommentsState: number;
   ViewAvatarState: number;
   RelationshipState: RelationshipState;
+
+  Bot?: boolean;
+  Frame: string;
+  Stories?: number;
 }
 
 /**
@@ -370,6 +906,22 @@ export interface UserModel {
   NewNotifications?: number; // Unread notifications count (for user only)
   FriendsRequests?: number; // Pending friend requests count (for user only)
   Relationships?: number; // Relationship status ID (for user only)
+
+  Background?: BackgroundModel | null;
+  Blocked?: boolean;
+  BlockedYou?: boolean;
+  Bot?: boolean;
+  FavoriteTracks: string;
+  Frame: string;
+  InviteState: number;
+  NotificationSettings: number;
+  ProfileBackground: number;
+  Role?: string;
+  Sections?: SectionsModel | null;
+  SensitiveMode: number;
+  Staff?: boolean;
+  ViewStoriesState: number;
+  WebState: number;
 }
 
 export interface Online {
@@ -456,6 +1008,9 @@ export interface ShopItem {
   Sub: number;
   Type: ShopItemType;
   Animated: number;
+
+  Art: string;
+  Rarity: number;
 }
 
 export enum ShopItemType {
@@ -512,6 +1067,20 @@ export interface SubscribePayload {
 }
 
 // -------- Files types --------
+// OpenAPI: files
+export interface EditFileModel {
+  folder: string | null;
+  name: string | null;
+  visibility: string | null;
+}
+export interface FilesFolderModel {
+  Count: number;
+  ID: string;
+  Name: string;
+  Size: number;
+  Timestamp: number;
+}
+
 export interface File {
   ID: number;
   Code: string;
@@ -520,11 +1089,218 @@ export interface File {
   Mine: boolean;
   Timestamp: number;
   Url: string;
+
+  Chat: boolean;
+  Folder: string;
+  Media?: string;
+  Preview?: string;
+  Ratio?: string;
+  View?: string;
+  Visibility: string;
 }
 export type UploadFileResponse = File;
 export type DeletFileResponse = BaseDelete;
 
 // ------- Account Types ------
+// OpenAPI: accounts
+export interface AssertionModel {
+  authenticatorData: string;
+  clientDataJSON: string;
+  id: string;
+  signature: string;
+}
+export interface AudienceModel {
+  ListID?: number;
+  Name?: string;
+  Type: string;
+}
+export interface BackgroundModel {
+  Animated: number;
+  Art: string;
+}
+export interface BranchInvitesModel {
+  invites: UserModel[];
+  original: UserModel | null;
+}
+export interface BranchesModel {
+  branches: UserModel[];
+  invited: UserModel[];
+}
+export interface FindPeopleModel {
+  avatar?: number;
+  city?: number;
+  country?: number;
+  online?: number;
+  region?: number;
+  relationships?: number;
+  sort?: number;
+  worksAt?: string;
+}
+export interface FriendListModel {
+  ID: number;
+  Members: number;
+  Name: string;
+}
+export interface InventoryItemModel {
+  Acquired: number;
+  Animated: number;
+  Art: string;
+  Category: number;
+  Cost: number;
+  Description: string;
+  ID: number;
+  Name: string;
+  Rarity: number;
+  Sub: number;
+  Type: string;
+}
+export interface LinkModel {
+  ID: number;
+  Type: string;
+}
+export interface NotificationSettingsModel {
+  notificationSettings?: number | null;
+}
+export interface OauthTokenModel {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+}
+export interface OauthUserModel {
+  Avatar?: string;
+  AvatarUrl?: string;
+  Email?: string;
+  ID: number;
+  Link?: string;
+  Name?: string;
+  RegisterDate?: number;
+  Surname?: string;
+}
+export interface OnlineStatusModel {
+  Degree: string;
+  LastBeen: number;
+  Online: boolean;
+  Status: string;
+}
+export interface PasskeyModel {
+  ID: number;
+  LastUsed: number;
+  Name: string;
+  Timestamp: number;
+}
+export interface PasskeyOptionsModel {
+  Challenge: string;
+  Credentials: string[];
+  RpID: string;
+  UserID?: string;
+  UserName?: string;
+}
+export interface PasskeyRegistrationModel {
+  alg: number;
+  authenticatorData: string;
+  clientDataJSON: string;
+  id: string;
+  name: string;
+  publicKey: string;
+}
+export interface PrivacyModel {
+  SearchState?: number | null;
+  addFriendState?: number | null;
+  commentsState?: number | null;
+  inviteState?: number | null;
+  onlineType?: number | null;
+  postState?: number | null;
+  sendMessageState?: number | null;
+  sensitiveMode?: number | null;
+  viewAvatarState?: number | null;
+  viewBirthdayState?: number | null;
+  viewFriendsState?: number | null;
+  viewStoriesState?: number | null;
+  webState?: number | null;
+}
+export interface ProofModel {
+  code: string;
+  email_code: string;
+  passkey: AssertionModel | null;
+  password: string;
+  recovery_code: string;
+}
+export interface RelationshipModel {
+  RelationshipState: string;
+}
+export interface SectionsModel {
+  Articles: number;
+  Gifts: number;
+  PhotoAlbums: number;
+  Planned: number;
+  Projects: number;
+  TrackPlaylists: number;
+  VideoPlaylists: number;
+  Videos: number;
+}
+export interface SecurityModel {
+  Passkeys: PasskeyModel[];
+  Password: boolean;
+  ReauthMethods: string[];
+  ReauthUntil: number;
+  RecoveryLeft: number;
+  Totp: boolean;
+  TwoFactor: boolean;
+}
+export interface SessionModel {
+  Current: boolean;
+  Device: string;
+  ID: number;
+  IP: string;
+  LastBeen: number;
+  Online: boolean;
+  Timestamp: number;
+}
+export interface SettingsModel {
+  about?: string | null;
+  avatar?: string | null;
+  banner?: string | null;
+  birthday?: string | null;
+  city?: number | null;
+  city_native?: string | null;
+  country?: number | null;
+  email?: string | null;
+  emoji?: string | null;
+  languages?: number[];
+  link?: string | null;
+  name?: string | null;
+  newPassword?: string | null;
+  oldPassword?: string | null;
+  online?: string | null;
+  relationships?: number | null;
+  reserve?: string | null;
+  status?: string | null;
+  surname?: string | null;
+  website?: string | null;
+  worksAt?: string | null;
+}
+export interface ShopCategoryModel {
+  Description: string;
+  ID: number;
+  Icon: string;
+  Items: ShopItem[];
+  Name: string;
+  Slug: string;
+}
+export interface ShopGiftModel {
+  ID: number;
+  Item: ShopItem;
+  Target: ShortUserModel;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface TotpSetupModel {
+  Secret: string;
+  Uri: string;
+}
+
 
 export interface Login {
   id: number;
@@ -565,6 +1341,29 @@ export interface SettingsPayload {
 }
 
 // -------- Music types --------
+// OpenAPI: tracks
+export interface PlaylistLegacyModel {
+  Author: ShortUserModel;
+  Cover: string;
+  Description: string | null;
+  ID: string;
+  Name: string;
+  Profile: boolean;
+  Release: string;
+  Timestamp: number;
+  Tracks: Track[];
+  Visibility: string;
+}
+export interface UpdatePlaylistModel {
+  cover: string | null;
+  description: string | null;
+  name: string | null;
+  profile: boolean | null;
+  release: string | null;
+  tracks_ids: string[] | null;
+  visibility: string | null;
+}
+
 
 export interface Track {
   ID: number;
@@ -581,6 +1380,10 @@ export interface Track {
   Text: string;
   Genre: string;
   Authorship: Authorship;
+
+  Sender?: ShortUserModel | null;
+  Transcript?: string | null;
+  Waveform?: number[];
 }
 
 export interface Playlist {
@@ -592,6 +1395,9 @@ export interface Playlist {
   Author: ShortUserModel;
   Timestamp: number;
   Cover: Photo['ID'];
+
+  Profile: boolean;
+  Visibility: string;
 }
 
 export enum Authorship {
@@ -618,6 +1424,71 @@ export type DeletePlaylistResponse = BaseDelete;
 export type DeleteTrackResponse = Playlist;
 
 // -------- Videos types --------
+// OpenAPI: video
+export interface EditPlaylistModel {
+  description: string | null;
+  name: string | null;
+  profile: boolean | null;
+  video: string | null;
+  visibility: string | null;
+}
+export interface EditVideoModel {
+  description: string | null;
+  name: string | null;
+  visibility: string | null;
+}
+export interface PhotosVideoModel {
+  description: string;
+  name: string;
+  photos: string[];
+  track: string;
+  visibility: string;
+}
+export interface PlaylistPageModel {
+  Playlist: VideoPlaylistModel;
+  Videos: Video[];
+}
+export interface SoundModel {
+  Count: number;
+  Track: VideoTrackModel;
+  Videos: Video[];
+}
+export interface StoryVideoModel {
+  Code: string;
+  Duration: number;
+}
+export interface VideoLikesModel {
+  IsLikedByYou: boolean;
+  Likes: number;
+}
+export interface VideoPhotoModel {
+  Height: number;
+  ID: string;
+  Width: number;
+}
+export interface VideoPlaylistModel {
+  Author?: ShortUserModel | null;
+  Contains: boolean;
+  Count: number;
+  Description: string;
+  ID: string;
+  Mine: boolean;
+  Name: string;
+  Preview: string;
+  Profile: boolean;
+  Timestamp: number;
+  Updated: number;
+  Visibility: string;
+}
+export interface VideoTrackModel {
+  Author: string;
+  Cover: string;
+  Duration: number;
+  ID: string;
+  Name: string;
+  Original: boolean;
+}
+
 
 export interface Video {
   ID: number;
@@ -630,6 +1501,22 @@ export interface Video {
   Mine: boolean;
   Timestamp: number;
   Url: string;
+
+  Author?: ShortUserModel | null;
+  Chat: boolean;
+  Comments: number;
+  Height: number;
+  Kind?: string;
+  Likes: VideoLikesModel;
+  Nsfw: boolean;
+  Photos?: VideoPhotoModel[];
+  Processing?: boolean;
+  Topics: string[];
+  Track: VideoTrackModel | null;
+  Transcript?: string | null;
+  Visibility: string;
+  Width: number;
+  Withheld?: boolean;
 }
 
 ///// Other later, videos in dev
@@ -644,6 +1531,15 @@ export interface Comment {
   Timestamp: number;
   Likes: Likes;
   Post: PostModel;
+
+  Article?: ArticlesNoteModel | null;
+  Parent?: string;
+  Photo?: Photo | null;
+  Project?: ProjectsNoteModel | null;
+  Replies: number;
+  ReplyTo?: ShortUserModel | null;
+  TopReply?: Comment | null;
+  Video?: Video | null;
 }
 
 export interface CommentPayload {
@@ -654,6 +1550,14 @@ export interface CommentPayload {
 export type DeleteCommentResponse = BaseDelete;
 
 // -------- Search types --------
+// OpenAPI: search
+export interface HistoryModel {
+  ID: number;
+  Query: string;
+  Section: string;
+  Timestamp: number;
+}
+
 
 /**
  * Sort options for search results
@@ -791,6 +1695,27 @@ export interface Item {
   Sub: number;
   Type: Type;
   Animated: number;
+
+  Approvals: number;
+  Assignees: ShortUserModel[];
+  Author?: ShortUserModel | null;
+  Body: string;
+  Changes: number;
+  ClosedAt: number;
+  ClosedBy?: ShortUserModel | null;
+  Comments: number;
+  Head: string;
+  Kind: string;
+  Labels: string[];
+  Merged: string;
+  Number: number;
+  Source?: string;
+  SourceProject?: ProjectRef | null;
+  State: string;
+  Target?: string;
+  Timestamp: number;
+  Title: string;
+  Updated: number;
 }
 
 export interface Shop {
@@ -813,6 +1738,9 @@ export interface App {
   SecretKey: string;
   RedirectUrl: string;
   Timestamp: number;
+
+  Public: boolean;
+  Users?: number;
 }
 
 export interface AppToken {
@@ -830,6 +1758,927 @@ export interface CreateAppPayload {
 }
 
 // ================================
+// -------- OPENAPI MODELS --------
+// OpenAPI: bots
+export interface AnswerModel {
+  Alert?: boolean;
+  Text?: string;
+  Url?: string;
+}
+export interface BotInfoModel {
+  About: string;
+  AllowGroups: boolean;
+  AppTitle: string;
+  AppUrl: string;
+  Blocked: boolean;
+  Commands: CommandModel[];
+  Description: string;
+  Inline: boolean;
+  InlinePlaceholder: string;
+  Mine: boolean;
+  Started: boolean;
+  User: ShortUserModel;
+}
+export interface BotModel {
+  About: string;
+  Admins: ShortUserModel[];
+  AllowGroups: boolean;
+  AppTitle: string;
+  AppUrl: string;
+  Category: string;
+  Commands: CommandModel[];
+  Delivery: DeliveryModel;
+  Description: string;
+  Inline: boolean;
+  InlinePlaceholder: string;
+  Listed: boolean;
+  Mine: boolean;
+  Owner: ShortUserModel;
+  ReadAll: boolean;
+  Scopes: string[];
+  Timestamp: number;
+  TokenHint: string;
+  User: ShortUserModel;
+  Users: number;
+}
+export interface BotsAppModel {
+  Url: string;
+}
+export interface CommandModel {
+  Command: string;
+  Description: string;
+  Scope: string;
+}
+export interface DeliveryModel {
+  Mode: string;
+  Pending: number;
+}
+export interface DialogBotsModel {
+  Bots: BotInfoModel[];
+  Keyboard: KeyboardModel | null;
+}
+export interface FoundBotModel {
+  About: string;
+  AllowGroups: boolean;
+  AppTitle: string;
+  AppUrl: string;
+  Blocked: boolean;
+  Category: string;
+  Commands: CommandModel[];
+  Description: string;
+  Inline: boolean;
+  InlinePlaceholder: string;
+  Mine: boolean;
+  Started: boolean;
+  User: ShortUserModel;
+  Users: number;
+}
+export interface InlineAnswerModel {
+  Placeholder: string;
+  Query: string;
+  Results: InlineResultModel[];
+}
+export interface InlineResultModel {
+  Attachments?: DialogsUploadAttachmentModel[];
+  Description?: string;
+  ID: string;
+  Markup?: MarkupModel | null;
+  Text?: string;
+  Title: string;
+}
+export interface KeyboardModel {
+  Bot: number;
+  Markup: MarkupModel | null;
+  Message: string;
+}
+export interface SearchModel {
+  Bots: FoundBotModel[];
+  Categories: string[];
+}
+export interface StatsCommandModel {
+  Command: string;
+  Count: number;
+}
+export interface StatsDayModel {
+  Callbacks: number;
+  Day: number;
+  Incoming: number;
+  Inline: number;
+  Outgoing: number;
+  Started: number;
+  Stopped: number;
+  Users: number;
+}
+export interface StatsModel {
+  Blocked: number;
+  Commands: StatsCommandModel[];
+  Days: StatsDayModel[];
+  Users: number;
+}
+export interface UpdateBotModel {
+  about?: string | null;
+  allowGroups?: boolean | null;
+  appTitle?: string | null;
+  appUrl?: string | null;
+  avatar?: string | null;
+  category?: string | null;
+  description?: string | null;
+  inline?: boolean | null;
+  inlinePlaceholder?: string | null;
+  link?: string | null;
+  listed?: boolean | null;
+  name?: string | null;
+  readAll?: boolean | null;
+}
+// OpenAPI: calls
+export interface CallModel {
+  Answered: number;
+  Callee: ShortUserModel;
+  Caller: ShortUserModel;
+  Created: number;
+  Dialog: string;
+  Ended: number;
+  ID: number;
+  State: string;
+  Video: boolean;
+}
+export interface CallsJoinModel {
+  Call: CallModel;
+  Token: string;
+  Url: string;
+}
+// OpenAPI: coins
+export interface BalanceModel {
+  Coins: number;
+  Month: MonthModel;
+  Rates: RatesModel;
+  Referral: number;
+  Streak: number;
+  Today: TodayModel;
+  Visited: boolean;
+}
+export interface CoinsEntryModel {
+  Amount: number;
+  Reason: string;
+  Ref: number;
+  Subject: string;
+  Target: string;
+  Timestamp: number;
+}
+export interface MonthModel {
+  Earned: number;
+  Spent: number;
+}
+export interface RatesModel {
+  ActivityCap: number;
+  Caps: Record<string, number>;
+  Comment: number;
+  CommentChars: number;
+  CommentReceived: number;
+  Day: number;
+  Follower: number;
+  Like: number;
+  LikeReceived: number;
+  Photo: number;
+  PhotoPost: number;
+  Post: number;
+  PostChars: number;
+  Repost: number;
+  Story: number;
+  Streak: number;
+  StreakDays: number;
+  Track: number;
+  Video: number;
+  VideoSeconds: number;
+}
+export interface TodayModel {
+  Earned: number;
+  Times: Record<string, number>;
+}
+// OpenAPI: env
+export interface CityModel {
+  Country: number;
+  ID: number;
+  Name: string;
+  Region: number;
+}
+export interface CountryModel {
+  ID: number;
+  Iso: string;
+  Name: string;
+}
+export interface ItemRef {
+  Code: boolean;
+  ID: number;
+}
+export interface LanguageModel {
+  Code: string;
+  ID: number;
+  Name: string;
+}
+export interface RegionModel {
+  Country: number;
+  ID: number;
+  Name: string;
+}
+// OpenAPI: general
+export interface Error {
+  detail: string;
+  ok: number;
+}
+// OpenAPI: handlers
+export interface FeedModel {
+  Channels: ShortDialogModel[];
+  Groups: ShortDialogModel[];
+  Users: ShortUserModel[];
+}
+export interface FileFolderBody {
+  name: string;
+}
+export interface SitemapItem {
+  Path: string;
+  Updated: number;
+}
+export interface UploadCommentBody {
+  content: string;
+  photos_list: number[];
+  reply_to: string;
+}
+// OpenAPI: payments
+export interface CheckoutModel {
+  Order: OrderModel;
+  Url: string;
+}
+export interface OrderModel {
+  Code: string;
+  Coins: number;
+  Created: number;
+  Currency: string;
+  Price: number;
+  Status: string;
+  Updated: number;
+}
+export interface PackModel {
+  Active: boolean;
+  Coins: number;
+  ID: number;
+  Position: number;
+  Price: number;
+}
+export interface ShopModel {
+  Enabled: boolean;
+  Packs: PackModel[];
+}
+// OpenAPI: polls
+export interface PollModel {
+  Anonymous: boolean;
+  Author: number;
+  Closed: boolean;
+  Correct: number;
+  ID: string;
+  Multiple: boolean;
+  Options: PollOptionModel[];
+  Question: string;
+  Quiz: boolean;
+  Timestamp: number;
+  Voted: number[];
+  Votes: number;
+}
+export interface PollOptionModel {
+  Content: string;
+  ID: number;
+  Voters: ShortUserModel[];
+  Votes: number;
+}
+export interface UploadPollModel {
+  anonymous: boolean;
+  correct: number;
+  multiple: boolean;
+  options: string[];
+  question: string;
+  quiz: boolean;
+}
+export interface VotePollModel {
+  options: number[];
+}
+// OpenAPI: projects
+export interface ActivityModel {
+  Data: Record<string, unknown>;
+  ID: number;
+  Project?: string;
+  Timestamp: number;
+  Type: string;
+  User?: ShortUserModel | null;
+}
+export interface ApiAdd {
+  File: string;
+  Method: string;
+  Path: string;
+  Summary?: string;
+  Tag?: string;
+}
+export interface ApiCounts {
+  Added: number;
+  Changed: number;
+  Removed: number;
+}
+export interface ApiOpKey {
+  method: string;
+  path: string;
+}
+export interface ApiOperation {
+  Auth: string;
+  Deprecated?: boolean;
+  Description?: string;
+  Errors?: unknown;
+  Extensions?: Record<string, unknown>;
+  Method: string;
+  OperationId?: string;
+  Parameters?: unknown[];
+  Path: string;
+  RequestBody?: unknown;
+  Responses?: Record<string, unknown>;
+  Security?: ApiScheme[];
+  Summary?: string;
+  Tags?: string[];
+}
+export interface ApiPageState {
+  Api: string;
+  File: string;
+  Slug: string;
+  Title: string;
+}
+export interface ApiProblem {
+  Detail?: string;
+  Path?: string;
+  Reason: string;
+}
+export interface ApiReport {
+  Added: ApiAdd[];
+  Branch: string;
+  Changed: ApiPageState[];
+  Head: string;
+  Operations: number;
+  Removed: ApiPageState[];
+  Spec: string;
+  Unsupported: ApiProblem[];
+}
+export interface ApiScheme {
+  Description?: string;
+  In?: string;
+  Name: string;
+  Param?: string;
+  Scheme?: string;
+  Scopes?: string[];
+  Type?: string;
+}
+export interface ApiSyncModel {
+  add: ApiOpKey[];
+  base: string;
+  branch: string;
+  message: string;
+  new_branch: string;
+  remove: string[];
+  reviewed: string[];
+}
+export interface BlameModel {
+  Lines: number[];
+  Revs: RevModel[];
+}
+export interface BranchModel {
+  Ahead: number;
+  Behind: number;
+  Checks: string[];
+  Default: boolean;
+  Head: RevModel;
+  Name: string;
+  Proposal: number;
+  Protected: boolean;
+  Updated: number;
+  UpdatedBy?: ShortUserModel | null;
+}
+export interface CheckModel {
+  Description: string;
+  Name: string;
+  State: string;
+  Updated: number;
+  Url: string;
+  User?: ShortUserModel | null;
+}
+export interface CodeHit {
+  Line: number;
+  Path: string;
+  Text: string;
+}
+export interface CommitModel {
+  base: string;
+  branch: string;
+  files: FileEdit[];
+  message: string;
+  new_branch: string;
+}
+export interface CommitResult {
+  Branch: string;
+  Rev: string;
+}
+export interface CompareModel {
+  Ahead: number;
+  Base: string;
+  Behind: number;
+  Conflicts: string[];
+  Diff: ProjectsDiffModel;
+  Head: string;
+  Mergeable: boolean;
+  Revs: RevModel[];
+  Unsettled: string[];
+}
+export interface ContributorModel {
+  First: number;
+  ID: number;
+  Last: number;
+  Name: string;
+  Revs: number;
+  User?: ShortUserModel | null;
+  Weeks: number[];
+}
+export interface CreateModel {
+  default_branch: string;
+  description: string;
+  ignore: string;
+  license: string;
+  name: string;
+  readme: boolean;
+  visibility: string;
+}
+export interface DocHit {
+  Slug: string;
+  Text: string;
+  Title: string;
+}
+export interface DocPage {
+  Api?: string;
+  Depth: number;
+  Group?: boolean;
+  Path: string;
+  Removed?: boolean;
+  Slug: string;
+  Title: string;
+}
+export interface DocVersion {
+  Prerelease?: boolean;
+  Ref: string;
+  Release: boolean;
+}
+export interface DocsModel {
+  Api?: ApiOperation | null;
+  ApiMissing?: boolean;
+  ApiSpec?: string;
+  ApiSync?: ApiCounts | null;
+  Branch: string;
+  Default: string;
+  Last?: RevModel | null;
+  Nav: DocPage[];
+  Next?: DocPage | null;
+  Page: DocPage;
+  Prev?: DocPage | null;
+  Ref: string;
+  Text: string;
+  Versions: DocVersion[];
+}
+export interface EventsModel {
+  Events: ActivityModel[];
+  Last: number;
+}
+export interface FileDiffModel {
+  Added: number;
+  Binary: boolean;
+  Hunks: Hunk[];
+  Lang: string;
+  Large: boolean;
+  OldPath?: string;
+  Path: string;
+  Removed: number;
+  Status: string;
+}
+export interface FileEdit {
+  content: string;
+  delete: boolean;
+  encoding: string;
+  exec: boolean;
+  from: string;
+  path: string;
+}
+export interface InsightsModel {
+  Contributors: ContributorModel[];
+  Forks: number;
+  Languages: LanguageShare[];
+  Likes: number;
+  Proposals: Record<string, number>;
+  Revs: number;
+  Size: number;
+  Tasks: Record<string, number>;
+  Watchers: number;
+  Weeks: number[];
+}
+export interface ItemDetailModel {
+  Blocked?: string;
+  CanClose: boolean;
+  CanEdit: boolean;
+  CanMerge: boolean;
+  Checks?: CheckModel[];
+  Compare?: CompareModel | null;
+  Item: Item;
+  Protected: boolean;
+  RequiredChecks?: string[];
+  Timeline: ProjectsCommentModel[];
+}
+export interface ItemUpdateModel {
+  assignees: string[] | null;
+  body: string | null;
+  labels: string[] | null;
+  state: string | null;
+  title: string | null;
+}
+export interface LanguageShare {
+  Color: string;
+  Name: string;
+  Share: number;
+}
+export interface MemberModel {
+  Role: string;
+  User: ShortUserModel;
+}
+export interface MergeModel {
+  delete_branch: boolean;
+  message: string;
+  method: string;
+}
+export interface NewCommentModel {
+  body: string;
+  line: number;
+  path: string;
+  state: string;
+}
+export interface NewItemModel {
+  body: string;
+  draft: boolean;
+  labels: string[];
+  source: string;
+  target: string;
+  title: string;
+  upstream: boolean;
+}
+export interface NewReleaseModel {
+  notes: string;
+  prerelease: boolean;
+  rev: string;
+  tag: string;
+  title: string;
+}
+export interface ProjectModel {
+  Archived: boolean;
+  Branches: number;
+  Comments: number;
+  DefaultBranch: string;
+  Description: string;
+  Docs: boolean;
+  Empty: boolean;
+  ForkOf?: ProjectRef | null;
+  Forks: number;
+  Head: string;
+  ID: number;
+  Languages: LanguageShare[];
+  Liked: boolean;
+  Likes: number;
+  Name: string;
+  OpenProposals: number;
+  OpenTasks: number;
+  Owner: ShortUserModel;
+  Pushed: number;
+  Releases: number;
+  Role: string;
+  Shares: number;
+  Size: number;
+  Timestamp: number;
+  Topics: string[];
+  Visibility: string;
+  Watchers: number;
+  Watching: string;
+  Web: string;
+  Website: string;
+}
+export interface ProjectRef {
+  ID: number;
+  Name: string;
+  Owner: string;
+}
+export interface ProjectsAuthorModel {
+  ID: number;
+  Name: string;
+  User?: ShortUserModel | null;
+}
+export interface ProjectsCommentModel {
+  Body: string;
+  Data?: Record<string, unknown>;
+  Edited: number;
+  Event?: string;
+  ID: number;
+  Kind: string;
+  Line?: number;
+  Mine: boolean;
+  Path?: string;
+  Timestamp: number;
+  User: ShortUserModel | null;
+}
+export interface ProjectsDiffModel {
+  Added: number;
+  Cut: boolean;
+  Files: FileDiffModel[];
+  Removed: number;
+}
+export interface ProjectsEntryModel {
+  Hash: string;
+  Kind: string;
+  Last?: RevModel | null;
+  Name: string;
+  Size: number;
+}
+export interface ProjectsFileModel {
+  Binary: boolean;
+  Hash: string;
+  Kind: string;
+  Lang: string;
+  Language: string;
+  Large: boolean;
+  Lines: number;
+  Media: string;
+  Name: string;
+  Path: string;
+  Size: number;
+  Text?: string | null;
+}
+export interface ProjectsNoteModel {
+  Comments?: boolean;
+  Kind?: string;
+  Number?: number;
+  Project: string;
+  Tag?: string;
+  Title?: string;
+}
+export interface ReleaseModel {
+  Author?: ShortUserModel | null;
+  Cdn: string;
+  Downloads: number;
+  Files: number;
+  ID: number;
+  Latest: boolean;
+  Notes: string;
+  Prerelease: boolean;
+  Rev: RevModel;
+  Size: number;
+  Tag: string;
+  Timestamp: number;
+  Title: string;
+  Web: string;
+  Zip: string;
+}
+export interface RevDetailModel {
+  Branches: string[];
+  Diff: ProjectsDiffModel;
+  Rev: RevModel;
+}
+export interface RevModel {
+  Author: ProjectsAuthorModel;
+  Change: string;
+  Conflicts: string[];
+  Hash: string;
+  Message: string;
+  Parents: string[];
+  PushedBy?: ShortUserModel | null;
+  Time: number;
+  Title: string;
+  Verified: boolean;
+}
+export interface SetCheckModel {
+  description: string;
+  name: string;
+  rev: string;
+  state: string;
+  url: string;
+}
+export interface TagModel {
+  Name: string;
+  Rev: RevModel;
+  Timestamp: number;
+  User?: ShortUserModel | null;
+}
+export interface TreeModel {
+  Entries: ProjectsEntryModel[];
+  Path: string;
+  Readme?: ProjectsFileModel | null;
+  Ref: string;
+  Rev: RevModel;
+  Revs: number;
+}
+export interface UpdateModel {
+  archived: boolean | null;
+  default_branch: string | null;
+  description: string | null;
+  name: string | null;
+  topics: string[] | null;
+  visibility: string | null;
+  website: string | null;
+}
+// OpenAPI: promo
+export interface RewardModel {
+  Amount?: number;
+  Kind: string;
+  Level?: number;
+  Name?: string;
+}
+// OpenAPI: referrals
+export interface Model {
+  Reward: number;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface ReferralsStatusModel {
+  Code: string;
+  Count: number;
+  Earned: number;
+  Reward: number;
+}
+// OpenAPI: stories
+export interface CreateHighlightModel {
+  CloseFriends: boolean;
+  Cover: string;
+  Name: string;
+}
+export interface HighlightFullModel {
+  CloseFriends?: boolean;
+  Cover: string;
+  ID: string;
+  Items: StoryModel[];
+  Mine: boolean;
+  Name: string;
+}
+export interface HighlightModel {
+  CloseFriends?: boolean;
+  Count: number;
+  Cover: string;
+  ID: string;
+  Mine: boolean;
+  Name: string;
+}
+export interface OverlayAnswerModel {
+  Answer: string;
+  Kind: string;
+  Num: number;
+  Overlay: string;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface OverlayResponse {
+  Avg: number;
+  Counts: number[];
+  Mine: string;
+  MineNum: number;
+  Mined: boolean;
+  Total: number;
+}
+export interface ReactStoryModel {
+  Reaction: string;
+}
+export interface RespondModel {
+  Answer: string;
+  Kind: string;
+  Num: number;
+  Overlay: string;
+}
+export interface StoryGroupModel {
+  Author: ShortUserModel;
+  HasUnseen: boolean;
+  HasUnseenClose?: boolean;
+  Mine: boolean;
+  Stories: StoryModel[];
+}
+export interface StoryModel {
+  Audience?: AudienceModel | null;
+  Author: ShortUserModel;
+  Caption: string;
+  CloseFriends?: boolean;
+  Expires: number;
+  Highlight: boolean;
+  ID: string;
+  Mine: boolean;
+  MyReaction: string;
+  Overlays: unknown;
+  Photo: string;
+  Processing?: boolean;
+  Reactions: number;
+  Responses: Record<string, OverlayResponse>;
+  Timestamp: number;
+  Track: unknown;
+  Video?: StoryVideoModel | null;
+  Viewed: boolean;
+  Views: number;
+}
+export interface StoryViewerModel {
+  Reaction: string;
+  Timestamp: number;
+  User: ShortUserModel;
+}
+export interface UploadStoryModel {
+  Audience: string;
+  Caption: string;
+  CloseFriends: boolean;
+  Highlight: string;
+  HighlightName: string;
+  Hours: number;
+  List: number;
+  Overlays: unknown;
+  Photo: string;
+  Track: string;
+}
+// OpenAPI: subs
+export interface PerksModel {
+  Bots: number;
+  CommentChars: number;
+  CosmeticAvatar: boolean;
+  FileSize: number;
+  NameEmoji: boolean;
+  OnlineHidden: boolean;
+  OnlineInvisible: boolean;
+  PhotoSize: number;
+  PostChars: number;
+  PostPhotos: number;
+  ScreenBitrate: number;
+  ScreenFps: number;
+  ScreenHeight: number;
+  Storage: number;
+  TrackSize: number;
+  VideoSize: number;
+  VoiceText: boolean;
+}
+export interface PlanModel {
+  Cost: number;
+  Days: number;
+  Level: number;
+  Name: string;
+  Perks: PerksModel;
+}
+export interface StorageModel {
+  Files: number;
+  Limit: number;
+  Photos: number;
+  Projects: number;
+  Tracks: number;
+  Used: number;
+  Videos: number;
+}
+export interface SubsEntryModel {
+  Cost: number;
+  Days: number;
+  Kind: string;
+  Level: number;
+  Name: string;
+  Timestamp: number;
+}
+export interface SubsStatusModel {
+  Auto: boolean;
+  Coins: number;
+  Ended: number;
+  Level: number;
+  Name: string;
+  Perks: PerksModel;
+  Plans: PlanModel[];
+  Started: number;
+  Storage: StorageModel;
+}
+// OpenAPI: voice
+export interface VoiceJoinModel {
+  CanSpeak: boolean;
+  Dialog: string;
+  Moderator: boolean;
+  Room: VoiceRoomModel | null;
+  Token: string;
+  Url: string;
+}
+// OpenAPI: yur
+export interface Hunk {
+  Lines: Line[];
+  NewLines: number;
+  NewStart: number;
+  OldLines: number;
+  OldStart: number;
+}
+export interface Line {
+  Kind: string;
+  New: number;
+  Old: number;
+  Text: string;
+}
+
 // SYSTEM ENUMS & UTILITIES
 // ================================
 
