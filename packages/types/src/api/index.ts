@@ -56,6 +56,9 @@
 // ================================
 
 // -------- MESSAGE TYPES --------
+/**
+ * @category Models
+ */
 export interface MessageModel {
   ID: number;
   Author: ShortUserModel;
@@ -189,6 +192,9 @@ export interface DialogInfo {
   Avatar: Photo['ID'];
 }
 
+/**
+ * @category Models
+ */
 export interface DialogModel {
   ID: number;
   Type: DialogType;
@@ -210,6 +216,9 @@ export interface DialogModel {
   Member: boolean;
 }
 
+/**
+ * @category Models
+ */
 export interface DialogMemberModel {
   ID: number;
   Dialog: number;
@@ -278,6 +287,9 @@ export enum DialogVerify {
 
 // -------- USER TYPES --------
 // Short model user
+/**
+ * @category Models
+ */
 export interface ShortUserModel {
   ID: number;
   Name: string;
@@ -300,6 +312,10 @@ export interface ShortUserModel {
 
 /**
  * User interface representing a Yurba user profile
+ */
+/**
+ * User interface representing a Yurba user profile
+ * @category Models
  */
 export interface UserModel {
   ID: number; // Unique user identifier
