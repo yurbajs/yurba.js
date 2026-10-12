@@ -227,11 +227,10 @@ class Client extends EventEmitter {
     if (!this.token) {
       throw new YurbajsError(ErrorCodes.TokenMissing);
     }
-    if (typeof this.token !== 'string' || !this.token.startsWith('y.') || this.token.length < 34) {
+    if (typeof this.token !== 'string' || !this.token.startsWith('y.') && !this.token.startsWith('b.') || this.token.length < 34) {
       throw new YurbajsError(ErrorCodes.TokenInvalid);
     }
 
-    // Встановлюємо токен для існуючого API клієнта
     this.api.setToken(this.token);
     this.wsm = new WSM(this.token);
 

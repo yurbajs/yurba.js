@@ -93,6 +93,9 @@ export type MessageType =
   | '';
 
 // -------- POST TYPES --------
+/**
+  * @category Models
+  */
 export interface PostModel {
   ID: number;
   Author: ShortUserModel;
@@ -112,12 +115,20 @@ export interface PostModel {
   Nsfw: boolean; // Spoiler
 }
 
+/**
+  * @category Posts
+  * @group API Payloads
+  */
 export interface GetPostPayload {
   lastId?: number;
   lang?: number | Language;
   feed?: boolean;
 }
 
+/**
+  * @category Posts
+  * @group API Payloads
+  */
 export interface CreatePostPayload {
   content: string | '';
   photos_list: Photo['ID'][] | [];
@@ -129,6 +140,9 @@ export interface CreatePostPayload {
   attachments: AttachmentPayload[] | [];
 }
 
+/**
+  * @category Models
+  */
 export interface Likes {
   IsLikedByYou: boolean;
   Likes: number;
@@ -139,6 +153,9 @@ export type EditPostResponse = PostModel;
 export type CreatePostResponse = PostModel;
 
 // -------- COMMENTS TYPES -------
+/**
+ * @category Models
+ */
 export interface CommentModel {
   ID: number;
   Author: ShortUserModel;
@@ -150,6 +167,9 @@ export interface CommentModel {
 }
 
 // -------- PHOTO TYPES --------
+/**
+ * @category Models
+ */
 export interface Photo {
   ID: number;
   Author: ShortUserModel['ID'];

@@ -12,11 +12,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js", 
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "dotenv": "^17.2.0",
-    "yurba.js": "^0.1.9"
+    "yurba.js": "link:../../packages/yurba.js"
   }
 }
